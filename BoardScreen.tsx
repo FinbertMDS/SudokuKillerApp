@@ -1,6 +1,6 @@
-// Đã cập nhật: hiển thị note ở phía trên ô
-import React, { useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+// Đã cập nhật: luôn ghi đè số vào ô, và hiển thị màu đỏ nếu là giá trị sai
+import React, { useEffect, useRef, useState } from 'react';
+import { Alert, AppState, AppStateStatus, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Svg, { Rect } from 'react-native-svg';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { hint } from 'sudoku-core';
@@ -8,8 +8,14 @@ import { convertTo1D, indexToPosition } from './utils';
 
 const BOARD_SIZE = 9;
 const CELL_SIZE = 40;
+const TIMEOUT_DURATION = 2 * 60 * 60 * 1000; // 2h
+const MAX_MISTAKES = 5;
 
-const BoardScreen = ({ board: initialBoard, cages }: { board: number[][], cages: { id: number, cells: [number, number][], sum: number }[] }) => {
+const BoardScreen = ({ board: initialBoard, cages, solvedBoard }: {
+  board: number[][],
+  cages: { id: number, cells: [number, number][], sum: number }[],
+  solvedBoard: number[][],
+}) => {
   const [selectedCell, setSelectedCell] = useState<{ row: number; col: number } | null>(null);
   const [board, setBoard] = useState<number[][]>(initialBoard);
   const [notes, setNotes] = useState<string[][][]>(
@@ -19,12 +25,110 @@ const BoardScreen = ({ board: initialBoard, cages }: { board: number[][], cages:
   );
   const [noteMode, setNoteMode] = useState<boolean>(false);
   const [history, setHistory] = useState<number[][][]>([]);
+  const [mistakeCount, setMistakeCount] = useState<number>(0);
 
-  const handleNumberPress = (num: number, noteMode: boolean, cell: { row: number; col: number } | null) => {
-    if (!cell) return;
-    const { row, col } = cell;
-    
-    if (board[row][col]) {
+  const [startTime, setStartTime] = useState(Date.now());
+  const [elapsedTime, setElapsedTime] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const [pauseTime, setPauseTime] = useState(0);
+  const [pausedDuration, setPausedDuration] = useState(0);
+  const [showPauseModal, setShowPauseModal] = useState(false);
+  const [timeAlertShown, setTimeAlertShown] = useState(false);
+
+  useEffect(() => {
+    if (elapsedTime > TIMEOUT_DURATION && !timeAlertShown) {
+      setTimeAlertShown(true);
+      Alert.alert('⏰ Time Warning', 'Bạn đã chơi hơn 10 giây rồi!');
+      handleResetGame();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [elapsedTime, timeAlertShown]);
+
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const appState = useRef(AppState.currentState);
+
+  useEffect(() => {
+    if (!isPaused) {
+      intervalRef.current = setInterval(() => {
+        setElapsedTime(Date.now() - startTime - pausedDuration);
+      }, 1000);
+    } else {
+      if (intervalRef.current) {clearInterval(intervalRef.current);}
+    }
+
+    return () => {
+      if (intervalRef.current) {clearInterval(intervalRef.current);}
+    };
+  }, [isPaused, startTime, pausedDuration]);
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', handleAppStateChange);
+    return () => subscription.remove();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pauseTime, pausedDuration, isPaused]);
+
+  const handleResetGame = () => {
+    if (intervalRef.current) {clearInterval(intervalRef.current);}
+    // setStartTime(Date.now());
+    setElapsedTime(0);
+    setIsPaused(false);
+    setPausedDuration(0);
+    setShowPauseModal(false);
+    setTimeAlertShown(false);
+    setSelectedCell(null);
+    setNoteMode(false);
+    setPauseTime(0);
+    setBoard(initialBoard);
+    setNotes(Array.from({ length: BOARD_SIZE }, () => Array.from({ length: BOARD_SIZE }, () => [])));
+    setHistory([]);
+    setMistakeCount(0);
+  };
+
+  const handleAppStateChange = (nextAppState: AppStateStatus) => {
+    if (appState.current.match(/active/) && nextAppState.match(/inactive|background/)) {
+      if (!isPaused) {
+        handlePause();
+      }
+    }
+    if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
+      if (isPaused) {
+        setShowPauseModal(true); // tự động hiển thị lại popup khi quay lại
+      }
+    }
+    appState.current = nextAppState;
+  };
+
+  const handlePause = () => {
+    setPauseTime(Date.now());
+    setIsPaused(true);
+    setShowPauseModal(true);
+  };
+
+  const handleResume = () => {
+    const pauseDuration = Date.now() - pauseTime;
+    setPausedDuration(prev => prev + pauseDuration);
+    setIsPaused(false);
+    setShowPauseModal(false);
+  };
+
+  const formatTime = (milliseconds: number) => {
+    const totalSeconds = Math.floor(milliseconds / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  };
+
+  useEffect(() => {
+    if (mistakeCount > MAX_MISTAKES) {
+      Alert.alert('Too many mistakes', 'You have made more than 5 mistakes. Please be careful!');
+    }
+  }, [mistakeCount]);
+
+  const handleNumberPress = (num: number) => {
+    if (!selectedCell) {return;}
+    const { row, col } = selectedCell;
+
+    if (board[row][col] && board[row][col] === solvedBoard[row][col]) {
       return; // Do nothing if the number is already in the cell
     }
 
@@ -40,6 +144,10 @@ const BoardScreen = ({ board: initialBoard, cages }: { board: number[][], cages:
       }
       setNotes(newNotes);
     } else {
+      const correctValue = solvedBoard[row][col];
+      if (num !== correctValue) {
+        setMistakeCount(prev => prev + 1);
+      }
       const newBoard = [...board];
       newBoard[row][col] = num;
       setBoard(newBoard);
@@ -55,14 +163,15 @@ const BoardScreen = ({ board: initialBoard, cages }: { board: number[][], cages:
   };
 
   const handleUndo = () => {
-    if (history.length === 0) return;
+    if (history.length === 0) {return;}
     const lastState = history[history.length - 1];
     setBoard(lastState);
     setHistory(prev => prev.slice(0, -1));
   };
 
   const handleClear = () => {
-    if (!selectedCell) return;
+    if (!selectedCell) {return;}
+    if (initialBoard[selectedCell.row][selectedCell.col]) {return;}
     const { row, col } = selectedCell;
     saveHistory();
     const newBoard = [...board];
@@ -74,7 +183,7 @@ const BoardScreen = ({ board: initialBoard, cages }: { board: number[][], cages:
   };
 
   const isCellInSameRowOrColOrBox = (row: number, col: number) => {
-    if (!selectedCell) return false;
+    if (!selectedCell) {return false;}
     const selRow = selectedCell.row;
     const selCol = selectedCell.col;
     const inSameBox = Math.floor(selRow / 3) === Math.floor(row / 3) && Math.floor(selCol / 3) === Math.floor(col / 3);
@@ -122,6 +231,7 @@ const BoardScreen = ({ board: initialBoard, cages }: { board: number[][], cages:
     const cellNotes = notes[row][col];
     const cage = getCageForCell(row, col);
     const isCageFirst = cage?.cells[0][0] === row && cage?.cells[0][1] === col;
+    const isMistake = cellValue !== 0 && cellValue !== solvedBoard[row][col];
 
     return (
       <View key={`${row}-${col}`} style={styles.cellWrapper}>
@@ -140,7 +250,9 @@ const BoardScreen = ({ board: initialBoard, cages }: { board: number[][], cages:
             ))}
           </View>
           {cellValue !== 0 && (
-            <Text style={[styles.cellText, cellValue === 0 && styles.placeholderText]}>
+            <Text
+              style={[styles.cellText, isMistake && { color: 'red' }]}
+            >
               {cellValue}
             </Text>
           )}
@@ -150,11 +262,16 @@ const BoardScreen = ({ board: initialBoard, cages }: { board: number[][], cages:
   };
 
   const handleHint = () => {
+    saveHistory();
+
     const solvedBoard = hint(convertTo1D(board));
     if (solvedBoard.steps && solvedBoard.steps.length > 0) {
       const { row, col } = indexToPosition(solvedBoard.steps[0].updates[0].index);
       setSelectedCell({ row, col });
-      handleNumberPress(solvedBoard.steps[0].updates[0].filledValue, false, { row, col });
+
+      const newBoard = [...board];
+      newBoard[row][col] = solvedBoard.steps[0].updates[0].filledValue;
+      setBoard(newBoard);
     }
   };
 
@@ -167,6 +284,25 @@ const BoardScreen = ({ board: initialBoard, cages }: { board: number[][], cages:
 
   return (
     <View style={styles.container}>
+      <View style={styles.topBar}>
+        <Text style={styles.mistakesText}>Mistakes: {mistakeCount}/5</Text>
+        <Text style={styles.timerText}>{formatTime(elapsedTime)}</Text>
+        <TouchableOpacity onPress={handlePause}>
+          <Text style={styles.pauseButton}>⏸</Text>
+        </TouchableOpacity>
+      </View>
+
+      <Modal visible={showPauseModal} transparent animationType="fade">
+        <View style={styles.modalContainer}>
+          <View style={styles.modalBox}>
+            <Text style={styles.modalText}>Đã dừng</Text>
+            <TouchableOpacity onPress={handleResume}>
+              <Text style={styles.resumeButton}>Tiếp tục</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
       <View style={styles.gridWrapper}>
         <View style={styles.grid}>
           {board.map((row, rowIndex) => (
@@ -197,7 +333,7 @@ const BoardScreen = ({ board: initialBoard, cages }: { board: number[][], cages:
 
       <View style={styles.numberPad}>
         {Array.from({ length: 9 }, (_, i) => i + 1).map((num) => (
-          <TouchableOpacity key={num} style={styles.numberButton} onPress={() => handleNumberPress(num, noteMode, selectedCell)}>
+          <TouchableOpacity key={num} style={styles.numberButton} onPress={() => handleNumberPress(num)}>
             <Text style={styles.numberText}>{num}</Text>
           </TouchableOpacity>
         ))}
@@ -207,6 +343,14 @@ const BoardScreen = ({ board: initialBoard, cages }: { board: number[][], cages:
 };
 
 const styles = StyleSheet.create({
+  topBar: { flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20, alignItems: 'center' },
+  mistakesText: { fontSize: 16, color: '#888' },
+  timerText: { fontSize: 16, color: '#888', marginLeft: 30 },
+  pauseButton: { fontSize: 20, paddingLeft: 10, color: '#888' },
+  modalContainer: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center' },
+  modalBox: { backgroundColor: 'white', padding: 20, borderRadius: 10 },
+  modalText: { fontSize: 18, textAlign: 'center', marginBottom: 10 },
+  resumeButton: { fontSize: 16, color: '#007bff', textAlign: 'center' },
   container: {
     flex: 1,
     alignItems: 'center',

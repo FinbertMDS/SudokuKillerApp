@@ -1,12 +1,13 @@
 import React from 'react';
 
-import { generate } from 'sudoku-core';
+import { generate, solve } from 'sudoku-core';
 import BoardScreen from './BoardScreen';
 import { convertTo2D } from './utils';
 
 function App(): React.JSX.Element {
   const boardBase = generate("easy");
-  const board = convertTo2D(boardBase);
+
+  const solvedBoard = solve(boardBase);
 
   const sampleCages = [
     { id: 1, sum: 10, cells: [[0, 0], [0, 1]] },
@@ -21,7 +22,7 @@ function App(): React.JSX.Element {
   ];
 
   return (
-    <BoardScreen board={board} cages={sampleCages} />
+    <BoardScreen board={convertTo2D(boardBase)} solvedBoard={convertTo2D(solvedBoard.board)} cages={sampleCages} />
   );
 }
 
