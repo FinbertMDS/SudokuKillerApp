@@ -1,9 +1,13 @@
 // Đã cập nhật: luôn ghi đè số vào ô, và hiển thị màu đỏ nếu là giá trị sai
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useEffect, useRef, useState } from 'react';
-import { Alert, AppState, AppStateStatus, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, AppState, AppStateStatus, Button, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Svg, { Rect } from 'react-native-svg';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { hint } from 'sudoku-core';
+import { RootStackParamList, SavedGame } from './types';
 import { convertTo1D, indexToPosition } from './utils';
 
 const BOARD_SIZE = 9;
@@ -11,24 +15,34 @@ const CELL_SIZE = 40;
 const TIMEOUT_DURATION = 2 * 60 * 60 * 1000; // 2h
 const MAX_MISTAKES = 5;
 
-const BoardScreen = ({ board: initialBoard, cages, solvedBoard }: {
-  board: number[][],
-  cages: { id: number, cells: [number, number][], sum: number }[],
-  solvedBoard: number[][],
-}) => {
+type BoardScreenRouteProp = RouteProp<RootStackParamList, 'Board'>;
+type BoardScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Board'>;
+
+
+function BoardScreen() {
+  const route = useRoute<BoardScreenRouteProp>();
+  const navigation = useNavigation<BoardScreenNavigationProp>();
+  const { initialBoard, solvedBoard, cages, savedBoard, savedMistakeCount, savedElapsedTime, savedHistory } = route.params;
+
   const [selectedCell, setSelectedCell] = useState<{ row: number; col: number } | null>(null);
-  const [board, setBoard] = useState<number[][]>(initialBoard);
+  const [board, setBoard] = useState<number[][]>(savedBoard ? savedBoard : initialBoard);
   const [notes, setNotes] = useState<string[][][]>(
     Array.from({ length: BOARD_SIZE }, () =>
       Array.from({ length: BOARD_SIZE }, () => [])
     )
   );
   const [noteMode, setNoteMode] = useState<boolean>(false);
-  const [history, setHistory] = useState<number[][][]>([]);
-  const [mistakeCount, setMistakeCount] = useState<number>(0);
+  const [history, setHistory] = useState(() =>
+    savedHistory !== undefined ? savedHistory : []
+  );
+  const [mistakeCount, setMistakeCount] = useState<number>(savedMistakeCount ? savedMistakeCount : 0);
 
-  const [startTime, setStartTime] = useState(Date.now());
-  const [elapsedTime, setElapsedTime] = useState(0);
+  const [startTime, setStartTime] = useState(() =>
+    savedElapsedTime !== undefined ? Date.now() - savedElapsedTime : Date.now()
+  );
+  const [elapsedTime, setElapsedTime] = useState(
+    savedElapsedTime !== undefined ? savedElapsedTime : 0
+  );
   const [isPaused, setIsPaused] = useState(false);
   const [pauseTime, setPauseTime] = useState(0);
   const [pausedDuration, setPausedDuration] = useState(0);
@@ -84,6 +98,30 @@ const BoardScreen = ({ board: initialBoard, cages, solvedBoard }: {
     setMistakeCount(0);
   };
 
+  const saveGameState = async () => {
+    try {
+      const state = {
+        initialBoard,
+        solvedBoard,
+        cages,
+        savedBoard: board,
+        savedMistakeCount: mistakeCount,
+        savedElapsedTime: elapsedTime,
+        savedHistory: history,
+        lastSaved: new Date(),
+        // các trạng thái khác nếu cần
+      } as SavedGame;
+      await AsyncStorage.setItem('savedGame', JSON.stringify(state));
+    } catch (e) {
+      console.error('Lỗi khi lưu game:', e);
+    }
+  };
+
+  const handleBackPress = async () => {
+    await saveGameState();
+    navigation.goBack();
+  };
+
   const handleAppStateChange = (nextAppState: AppStateStatus) => {
     if (appState.current.match(/active/) && nextAppState.match(/inactive|background/)) {
       if (!isPaused) {
@@ -127,10 +165,6 @@ const BoardScreen = ({ board: initialBoard, cages, solvedBoard }: {
   const handleNumberPress = (num: number) => {
     if (!selectedCell) {return;}
     const { row, col } = selectedCell;
-
-    if (board[row][col] && board[row][col] === solvedBoard[row][col]) {
-      return; // Do nothing if the number is already in the cell
-    }
 
     saveHistory();
 
@@ -284,6 +318,8 @@ const BoardScreen = ({ board: initialBoard, cages, solvedBoard }: {
 
   return (
     <View style={styles.container}>
+      <Button title="← Back" onPress={handleBackPress} />
+
       <View style={styles.topBar}>
         <Text style={styles.mistakesText}>Mistakes: {mistakeCount}/5</Text>
         <Text style={styles.timerText}>{formatTime(elapsedTime)}</Text>
@@ -356,6 +392,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#fff',
+  },
+  title: {
+    fontSize: 22,
+    color: '#fff',
+    marginBottom: 20,
   },
   gridWrapper: {
     width: CELL_SIZE * BOARD_SIZE,
