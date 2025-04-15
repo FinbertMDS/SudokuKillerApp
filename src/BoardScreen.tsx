@@ -22,7 +22,7 @@ type BoardScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, '
 function BoardScreen() {
   const route = useRoute<BoardScreenRouteProp>();
   const navigation = useNavigation<BoardScreenNavigationProp>();
-  const { initialBoard, solvedBoard, cages, savedBoard, savedMistakeCount, savedElapsedTime, savedHistory } = route.params;
+  const { level, score, initialBoard, solvedBoard, cages, savedBoard, savedMistakeCount, savedElapsedTime, savedHistory } = route.params;
 
   const [selectedCell, setSelectedCell] = useState<{ row: number; col: number } | null>(null);
   const [board, setBoard] = useState<number[][]>(savedBoard ? savedBoard : initialBoard);
@@ -321,8 +321,12 @@ function BoardScreen() {
       <Button title="← Back" onPress={handleBackPress} />
 
       <View style={styles.topBar}>
-        <Text style={styles.mistakesText}>Mistakes: {mistakeCount}/5</Text>
-        <Text style={styles.timerText}>{formatTime(elapsedTime)}</Text>
+        <Text style={styles.topText}>Level: {level}</Text>
+        <Text style={styles.topText}>Score: {score}</Text>
+      </View>
+      <View style={styles.topBar}>
+        <Text style={styles.topText}>Mistakes: {mistakeCount}/{MAX_MISTAKES}</Text>
+        <Text style={styles.topText}>{formatTime(elapsedTime)}</Text>
         <TouchableOpacity onPress={handlePause}>
           <Text style={styles.pauseButton}>⏸</Text>
         </TouchableOpacity>
@@ -379,9 +383,8 @@ function BoardScreen() {
 };
 
 const styles = StyleSheet.create({
-  topBar: { flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20, alignItems: 'center' },
-  mistakesText: { fontSize: 16, color: '#888' },
-  timerText: { fontSize: 16, color: '#888', marginLeft: 30 },
+  topBar: { flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20, alignItems: 'center', marginBottom: 10 },
+  topText: { fontSize: 16, color: '#888', marginRight: 30 },
   pauseButton: { fontSize: 20, paddingLeft: 10, color: '#888' },
   modalContainer: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center' },
   modalBox: { backgroundColor: 'white', padding: 20, borderRadius: 10 },

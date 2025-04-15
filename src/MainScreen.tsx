@@ -6,7 +6,8 @@ import React, { useCallback, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Menu, Provider } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { Difficulty, generate, solve } from 'sudoku-core';
+import { generate, solve } from 'sudoku-core';
+import { Difficulty, SolvingResult } from 'sudoku-core/dist/cjs/types';
 import BoardScreen from './BoardScreen';
 import { RootStackParamList, SavedGame } from './types';
 import { convertTo2D } from './utils';
@@ -44,12 +45,14 @@ const MainScreen = ({ navigation }: any) => {
   const handleNewGame = (level: string) => {
     setMenuVisible(false);
     const board = generate(level.toLocaleLowerCase() as Difficulty);
-    const solvedBoard = solve(board);
+    const solvedBoard = solve(board) as SolvingResult;
     const cages = [
       { id: 1, sum: 10, cells: [[0, 0], [0, 1]] },
     ];
 
     navigation.navigate('Board', {
+      level: level,
+      score: solvedBoard.analysis?.score ?? 0,
       initialBoard: convertTo2D(board),
       solvedBoard: convertTo2D(solvedBoard.board ?? []),
       cages,
@@ -59,8 +62,10 @@ const MainScreen = ({ navigation }: any) => {
   const handleContinueGame = async () => {
     const data = await AsyncStorage.getItem('savedGame');
     if (data) {
-      const oldData = JSON.parse(data);
+      const oldData = JSON.parse(data) as SavedGame;
       navigation.navigate('Board', {
+        level: oldData?.level,
+        score: oldData?.score,
         initialBoard: oldData?.initialBoard,
         solvedBoard: oldData?.solvedBoard,
         cages: oldData?.cages,

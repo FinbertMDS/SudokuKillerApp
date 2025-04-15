@@ -14,6 +14,8 @@ export type RootStackParamList = {
 };
 
 export type SavedGame = {
+  level: string;
+  score: number;
   initialBoard: number[][];
   solvedBoard: number[][];
   cages: { id: number, cells: [number, number][], sum: number }[];
