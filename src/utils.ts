@@ -75,6 +75,19 @@ export function positionToIndex(row: number, col: number, size: number = 9): num
   return row * size + col;
 }
 
+export const checkIfBoardIsSolved = (board: number[][], solvedBoard: number[][]): boolean => {
+  const size = board.length;
+
+  for (let row = 0; row < size; row++) {
+    for (let col = 0; col < size; col++) {
+      if (board[row][col] !== solvedBoard[row][col]) {
+        return false;
+      }
+    }
+  }
+
+  return true;
+};
 
 import { Cage } from './types';
 

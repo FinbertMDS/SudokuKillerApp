@@ -8,7 +8,7 @@ import Svg, { Rect } from 'react-native-svg';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { hint } from 'sudoku-core';
 import { RootStackParamList, SavedGame } from './types';
-import { convertTo1D, indexToPosition } from './utils';
+import { checkIfBoardIsSolved, convertTo1D, indexToPosition } from './utils';
 
 const BOARD_SIZE = 9;
 const CELL_SIZE = 40;
@@ -55,7 +55,7 @@ function BoardScreen() {
       Alert.alert('⏰ Time Warning', 'Bạn đã chơi hơn 10 giây rồi!');
       handleResetGame();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [elapsedTime, timeAlertShown]);
 
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -67,22 +67,22 @@ function BoardScreen() {
         setElapsedTime(Date.now() - startTime - pausedDuration);
       }, 1000);
     } else {
-      if (intervalRef.current) {clearInterval(intervalRef.current);}
+      if (intervalRef.current) { clearInterval(intervalRef.current); }
     }
 
     return () => {
-      if (intervalRef.current) {clearInterval(intervalRef.current);}
+      if (intervalRef.current) { clearInterval(intervalRef.current); }
     };
   }, [isPaused, startTime, pausedDuration]);
 
   useEffect(() => {
     const subscription = AppState.addEventListener('change', handleAppStateChange);
     return () => subscription.remove();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pauseTime, pausedDuration, isPaused]);
 
   const handleResetGame = () => {
-    if (intervalRef.current) {clearInterval(intervalRef.current);}
+    if (intervalRef.current) { clearInterval(intervalRef.current); }
     // setStartTime(Date.now());
     setElapsedTime(0);
     setIsPaused(false);
@@ -163,7 +163,7 @@ function BoardScreen() {
   }, [mistakeCount]);
 
   const handleNumberPress = (num: number) => {
-    if (!selectedCell) {return;}
+    if (!selectedCell) { return; }
     const { row, col } = selectedCell;
 
     saveHistory();
@@ -179,17 +179,38 @@ function BoardScreen() {
       setNotes(newNotes);
     } else {
       const correctValue = solvedBoard[row][col];
-      if (num !== correctValue) {
-        setMistakeCount(prev => prev + 1);
-      }
       const newBoard = [...board];
       newBoard[row][col] = num;
       setBoard(newBoard);
       const newNotes = [...notes];
       newNotes[row][col] = [];
       setNotes(newNotes);
+      if (num !== correctValue) {
+        setMistakeCount(prev => prev + 1);
+      } else {
+        handleCheckSolved(newBoard);
+      }
     }
   };
+
+  const handleCheckSolved = (newBoard: number[][]) => {
+    if (checkIfBoardIsSolved(newBoard, solvedBoard)) {
+      Alert.alert(
+        '🎉 Hoàn thành!',
+        'Bạn đã giải xong Sudoku!',
+        [
+          {
+            text: 'Quay về Main',
+            onPress: async () => {
+              await AsyncStorage.removeItem('savedGame');
+              navigation.goBack();   // quay lại MainScreen
+            },
+          },
+        ],
+        { cancelable: false }
+      );
+    }
+  }
 
   const saveHistory = () => {
     const boardCopy = board.map(row => [...row]);
@@ -197,15 +218,15 @@ function BoardScreen() {
   };
 
   const handleUndo = () => {
-    if (history.length === 0) {return;}
+    if (history.length === 0) { return; }
     const lastState = history[history.length - 1];
     setBoard(lastState);
     setHistory(prev => prev.slice(0, -1));
   };
 
   const handleClear = () => {
-    if (!selectedCell) {return;}
-    if (initialBoard[selectedCell.row][selectedCell.col]) {return;}
+    if (!selectedCell) { return; }
+    if (initialBoard[selectedCell.row][selectedCell.col]) { return; }
     const { row, col } = selectedCell;
     saveHistory();
     const newBoard = [...board];
@@ -217,7 +238,7 @@ function BoardScreen() {
   };
 
   const isCellInSameRowOrColOrBox = (row: number, col: number) => {
-    if (!selectedCell) {return false;}
+    if (!selectedCell) { return false; }
     const selRow = selectedCell.row;
     const selCol = selectedCell.col;
     const inSameBox = Math.floor(selRow / 3) === Math.floor(row / 3) && Math.floor(selCol / 3) === Math.floor(col / 3);
@@ -298,14 +319,16 @@ function BoardScreen() {
   const handleHint = () => {
     saveHistory();
 
-    const solvedBoard = hint(convertTo1D(board));
-    if (solvedBoard.steps && solvedBoard.steps.length > 0) {
-      const { row, col } = indexToPosition(solvedBoard.steps[0].updates[0].index);
+    const hintBoard = hint(convertTo1D(board));
+    if (hintBoard.steps && hintBoard.steps.length > 0) {
+      const { row, col } = indexToPosition(hintBoard.steps[0].updates[0].index);
       setSelectedCell({ row, col });
 
       const newBoard = [...board];
-      newBoard[row][col] = solvedBoard.steps[0].updates[0].filledValue;
+      newBoard[row][col] = hintBoard.steps[0].updates[0].filledValue;
       setBoard(newBoard);
+
+      handleCheckSolved(newBoard);
     }
   };
 
