@@ -46,7 +46,6 @@ function BoardScreen() {
   const [isPaused, setIsPaused] = useState(false);
   const [pauseTime, setPauseTime] = useState(0);
   const [pausedDuration, setPausedDuration] = useState(0);
-  const [showPauseModal, setShowPauseModal] = useState(false);
   const [timeAlertShown, setTimeAlertShown] = useState(false);
 
   useEffect(() => {
@@ -76,10 +75,15 @@ function BoardScreen() {
   }, [isPaused, startTime, pausedDuration]);
 
   useEffect(() => {
+    // Đăng ký sự kiện thay đổi trạng thái của app
     const subscription = AppState.addEventListener('change', handleAppStateChange);
-    return () => subscription.remove();
+
+    // Dọn dẹp khi component bị hủy
+    return () => {
+      subscription.remove();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pauseTime, pausedDuration, isPaused]);
+  }, [isPaused]);
 
   const handleResetGame = () => {
     if (intervalRef.current) { clearInterval(intervalRef.current); }
@@ -87,7 +91,6 @@ function BoardScreen() {
     setElapsedTime(0);
     setIsPaused(false);
     setPausedDuration(0);
-    setShowPauseModal(false);
     setTimeAlertShown(false);
     setSelectedCell(null);
     setNoteMode(false);
@@ -113,6 +116,7 @@ function BoardScreen() {
         // các trạng thái khác nếu cần
       } as SavedGame;
       await AsyncStorage.setItem('savedGame', JSON.stringify(state));
+      console.log('Game state saved successfully:', board);
     } catch (e) {
       console.error('Lỗi khi lưu game:', e);
     }
@@ -123,31 +127,36 @@ function BoardScreen() {
     navigation.goBack();
   };
 
-  const handleAppStateChange = (nextAppState: AppStateStatus) => {
+  const handleAppStateChange = async (nextAppState: AppStateStatus) => {
     if (appState.current.match(/active/) && nextAppState.match(/inactive|background/)) {
       if (!isPaused) {
-        handlePause();
+        setTimeout(async () => {
+          try {
+            await handlePause();
+          } catch (error) {
+            console.error('AppStateChange:', error);
+          }
+        }, 100); // Delay 100ms để đảm bảo app đã chuyển trạng thái
       }
     }
     if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
       if (isPaused) {
-        setShowPauseModal(true); // tự động hiển thị lại popup khi quay lại
+        setIsPaused(true); // tự động hiển thị lại popup khi quay lại
       }
     }
     appState.current = nextAppState;
   };
 
-  const handlePause = () => {
-    setPauseTime(Date.now());
+  const handlePause = async () => {
+    await saveGameState();
     setIsPaused(true);
-    setShowPauseModal(true);
+    setPauseTime(Date.now());
   };
 
   const handleResume = () => {
     const pauseDuration = Date.now() - pauseTime;
     setPausedDuration(prev => prev + pauseDuration);
     setIsPaused(false);
-    setShowPauseModal(false);
   };
 
   const formatTime = (milliseconds: number) => {
@@ -573,7 +582,7 @@ function BoardScreen() {
           <Text style={styles.infoValue}>{formatTime(elapsedTime)}</Text>
         </View>
         <TouchableOpacity style={styles.infoBlock} onPress={handlePause}>
-          {!showPauseModal ? (
+          {!isPaused ? (
             <MaterialCommunityIcons name="pause-circle-outline" size={28} color="#333" />
           ) : (
             <MaterialCommunityIcons name="play-circle-outline" size={28} color="#333" />
@@ -582,7 +591,7 @@ function BoardScreen() {
       </View>
 
       {/* Modal tạm dừng */}
-      <Modal visible={showPauseModal} transparent animationType="fade">
+      <Modal visible={isPaused} transparent animationType="fade">
         <View style={styles.modalContainer}>
           <View style={styles.modalBox}>
 

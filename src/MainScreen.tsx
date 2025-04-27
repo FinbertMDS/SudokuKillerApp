@@ -21,27 +21,25 @@ const MainScreen = ({ navigation }: any) => {
   const [menuVisible, setMenuVisible] = useState(false);
 
   const [hasSavedGame, setHasSavedGame] = useState(false);
-  const [, setSavedGameData] = useState<SavedGame | null>(null);
 
   useFocusEffect(
     useCallback(() => {
-      const checkSavedGame = async () => {
-        try {
-          const data = await AsyncStorage.getItem('savedGame');
-          if (data) {
-            setSavedGameData(JSON.parse(data));
-            setHasSavedGame(true);
-          } else {
-            setSavedGameData(null);
-            setHasSavedGame(false);
-          }
-        } catch (e) {
-          console.error('Lỗi khi đọc saved game:', e);
-        }
-      };
       checkSavedGame();
     }, [])
   );
+
+  const checkSavedGame = async () => {
+    try {
+      const data = await AsyncStorage.getItem('savedGame');
+      if (data) {
+        setHasSavedGame(true);
+      } else {
+        setHasSavedGame(false);
+      }
+    } catch (e) {
+      console.error('Lỗi khi đọc saved game:', e);
+    }
+  };
 
   const handleNewGame = (level: string) => {
     setMenuVisible(false);
@@ -62,6 +60,8 @@ const MainScreen = ({ navigation }: any) => {
     const data = await AsyncStorage.getItem('savedGame');
     if (data) {
       const oldData = JSON.parse(data) as SavedGame;
+      console.log('Đã tìm thấy saved game:', oldData);
+
       navigation.navigate('Board', {
         savedLevel: oldData?.savedLevel,
         score: oldData?.score,
@@ -114,7 +114,6 @@ const MainScreen = ({ navigation }: any) => {
           try {
             await AsyncStorage.removeItem('savedGame');
             setHasSavedGame(false);
-            setSavedGameData(null);
           } catch (e) {
             console.error('Lỗi khi xoá saved game:', e);
           }
