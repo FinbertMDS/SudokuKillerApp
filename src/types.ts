@@ -9,11 +9,11 @@ export type RootStackParamList = {
 };
 
 export type SavedGame = {
-  level: string;
   score: number;
   initialBoard: number[][];
   solvedBoard: number[][];
   cages: { cells: [number, number][], sum: number }[];
+  savedLevel: string;
   savedBoard: number[][];
   savedMistakeCount: number;
   savedElapsedTime: number; // thời gian đã trôi qua

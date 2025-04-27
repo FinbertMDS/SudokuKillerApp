@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useEffect, useRef, useState } from 'react';
-import { Alert, AppState, AppStateStatus, Button, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, AppState, AppStateStatus, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Svg, { Line } from 'react-native-svg';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { RootStackParamList, SavedGame } from './types';
@@ -13,17 +13,19 @@ const BOARD_SIZE = 9;
 const CELL_SIZE = 40;
 const TIMEOUT_DURATION = 2 * 60 * 60 * 1000; // 2h
 const MAX_MISTAKES = 5;
+const CAGE_PADDING = 3;
 
 type BoardScreenRouteProp = RouteProp<RootStackParamList, 'Board'>;
 type BoardScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Board'>;
 
-
 function BoardScreen() {
   const route = useRoute<BoardScreenRouteProp>();
   const navigation = useNavigation<BoardScreenNavigationProp>();
-  const { level, initialBoard, solvedBoard, cages, savedBoard, savedMistakeCount, savedElapsedTime, savedHistory } = route.params;
+  const { savedLevel, initialBoard, solvedBoard, cages, savedBoard, savedMistakeCount, savedElapsedTime, savedHistory } = route.params;
 
   const [selectedCell, setSelectedCell] = useState<{ row: number; col: number } | null>(null);
+  const [activeButton, setActiveButton] = useState<string | null>(null);
+  const [level] = useState<string>(savedLevel ? savedLevel : 'easy');
   const [board, setBoard] = useState<number[][]>(savedBoard ? savedBoard : initialBoard);
   const [notes, setNotes] = useState<string[][][]>(
     Array.from({ length: BOARD_SIZE }, () =>
@@ -36,7 +38,7 @@ function BoardScreen() {
   );
   const [mistakeCount, setMistakeCount] = useState<number>(savedMistakeCount ? savedMistakeCount : 0);
 
-  const [startTime,] = useState(() =>
+  const [startTime] = useState(() =>
     savedElapsedTime !== undefined ? Date.now() - savedElapsedTime : Date.now()
   );
   const [elapsedTime, setElapsedTime] = useState(
@@ -209,7 +211,7 @@ function BoardScreen() {
         { cancelable: false }
       );
     }
-  }
+  };
 
   const saveHistory = () => {
     const boardCopy = board.map(row => [...row]);
@@ -248,38 +250,7 @@ function BoardScreen() {
     return cages.find(cage => cage.cells.some(cell => cell[0] === row && cell[1] === col));
   };
 
-  // const renderCageOutlines = () => {
-  //   return cages.map((cage, index) => {
-  //     const rows = cage.cells.map(([r]) => r);
-  //     const cols = cage.cells.map(([, c]) => c);
-  //     const minRow = Math.min(...rows);
-  //     const maxRow = Math.max(...rows);
-  //     const minCol = Math.min(...cols);
-  //     const maxCol = Math.max(...cols);
-
-  //     const x = minCol * CELL_SIZE + 3;
-  //     const y = minRow * CELL_SIZE + 3;
-  //     const width = (maxCol - minCol + 1) * CELL_SIZE - 6;
-  //     const height = (maxRow - minRow + 1) * CELL_SIZE - 6;
-
-  //     return (
-  //       <Rect
-  //         key={`cage-${index}`}
-  //         x={x}
-  //         y={y}
-  //         width={width}
-  //         height={height}
-  //         stroke="gray"
-  //         strokeDasharray="4,4"
-  //         strokeWidth={1}
-  //         fill="red"
-  //       />
-  //     );
-  //   });
-  // };
   const renderCageBorders = () => {
-    const PADDING = 3;
-
     // Map từ (row,col) => cage index
     const cageMap = new Map<string, number>();
     cages.forEach((cage, index) => {
@@ -290,11 +261,11 @@ function BoardScreen() {
 
     const lines = [];
 
-    for (let r = 0; r < 9; r++) {
-      for (let c = 0; c < 9; c++) {
+    for (let r = 0; r < BOARD_SIZE; r++) {
+      for (let c = 0; c < BOARD_SIZE; c++) {
         const thisCageIdx = cageMap.get(`${r},${c}`);
 
-        if (thisCageIdx == null) continue; // bỏ qua ô không thuộc cage nào
+        if (thisCageIdx == null) { continue; } // bỏ qua ô không thuộc cage nào
 
         const adjacentCells = getAdjacentCellsInSameCage(r, c, cages);
 
@@ -305,10 +276,10 @@ function BoardScreen() {
             lines.push(
               <Line
                 key={`right-${r}-${c}`}
-                x1={(c + 1) * CELL_SIZE - PADDING}
-                y1={r * CELL_SIZE + (adjacentCells.top ? 0 : PADDING)}
-                x2={(c + 1) * CELL_SIZE - PADDING}
-                y2={(r + 1) * CELL_SIZE - (adjacentCells.bottom ? 0 : PADDING)}
+                x1={(c + 1) * CELL_SIZE - CAGE_PADDING}
+                y1={r * CELL_SIZE + (adjacentCells.top ? 0 : CAGE_PADDING)}
+                x2={(c + 1) * CELL_SIZE - CAGE_PADDING}
+                y2={(r + 1) * CELL_SIZE - (adjacentCells.bottom ? 0 : CAGE_PADDING)}
                 stroke="gray"
                 strokeWidth={1}
                 strokeDasharray="2,2"
@@ -325,10 +296,10 @@ function BoardScreen() {
             lines.push(
               <Line
                 key={`bottom-${r}-${c}`}
-                x1={c * CELL_SIZE + (adjacentCells.left ? 0 : PADDING)}
-                y1={(r + 1) * CELL_SIZE - PADDING}
-                x2={(c + 1) * CELL_SIZE - (adjacentCells.right ? 0 : PADDING)}
-                y2={(r + 1) * CELL_SIZE - PADDING}
+                x1={c * CELL_SIZE + (adjacentCells.left ? 0 : CAGE_PADDING)}
+                y1={(r + 1) * CELL_SIZE - CAGE_PADDING}
+                x2={(c + 1) * CELL_SIZE - (adjacentCells.right ? 0 : CAGE_PADDING)}
+                y2={(r + 1) * CELL_SIZE - CAGE_PADDING}
                 stroke="gray"
                 strokeWidth={1}
                 strokeDasharray="2,2"
@@ -343,10 +314,10 @@ function BoardScreen() {
           lines.push(
             <Line
               key={`left-${r}-${c}`}
-              x1={c * CELL_SIZE + PADDING}
-              y1={r * CELL_SIZE + (adjacentCells.top ? 0 : PADDING)}
-              x2={c * CELL_SIZE + PADDING}
-              y2={(r + 1) * CELL_SIZE - (adjacentCells.bottom ? 0 : PADDING)}
+              x1={c * CELL_SIZE + CAGE_PADDING}
+              y1={r * CELL_SIZE + (adjacentCells.top ? 0 : CAGE_PADDING)}
+              x2={c * CELL_SIZE + CAGE_PADDING}
+              y2={(r + 1) * CELL_SIZE - (adjacentCells.bottom ? 0 : CAGE_PADDING)}
               stroke="gray"
               strokeWidth={1}
               strokeDasharray="2,2"
@@ -360,10 +331,10 @@ function BoardScreen() {
           lines.push(
             <Line
               key={`top-${r}-${c}`}
-              x1={c * CELL_SIZE + (adjacentCells.left ? (adjacentCells.right ? -PADDING : 0) : PADDING)}
-              y1={r * CELL_SIZE + PADDING}
-              x2={(c + 1) * CELL_SIZE - (adjacentCells.right ? 0 : PADDING)}
-              y2={r * CELL_SIZE + PADDING}
+              x1={c * CELL_SIZE + (adjacentCells.left ? (adjacentCells.right ? -CAGE_PADDING : 0) : CAGE_PADDING)}
+              y1={r * CELL_SIZE + CAGE_PADDING}
+              x2={(c + 1) * CELL_SIZE - (adjacentCells.right ? 0 : CAGE_PADDING)}
+              y2={r * CELL_SIZE + CAGE_PADDING}
               stroke="gray"
               strokeWidth={1}
               strokeDasharray="2,2"
@@ -378,9 +349,9 @@ function BoardScreen() {
             <Line
               key={`top-left-corner-${r}-${c}`}
               x1={c * CELL_SIZE}
-              y1={r * CELL_SIZE + PADDING}
-              x2={c * CELL_SIZE + PADDING}
-              y2={r * CELL_SIZE + PADDING}
+              y1={r * CELL_SIZE + CAGE_PADDING}
+              x2={c * CELL_SIZE + CAGE_PADDING}
+              y2={r * CELL_SIZE + CAGE_PADDING}
               stroke="gray"
               strokeWidth={1}
               strokeDasharray="2,2"
@@ -388,10 +359,10 @@ function BoardScreen() {
             />,
             <Line
               key={`top-left-corner-${r}-${c}-2`}
-              x1={c * CELL_SIZE + PADDING}
+              x1={c * CELL_SIZE + CAGE_PADDING}
               y1={r * CELL_SIZE}
-              x2={c * CELL_SIZE + PADDING}
-              y2={r * CELL_SIZE + PADDING}
+              x2={c * CELL_SIZE + CAGE_PADDING}
+              y2={r * CELL_SIZE + CAGE_PADDING}
               stroke="gray"
               strokeWidth={1}
               strokeDasharray="2,2"
@@ -405,10 +376,10 @@ function BoardScreen() {
           lines.push(
             <Line
               key={`top-right-corner-${r}-${c}`}
-              x1={(c + 1) * CELL_SIZE - PADDING}
-              y1={r * CELL_SIZE + PADDING}
-              x2={(c + 1) * CELL_SIZE - PADDING}
-              y2={r * CELL_SIZE + PADDING}
+              x1={(c + 1) * CELL_SIZE - CAGE_PADDING}
+              y1={r * CELL_SIZE + CAGE_PADDING}
+              x2={(c + 1) * CELL_SIZE - CAGE_PADDING}
+              y2={r * CELL_SIZE + CAGE_PADDING}
               stroke="gray"
               strokeWidth={1}
               strokeDasharray="2,2"
@@ -416,10 +387,10 @@ function BoardScreen() {
             />,
             <Line
               key={`top-right-corner-${r}-${c}-2`}
-              x1={(c + 1) * CELL_SIZE - PADDING}
+              x1={(c + 1) * CELL_SIZE - CAGE_PADDING}
               y1={r * CELL_SIZE}
-              x2={(c + 1) * CELL_SIZE - PADDING}
-              y2={r * CELL_SIZE + PADDING}
+              x2={(c + 1) * CELL_SIZE - CAGE_PADDING}
+              y2={r * CELL_SIZE + CAGE_PADDING}
               stroke="gray"
               strokeWidth={1}
               strokeDasharray="2,2"
@@ -433,9 +404,9 @@ function BoardScreen() {
             <Line
               key={`bottom-left-corner-${r}-${c}`}
               x1={c * CELL_SIZE}
-              y1={(r + 1) * CELL_SIZE - PADDING}
-              x2={c * CELL_SIZE + PADDING}
-              y2={(r + 1) * CELL_SIZE - PADDING}
+              y1={(r + 1) * CELL_SIZE - CAGE_PADDING}
+              x2={c * CELL_SIZE + CAGE_PADDING}
+              y2={(r + 1) * CELL_SIZE - CAGE_PADDING}
               stroke="gray"
               strokeWidth={1}
               strokeDasharray="2,2"
@@ -443,10 +414,10 @@ function BoardScreen() {
             />,
             <Line
               key={`bottom-left-corner-${r}-${c}-2`}
-              x1={c * CELL_SIZE + PADDING}
+              x1={c * CELL_SIZE + CAGE_PADDING}
               y1={(r + 1) * CELL_SIZE}
-              x2={c * CELL_SIZE + PADDING}
-              y2={(r + 1) * CELL_SIZE - PADDING}
+              x2={c * CELL_SIZE + CAGE_PADDING}
+              y2={(r + 1) * CELL_SIZE - CAGE_PADDING}
               stroke="gray"
               strokeWidth={1}
               strokeDasharray="2,2"
@@ -459,10 +430,10 @@ function BoardScreen() {
           lines.push(
             <Line
               key={`bottom-right-corner-${r}-${c}`}
-              x1={(c + 1) * CELL_SIZE - PADDING}
-              y1={(r + 1) * CELL_SIZE - PADDING}
-              x2={(c + 1) * CELL_SIZE - PADDING}
-              y2={(r + 1) * CELL_SIZE - PADDING}
+              x1={(c + 1) * CELL_SIZE - CAGE_PADDING}
+              y1={(r + 1) * CELL_SIZE - CAGE_PADDING}
+              x2={(c + 1) * CELL_SIZE - CAGE_PADDING}
+              y2={(r + 1) * CELL_SIZE - CAGE_PADDING}
               stroke="gray"
               strokeWidth={1}
               strokeDasharray="2,2"
@@ -470,10 +441,10 @@ function BoardScreen() {
             />,
             <Line
               key={`bottom-right-corner-${r}-${c}-2`}
-              x1={(c + 1) * CELL_SIZE - PADDING}
+              x1={(c + 1) * CELL_SIZE - CAGE_PADDING}
               y1={(r + 1) * CELL_SIZE}
-              x2={(c + 1) * CELL_SIZE - PADDING}
-              y2={(r + 1) * CELL_SIZE - PADDING}
+              x2={(c + 1) * CELL_SIZE - CAGE_PADDING}
+              y2={(r + 1) * CELL_SIZE - CAGE_PADDING}
               stroke="gray"
               strokeWidth={1}
               strokeDasharray="2,2"
@@ -486,7 +457,7 @@ function BoardScreen() {
     }
 
     return lines;
-  }
+  };
 
   const renderCell = (row: number, col: number) => {
     const isSelected = selectedCell?.row === row && selectedCell?.col === col;
@@ -502,12 +473,21 @@ function BoardScreen() {
         {isRelated && !isSelected && <View style={styles.relatedOverlay} />}
         {isSelected && <View style={styles.selectedOverlay} />}
         <TouchableOpacity
-          style={styles.cell}
+          style={[
+            styles.cell,
+            // eslint-disable-next-line react-native/no-inline-styles
+            {
+              borderTopWidth: (row === 0 || row === 3 || row === 6) ? 1.2 : 0.2,
+              borderBottomWidth: (row === 8) ? 1.2 : 0.2,
+              borderLeftWidth: (col === 0 || col === 3 || col === 6) ? 1.2 : 0.2,
+              borderRightWidth: (col === 8) ? 1.2 : 0.2,
+            },
+          ]}
           onPress={() => setSelectedCell({ row, col })}
         >
           {isCageFirst && <Text style={styles.cageText}>{cage?.sum}</Text>}
           <View style={styles.notesContainerTop}>
-            {Array.from({ length: 9 }, (_, i) => (
+            {Array.from({ length: BOARD_SIZE }, (_, i) => (
               <Text key={i} style={styles.noteText}>
                 {cellNotes.includes((i + 1).toString()) ? i + 1 : ' '}
               </Text>
@@ -515,7 +495,7 @@ function BoardScreen() {
           </View>
           {cellValue !== 0 && (
             <Text
-              style={[styles.cellText, isMistake && { color: 'red' }]}
+              style={[styles.cellText, isMistake && styles.mistakeCellText]}
             >
               {cellValue}
             </Text>
@@ -553,68 +533,131 @@ function BoardScreen() {
   };
 
   const buttons = [
-    { label: 'Undo', icon: 'undo', onPress: handleUndo },
-    { label: 'Erase', icon: 'eraser', onPress: handleClear },
-    { label: 'Notes', icon: 'note-edit-outline', onPress: () => setNoteMode(!noteMode) },
-    { label: 'Solved Board', icon: 'lightbulb-on-outline', onPress: displaySolvedBoard },
+    { label: 'Undo', icon: ['undo'], onPress: handleUndo },
+    { label: 'Erase', icon: ['eraser'], onPress: handleClear },
+    { label: 'Notes', icon: ['note-outline', 'note-edit-outline'], iconChangeFlag: noteMode, onPress: () => setNoteMode(!noteMode) },
+    { label: 'Solved Board', icon: ['lightbulb-on-outline'], onPress: displaySolvedBoard },
     // { label: 'Hint', icon: 'lightbulb-on-outline', onPress: handleHint },
   ];
 
   return (
     <View style={styles.container}>
-      <Button title="← Back" onPress={handleBackPress} />
 
-      <View style={styles.topBar}>
-        <Text style={styles.topText}>Level: {level}</Text>
-        {/* <Text style={styles.topText}>Score: {score}</Text> */}
-      </View>
-      <View style={styles.topBar}>
-        <Text style={styles.topText}>Mistakes: {mistakeCount}/{MAX_MISTAKES}</Text>
-        <Text style={styles.topText}>{formatTime(elapsedTime)}</Text>
-        <TouchableOpacity onPress={handlePause}>
-          <Text style={styles.pauseButton}>⏸</Text>
+      {/* Header */}
+      <View style={styles.header}>
+        <TouchableOpacity onPress={handleBackPress}>
+          <MaterialCommunityIcons name="arrow-left" size={28} color="#333" />
+        </TouchableOpacity>
+
+        <Text style={styles.headerTitle}>Killer Sudoku</Text>
+
+        <TouchableOpacity onPress={() => console.log('Open settings')}>
+          <MaterialCommunityIcons name="cog-outline" size={28} color="#333" />
         </TouchableOpacity>
       </View>
 
+      {/* Thông tin board */}
+      <View style={styles.boardInfo}>
+        <View style={styles.infoBlock}>
+          <Text style={styles.infoTitle}>Level</Text>
+          <Text style={styles.infoValue}>{level}</Text>
+        </View>
+        <View style={styles.infoBlock}>
+          <Text style={styles.infoTitle}>Mistakes</Text>
+          <Text style={styles.infoValue}>{mistakeCount}/{MAX_MISTAKES}</Text>
+        </View>
+        <View style={styles.infoBlock}>
+          <Text style={styles.infoTitle}>Time</Text>
+          <Text style={styles.infoValue}>{formatTime(elapsedTime)}</Text>
+        </View>
+        <TouchableOpacity style={styles.infoBlock} onPress={handlePause}>
+          {!showPauseModal ? (
+            <MaterialCommunityIcons name="pause-circle-outline" size={28} color="#333" />
+          ) : (
+            <MaterialCommunityIcons name="play-circle-outline" size={28} color="#333" />
+          )}
+        </TouchableOpacity>
+      </View>
+
+      {/* Modal tạm dừng */}
       <Modal visible={showPauseModal} transparent animationType="fade">
         <View style={styles.modalContainer}>
           <View style={styles.modalBox}>
-            <Text style={styles.modalText}>Đã dừng</Text>
-            <TouchableOpacity onPress={handleResume}>
-              <Text style={styles.resumeButton}>Tiếp tục</Text>
+
+            {/* Header */}
+            <Text style={styles.modalHeader}>Đã dừng</Text>
+
+            {/* Thông tin Board */}
+            <View style={styles.modalBoardInfo}>
+              <View style={styles.infoBlock}>
+                <Text style={styles.infoTitle}>Level</Text>
+                <Text style={styles.infoValue}>{level}</Text>
+              </View>
+              <View style={styles.infoBlock}>
+                <Text style={styles.infoTitle}>Mistakes</Text>
+                <Text style={styles.infoValue}>{mistakeCount}/{MAX_MISTAKES}</Text>
+              </View>
+              <View style={styles.infoBlock}>
+                <Text style={styles.infoTitle}>Time</Text>
+                <Text style={styles.infoValue}>{formatTime(elapsedTime)}</Text>
+              </View>
+            </View>
+
+            {/* Button Tiếp tục */}
+            <TouchableOpacity style={styles.resumeButton} onPress={handleResume}>
+              <Text style={styles.resumeButtonText}>Tiếp tục</Text>
             </TouchableOpacity>
+
           </View>
         </View>
       </Modal>
 
-      <View style={styles.gridWrapper}>
-        <View style={styles.grid}>
-          {board.map((row, rowIndex) => (
-            <View key={rowIndex} style={styles.row}>
-              {row.map((_, colIndex) => renderCell(rowIndex, colIndex))}
-            </View>
-          ))}
-        </View>
-        <Svg
-          width={CELL_SIZE * BOARD_SIZE}
-          height={CELL_SIZE * BOARD_SIZE}
-          style={styles.cageBorder}
+
+      {/* Board Sudoku */}
+      <View style={styles.boardContainer}>
+        <View style={styles.gridWrapper}>
+          <View style={styles.grid}>
+            {board.map((row, rowIndex) => (
+              <View key={rowIndex} style={styles.row}>
+                {row.map((_, colIndex) => renderCell(rowIndex, colIndex))}
+              </View>
+            ))}
+          </View>
+
+          {/* Cage borders */}
+          <Svg
+            width={CELL_SIZE * 9}
+            height={CELL_SIZE * 9}
+            style={styles.cageBordersSvg}
+            pointerEvents="none"
           >
-          {renderCageBorders()}
-        </Svg>
+            {renderCageBorders()}
+          </Svg>
+        </View>
       </View>
 
+      {/* Các nút chức năng */}
       <View style={styles.actionButtons}>
         {buttons.map((btn, idx) => (
           <TouchableOpacity key={idx} onPress={btn.onPress} style={styles.actionButtonList}>
             <View style={styles.actionButtonList2}>
-              <MaterialCommunityIcons name={btn.icon} size={24} color="#333" style={styles.actionButtonList2} />
+              <MaterialCommunityIcons
+                name={btn.icon.length > 0 && btn.iconChangeFlag ? btn.icon[1] : btn.icon[0]}
+                size={24}
+                color={btn.icon.length > 0 && btn.iconChangeFlag ? '#325AAF' : '#ADB6C2'}
+              />
             </View>
-            <Text>{btn.label}{btn.label === 'Notes' && noteMode ? ' (On)' : ''}</Text>
+            <Text
+              // eslint-disable-next-line react-native/no-inline-styles
+              style={{
+                color: btn.icon.length > 0 && btn.iconChangeFlag ? '#325AAF' : '#ADB6C2',
+              }}
+            >{btn.label}</Text>
           </TouchableOpacity>
         ))}
       </View>
 
+      {/* Bàn phím số */}
       <View style={styles.numberPad}>
         {Array.from({ length: 9 }, (_, i) => i + 1).map((num) => (
           <TouchableOpacity key={num} style={styles.numberButton} onPress={() => handleNumberPress(num)}>
@@ -623,31 +666,106 @@ function BoardScreen() {
         ))}
       </View>
     </View>
+
   );
-};
+}
 
 const styles = StyleSheet.create({
-  topBar: { flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20, alignItems: 'center', marginBottom: 10 },
-  topText: { fontSize: 16, color: '#888', marginRight: 30 },
-  pauseButton: { fontSize: 20, paddingLeft: 10, color: '#888' },
-  modalContainer: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center' },
-  modalBox: { backgroundColor: 'white', padding: 20, borderRadius: 10 },
-  modalText: { fontSize: 18, textAlign: 'center', marginBottom: 10 },
-  resumeButton: { fontSize: 16, color: '#007bff', textAlign: 'center' },
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: '#fff',
+    alignItems: 'center',
   },
-  title: {
+  header: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingTop: 40, // để cách đỉnh màn hình
+    paddingBottom: 10,
+  },
+
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+
+  boardInfo: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    marginBottom: 10,
+    marginTop: 70,
+  },
+
+  infoBlock: {
+    alignItems: 'center',
+  },
+
+  infoTitle: {
+    fontSize: 14,
+    color: '#888',
+  },
+
+  infoValue: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+
+  modalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  modalBox: {
+    backgroundColor: 'white',
+    width: '90%', // chiếm 90% màn hình
+    padding: 20,
+    borderRadius: 12,
+    alignItems: 'center',
+  },
+
+  modalHeader: {
     fontSize: 22,
-    color: '#fff',
+    fontWeight: 'bold',
     marginBottom: 20,
+    color: '#333',
+  },
+
+  modalBoardInfo: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+    marginBottom: 20,
+  },
+
+  resumeButton: {
+    backgroundColor: '#007bff',
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    borderRadius: 25,
+  },
+
+  resumeButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+
+  boardContainer: {
+    paddingVertical: 10,
+    alignItems: 'center',
   },
   gridWrapper: {
     width: CELL_SIZE * BOARD_SIZE,
     height: CELL_SIZE * BOARD_SIZE,
+    marginVertical: 10, // cách trên dưới 10px
   },
   grid: {
     flexDirection: 'column',
@@ -657,8 +775,12 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
   },
-  cageBorder: {
+  cageBordersSvg: {
     position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     zIndex: 10,
   },
   cellWrapper: {
@@ -677,7 +799,6 @@ const styles = StyleSheet.create({
   },
   cell: {
     flex: 1,
-    borderWidth: 0.2,
     borderColor: '#000',
     justifyContent: 'center',
     alignItems: 'center',
@@ -696,6 +817,9 @@ const styles = StyleSheet.create({
   cellText: {
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  mistakeCellText: {
+    color: 'red',
   },
   notesContainerTop: {
     position: 'absolute',

@@ -53,7 +53,7 @@ const MainScreen = ({ navigation }: any) => {
     console.log(cages);
 
     navigation.navigate('Board', {
-      level: level,
+      savedLevel: level,
       score: 0,
       initialBoard: stringToGrid(sudoku.puzzle),
       solvedBoard: solvedBoard,
@@ -66,7 +66,7 @@ const MainScreen = ({ navigation }: any) => {
     if (data) {
       const oldData = JSON.parse(data) as SavedGame;
       navigation.navigate('Board', {
-        level: oldData?.level,
+        savedLevel: oldData?.savedLevel,
         score: oldData?.score,
         initialBoard: oldData?.initialBoard,
         solvedBoard: oldData?.solvedBoard,
