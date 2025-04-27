@@ -4,11 +4,10 @@ import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useEffect, useRef, useState } from 'react';
 import { Alert, AppState, AppStateStatus, Button, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import Svg, { Rect } from 'react-native-svg';
+import Svg, { Line } from 'react-native-svg';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { hint } from 'sudoku-core';
 import { RootStackParamList, SavedGame } from './types';
-import { checkIfBoardIsSolved, convertTo1D, indexToPosition } from './utils';
+import { checkIfBoardIsSolved, getAdjacentCellsInSameCage } from './utils';
 
 const BOARD_SIZE = 9;
 const CELL_SIZE = 40;
@@ -22,7 +21,7 @@ type BoardScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, '
 function BoardScreen() {
   const route = useRoute<BoardScreenRouteProp>();
   const navigation = useNavigation<BoardScreenNavigationProp>();
-  const { level, score, initialBoard, solvedBoard, cages, savedBoard, savedMistakeCount, savedElapsedTime, savedHistory } = route.params;
+  const { level, initialBoard, solvedBoard, cages, savedBoard, savedMistakeCount, savedElapsedTime, savedHistory } = route.params;
 
   const [selectedCell, setSelectedCell] = useState<{ row: number; col: number } | null>(null);
   const [board, setBoard] = useState<number[][]>(savedBoard ? savedBoard : initialBoard);
@@ -37,7 +36,7 @@ function BoardScreen() {
   );
   const [mistakeCount, setMistakeCount] = useState<number>(savedMistakeCount ? savedMistakeCount : 0);
 
-  const [startTime, setStartTime] = useState(() =>
+  const [startTime,] = useState(() =>
     savedElapsedTime !== undefined ? Date.now() - savedElapsedTime : Date.now()
   );
   const [elapsedTime, setElapsedTime] = useState(
@@ -249,35 +248,245 @@ function BoardScreen() {
     return cages.find(cage => cage.cells.some(cell => cell[0] === row && cell[1] === col));
   };
 
-  const renderCageOutlines = () => {
-    return cages.map((cage) => {
-      const rows = cage.cells.map(([r]) => r);
-      const cols = cage.cells.map(([, c]) => c);
-      const minRow = Math.min(...rows);
-      const maxRow = Math.max(...rows);
-      const minCol = Math.min(...cols);
-      const maxCol = Math.max(...cols);
+  // const renderCageOutlines = () => {
+  //   return cages.map((cage, index) => {
+  //     const rows = cage.cells.map(([r]) => r);
+  //     const cols = cage.cells.map(([, c]) => c);
+  //     const minRow = Math.min(...rows);
+  //     const maxRow = Math.max(...rows);
+  //     const minCol = Math.min(...cols);
+  //     const maxCol = Math.max(...cols);
 
-      const x = minCol * CELL_SIZE + 3;
-      const y = minRow * CELL_SIZE + 3;
-      const width = (maxCol - minCol + 1) * CELL_SIZE - 6;
-      const height = (maxRow - minRow + 1) * CELL_SIZE - 6;
+  //     const x = minCol * CELL_SIZE + 3;
+  //     const y = minRow * CELL_SIZE + 3;
+  //     const width = (maxCol - minCol + 1) * CELL_SIZE - 6;
+  //     const height = (maxRow - minRow + 1) * CELL_SIZE - 6;
 
-      return (
-        <Rect
-          key={`cage-${cage.id}`}
-          x={x}
-          y={y}
-          width={width}
-          height={height}
-          stroke="gray"
-          strokeDasharray="4,4"
-          strokeWidth={1}
-          fill="none"
-        />
-      );
+  //     return (
+  //       <Rect
+  //         key={`cage-${index}`}
+  //         x={x}
+  //         y={y}
+  //         width={width}
+  //         height={height}
+  //         stroke="gray"
+  //         strokeDasharray="4,4"
+  //         strokeWidth={1}
+  //         fill="red"
+  //       />
+  //     );
+  //   });
+  // };
+  const renderCageBorders = () => {
+    const PADDING = 3;
+
+    // Map từ (row,col) => cage index
+    const cageMap = new Map<string, number>();
+    cages.forEach((cage, index) => {
+      for (const [r, c] of cage.cells) {
+        cageMap.set(`${r},${c}`, index);
+      }
     });
-  };
+
+    const lines = [];
+
+    for (let r = 0; r < 9; r++) {
+      for (let c = 0; c < 9; c++) {
+        const thisCageIdx = cageMap.get(`${r},${c}`);
+
+        if (thisCageIdx == null) continue; // bỏ qua ô không thuộc cage nào
+
+        const adjacentCells = getAdjacentCellsInSameCage(r, c, cages);
+
+        // 1. Vẽ bên phải nếu neighbor khác cage
+        if (c <= 8) {
+          const rightCageIdx = cageMap.get(`${r},${c + 1}`);
+          if (thisCageIdx !== rightCageIdx) {
+            lines.push(
+              <Line
+                key={`right-${r}-${c}`}
+                x1={(c + 1) * CELL_SIZE - PADDING}
+                y1={r * CELL_SIZE + (adjacentCells.top ? 0 : PADDING)}
+                x2={(c + 1) * CELL_SIZE - PADDING}
+                y2={(r + 1) * CELL_SIZE - (adjacentCells.bottom ? 0 : PADDING)}
+                stroke="gray"
+                strokeWidth={1}
+                strokeDasharray="2,2"
+                strokeLinecap="round"
+              />
+            );
+          }
+        }
+
+        // 2. Vẽ bên dưới nếu neighbor khác cage
+        if (r <= 8) {
+          const bottomCageIdx = cageMap.get(`${r + 1},${c}`);
+          if (thisCageIdx !== bottomCageIdx) {
+            lines.push(
+              <Line
+                key={`bottom-${r}-${c}`}
+                x1={c * CELL_SIZE + (adjacentCells.left ? 0 : PADDING)}
+                y1={(r + 1) * CELL_SIZE - PADDING}
+                x2={(c + 1) * CELL_SIZE - (adjacentCells.right ? 0 : PADDING)}
+                y2={(r + 1) * CELL_SIZE - PADDING}
+                stroke="gray"
+                strokeWidth={1}
+                strokeDasharray="2,2"
+                strokeLinecap="round"
+              />
+            );
+          }
+        }
+
+        // 3. Vẽ bên trái nếu là cột 0 hoặc neighbor left khác cage
+        if (c === 0 || cageMap.get(`${r},${c - 1}`) !== thisCageIdx) {
+          lines.push(
+            <Line
+              key={`left-${r}-${c}`}
+              x1={c * CELL_SIZE + PADDING}
+              y1={r * CELL_SIZE + (adjacentCells.top ? 0 : PADDING)}
+              x2={c * CELL_SIZE + PADDING}
+              y2={(r + 1) * CELL_SIZE - (adjacentCells.bottom ? 0 : PADDING)}
+              stroke="gray"
+              strokeWidth={1}
+              strokeDasharray="2,2"
+              strokeLinecap="round"
+            />
+          );
+        }
+
+        // 4. Vẽ bên trên nếu là hàng 0 hoặc neighbor top khác cage
+        if (r === 0 || cageMap.get(`${r - 1},${c}`) !== thisCageIdx) {
+          lines.push(
+            <Line
+              key={`top-${r}-${c}`}
+              x1={c * CELL_SIZE + (adjacentCells.left ? (adjacentCells.right ? -PADDING : 0) : PADDING)}
+              y1={r * CELL_SIZE + PADDING}
+              x2={(c + 1) * CELL_SIZE - (adjacentCells.right ? 0 : PADDING)}
+              y2={r * CELL_SIZE + PADDING}
+              stroke="gray"
+              strokeWidth={1}
+              strokeDasharray="2,2"
+              strokeLinecap="round"
+            />
+          );
+        }
+
+        // 5. Vẽ góc phần tư thứ nhất nếu có neighbor trên và bên trái cùng cage
+        if (adjacentCells.top && adjacentCells.left && !adjacentCells.topleft) {
+          lines.push(
+            <Line
+              key={`top-left-corner-${r}-${c}`}
+              x1={c * CELL_SIZE}
+              y1={r * CELL_SIZE + PADDING}
+              x2={c * CELL_SIZE + PADDING}
+              y2={r * CELL_SIZE + PADDING}
+              stroke="gray"
+              strokeWidth={1}
+              strokeDasharray="2,2"
+              strokeLinecap="round"
+            />,
+            <Line
+              key={`top-left-corner-${r}-${c}-2`}
+              x1={c * CELL_SIZE + PADDING}
+              y1={r * CELL_SIZE}
+              x2={c * CELL_SIZE + PADDING}
+              y2={r * CELL_SIZE + PADDING}
+              stroke="gray"
+              strokeWidth={1}
+              strokeDasharray="2,2"
+              strokeLinecap="round"
+            />,
+          );
+        }
+
+        // 6. Vẽ góc phần tư thứ hai nếu có neighbor trên và bên phải cùng cage
+        if (adjacentCells.top && adjacentCells.right && !adjacentCells.topright) {
+          lines.push(
+            <Line
+              key={`top-right-corner-${r}-${c}`}
+              x1={(c + 1) * CELL_SIZE - PADDING}
+              y1={r * CELL_SIZE + PADDING}
+              x2={(c + 1) * CELL_SIZE - PADDING}
+              y2={r * CELL_SIZE + PADDING}
+              stroke="gray"
+              strokeWidth={1}
+              strokeDasharray="2,2"
+              strokeLinecap="round"
+            />,
+            <Line
+              key={`top-right-corner-${r}-${c}-2`}
+              x1={(c + 1) * CELL_SIZE - PADDING}
+              y1={r * CELL_SIZE}
+              x2={(c + 1) * CELL_SIZE - PADDING}
+              y2={r * CELL_SIZE + PADDING}
+              stroke="gray"
+              strokeWidth={1}
+              strokeDasharray="2,2"
+              strokeLinecap="round"
+            />,
+          );
+        }
+        // 7. Vẽ góc phần tư thứ ba nếu có neighbor dưới và bên trái cùng cage
+        if (adjacentCells.bottom && adjacentCells.left && !adjacentCells.bottomleft) {
+          lines.push(
+            <Line
+              key={`bottom-left-corner-${r}-${c}`}
+              x1={c * CELL_SIZE}
+              y1={(r + 1) * CELL_SIZE - PADDING}
+              x2={c * CELL_SIZE + PADDING}
+              y2={(r + 1) * CELL_SIZE - PADDING}
+              stroke="gray"
+              strokeWidth={1}
+              strokeDasharray="2,2"
+              strokeLinecap="round"
+            />,
+            <Line
+              key={`bottom-left-corner-${r}-${c}-2`}
+              x1={c * CELL_SIZE + PADDING}
+              y1={(r + 1) * CELL_SIZE}
+              x2={c * CELL_SIZE + PADDING}
+              y2={(r + 1) * CELL_SIZE - PADDING}
+              stroke="gray"
+              strokeWidth={1}
+              strokeDasharray="2,2"
+              strokeLinecap="round"
+            />,
+          );
+        }
+        // 8. Vẽ góc phần tư thứ tư nếu có neighbor dưới và bên phải cùng cage
+        if (adjacentCells.bottom && adjacentCells.right && !adjacentCells.bottomright) {
+          lines.push(
+            <Line
+              key={`bottom-right-corner-${r}-${c}`}
+              x1={(c + 1) * CELL_SIZE - PADDING}
+              y1={(r + 1) * CELL_SIZE - PADDING}
+              x2={(c + 1) * CELL_SIZE - PADDING}
+              y2={(r + 1) * CELL_SIZE - PADDING}
+              stroke="gray"
+              strokeWidth={1}
+              strokeDasharray="2,2"
+              strokeLinecap="round"
+            />,
+            <Line
+              key={`bottom-right-corner-${r}-${c}-2`}
+              x1={(c + 1) * CELL_SIZE - PADDING}
+              y1={(r + 1) * CELL_SIZE}
+              x2={(c + 1) * CELL_SIZE - PADDING}
+              y2={(r + 1) * CELL_SIZE - PADDING}
+              stroke="gray"
+              strokeWidth={1}
+              strokeDasharray="2,2"
+              strokeLinecap="round"
+            />,
+          );
+        }
+
+      }
+    }
+
+    return lines;
+  }
 
   const renderCell = (row: number, col: number) => {
     const isSelected = selectedCell?.row === row && selectedCell?.col === col;
@@ -316,27 +525,39 @@ function BoardScreen() {
     );
   };
 
-  const handleHint = () => {
-    saveHistory();
+  // const handleHint = () => {
+  //   saveHistory();
 
-    const hintBoard = hint(convertTo1D(board));
-    if (hintBoard.steps && hintBoard.steps.length > 0) {
-      const { row, col } = indexToPosition(hintBoard.steps[0].updates[0].index);
-      setSelectedCell({ row, col });
+  //   const hintBoard = hint(convertTo1D(board));
+  //   if (hintBoard.steps && hintBoard.steps.length > 0) {
+  //     const { row, col } = indexToPosition(hintBoard.steps[0].updates[0].index);
+  //     setSelectedCell({ row, col });
 
-      const newBoard = [...board];
-      newBoard[row][col] = hintBoard.steps[0].updates[0].filledValue;
-      setBoard(newBoard);
+  //     const newBoard = [...board];
+  //     newBoard[row][col] = hintBoard.steps[0].updates[0].filledValue;
+  //     setBoard(newBoard);
 
-      handleCheckSolved(newBoard);
-    }
+  //     handleCheckSolved(newBoard);
+  //   }
+  // };
+
+  const displaySolvedBoard = () => {
+    Alert.alert(
+      'Giải pháp',
+      'Toàn bộ bảng Sudoku đã giải',
+      [{ text: 'OK' }],
+      { cancelable: false }
+    );
+
+    setBoard(solvedBoard);
   };
 
   const buttons = [
     { label: 'Undo', icon: 'undo', onPress: handleUndo },
     { label: 'Erase', icon: 'eraser', onPress: handleClear },
     { label: 'Notes', icon: 'note-edit-outline', onPress: () => setNoteMode(!noteMode) },
-    { label: 'Hint', icon: 'lightbulb-on-outline', onPress: handleHint },
+    { label: 'Solved Board', icon: 'lightbulb-on-outline', onPress: displaySolvedBoard },
+    // { label: 'Hint', icon: 'lightbulb-on-outline', onPress: handleHint },
   ];
 
   return (
@@ -345,7 +566,7 @@ function BoardScreen() {
 
       <View style={styles.topBar}>
         <Text style={styles.topText}>Level: {level}</Text>
-        <Text style={styles.topText}>Score: {score}</Text>
+        {/* <Text style={styles.topText}>Score: {score}</Text> */}
       </View>
       <View style={styles.topBar}>
         <Text style={styles.topText}>Mistakes: {mistakeCount}/{MAX_MISTAKES}</Text>
@@ -377,17 +598,17 @@ function BoardScreen() {
         <Svg
           width={CELL_SIZE * BOARD_SIZE}
           height={CELL_SIZE * BOARD_SIZE}
-          style={[StyleSheet.absoluteFill, { zIndex: 10 }]}
-        >
-          {renderCageOutlines()}
+          style={styles.cageBorder}
+          >
+          {renderCageBorders()}
         </Svg>
       </View>
 
-      <View style={{ flexDirection: 'row', justifyContent: 'space-around', width: 300, marginBottom: 12 }}>
+      <View style={styles.actionButtons}>
         {buttons.map((btn, idx) => (
           <TouchableOpacity key={idx} onPress={btn.onPress} style={styles.actionButtonList}>
-            <View style={{ marginBottom: 4 }}>
-              <MaterialCommunityIcons name={btn.icon} size={24} color="#333" style={{ marginBottom: 4 }} />
+            <View style={styles.actionButtonList2}>
+              <MaterialCommunityIcons name={btn.icon} size={24} color="#333" style={styles.actionButtonList2} />
             </View>
             <Text>{btn.label}{btn.label === 'Notes' && noteMode ? ' (On)' : ''}</Text>
           </TouchableOpacity>
@@ -435,6 +656,10 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
+  },
+  cageBorder: {
+    position: 'absolute',
+    zIndex: 10,
   },
   cellWrapper: {
     width: CELL_SIZE,
@@ -517,6 +742,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 16,
     marginHorizontal: 12,
+  },
+  actionButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: 300,
+    marginBottom: 12,
+  },
+  actionButtonList2: {
+    marginBottom: 4,
   },
 });
 

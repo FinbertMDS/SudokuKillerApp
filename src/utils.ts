@@ -1,5 +1,24 @@
 // utils.ts
 
+
+/**
+ * Chuyển string thành mảng 2 chiều theo số cột nhất định (thường là 9 với Sudoku).
+ * @param input string
+ * @param size Số cột trong mảng 2 chiều
+ * @returns Mảng 2 chiều
+ */
+export function stringToGrid(input: string, columns = 9): (number | null)[][] {
+  const grid: (number | null)[][] = [];
+  for (let i = 0; i < input.length; i += columns) {
+    const row = input
+      .slice(i, i + columns)
+      .split('')
+      .map(ch => (ch === '-' ? null : parseInt(ch, 10)));
+    grid.push(row);
+  }
+  return grid;
+}
+
 /**
  * Chuyển mảng 1 chiều thành mảng 2 chiều theo số cột nhất định (thường là 9 với Sudoku).
  * @param arr Mảng 1 chiều
@@ -91,57 +110,70 @@ export const checkIfBoardIsSolved = (board: number[][], solvedBoard: number[][])
 
 import { Cage } from './types';
 
-/**
- * Tính tổng các giá trị trong một cage từ grid
- * @param grid Bảng Sudoku (2D)
- * @param cage Cage chứa các ô
- * @returns Tổng hiện tại
- */
-export function sumCage(grid: number[][], cage: Cage): number {
-  return cage.cells.reduce((sum, { row, col }) => {
-    const value = grid[row][col];
-    return sum + (value || 0); // bỏ qua ô trống (0 hoặc undefined)
-  }, 0);
+export function sortAreasCells(areas: Cage[]): Cage[] {
+  return areas.map(cage => ({
+    ...cage,
+    cells: [...cage.cells].sort((a, b) => {
+      if (a[0] !== b[0]) {
+        return a[0] - b[0]; // Ưu tiên hàng (row) trước
+      }
+      return a[1] - b[1];   // Nếu cùng hàng, ưu tiên cột (col)
+    }),
+  }));
 }
 
-/**
- * Kiểm tra xem cage có hợp lệ không:
- * - Tổng hiện tại <= tổng yêu cầu
- * - Không có số trùng lặp trong cage
- * @param grid Bảng Sudoku
- * @param cage Cage
- */
-export function isCageValid(grid: number[][], cage: Cage): boolean {
-  const seen = new Set<number>();
-  let currentSum = 0;
+export function getAdjacentCellsInSameCage(row: number, col: number, cages: Cage[]) {
+  // Danh sách các vị trí xung quanh: trên, dưới, trái, phải
+  const adjacentCells = [
+    { direction: 'top', row: row - 1, col: col },  // Ô trên
+    { direction: 'bottom', row: row + 1, col: col },  // Ô dưới
+    { direction: 'left', row: row, col: col - 1 },  // Ô trái
+    { direction: 'right', row: row, col: col + 1 }   // Ô phải
+  ];
 
-  for (const { row, col } of cage.cells) {
-    const value = grid[row][col];
-    if (value) {
-      if (seen.has(value)) return false;
-      seen.add(value);
-      currentSum += value;
+  const result = {
+    top: false,
+    bottom: false,
+    left: false,
+    right: false,
+    topleft: false,
+    topright: false,
+    bottomleft: false,
+    bottomright: false,
+  };
+
+  // Duyệt qua tất cả các cage để tìm các ô xung quanh thuộc cùng *cage*
+  for (let cage of cages) {
+    let currentCell = [row, col];
+
+    // Kiểm tra nếu ô hiện tại có trong cage
+    if (cage.cells.some(cell => JSON.stringify(cell) === JSON.stringify(currentCell))) {
+      // Duyệt qua các ô xung quanh
+      for (let adj of adjacentCells) {
+        // Kiểm tra nếu ô xung quanh có trong cùng một cage
+        if (cage.cells.some(cell => JSON.stringify(cell) === JSON.stringify([adj.row, adj.col]))) {
+          result[adj.direction as keyof typeof result] = true;  // Gán true cho ô xung quanh nếu thuộc cùng cage
+        }
+        // Kiểm tra nếu ô ở phía trên bên trái có trong cùng một cage
+        if (adj.direction === 'top' && cage.cells.some(cell => JSON.stringify(cell) === JSON.stringify([row - 1, col - 1]))) {
+          result.topleft = true;  // Gán true cho ô trên bên trái nếu thuộc cùng cage
+        }
+        // Kiểm tra nếu ô ở phía trên bên phải có trong cùng một cage
+        if (adj.direction === 'top' && cage.cells.some(cell => JSON.stringify(cell) === JSON.stringify([row - 1, col + 1]))) {
+          result.topright = true;  // Gán true cho ô trên bên phải nếu thuộc cùng cage
+        }
+        // Kiểm tra nếu ô ở phía dưới bên trái có trong cùng một cage
+        if (adj.direction === 'bottom' && cage.cells.some(cell => JSON.stringify(cell) === JSON.stringify([row + 1, col - 1]))) {
+          result.bottomleft = true;  // Gán true cho ô dưới bên trái nếu thuộc cùng cage
+        }
+        // Kiểm tra nếu ô ở phía dưới bên phải có trong cùng một cage
+        if (adj.direction === 'bottom' && cage.cells.some(cell => JSON.stringify(cell) === JSON.stringify([row + 1, col + 1]))) {
+          result.bottomright = true;  // Gán true cho ô dưới bên phải nếu thuộc cùng cage
+        }
+      }
+      break;  // Nếu đã tìm được cage, không cần duyệt qua các cage khác nữa
     }
   }
 
-  return currentSum <= cage.total;
-}
-
-/**
- * Kiểm tra xem cage đã hoàn thành và chính xác chưa
- * @param grid Bảng Sudoku
- * @param cage Cage
- */
-export function isCageComplete(grid: number[][], cage: Cage): boolean {
-  const values = cage.cells.map(({ row, col }) => grid[row][col]);
-  if (values.includes(0) || values.some(value => value === undefined)) return false;
-
-  const sum = values.reduce((a, b) => a + b, 0);
-  const unique = new Set(values);
-
-  return sum === cage.total && unique.size === values.length;
-}
-
-export function areAllCagesValid(grid: number[][], cages: Cage[]): boolean {
-  return cages.every(cage => isCageValid(grid, cage));
+  return result;
 }

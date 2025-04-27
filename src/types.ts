@@ -1,11 +1,6 @@
-export interface CellPosition {
-  row: number;
-  col: number;
-}
-
 export interface Cage {
-  cells: CellPosition[];
-  total: number; // tổng yêu cầu
+  sum: number;
+  cells: [number, number][];
 }
 
 export type RootStackParamList = {
@@ -18,7 +13,7 @@ export type SavedGame = {
   score: number;
   initialBoard: number[][];
   solvedBoard: number[][];
-  cages: { id: number, cells: [number, number][], sum: number }[];
+  cages: { cells: [number, number][], sum: number }[];
   savedBoard: number[][];
   savedMistakeCount: number;
   savedElapsedTime: number; // thời gian đã trôi qua

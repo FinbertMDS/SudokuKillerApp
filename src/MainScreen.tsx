@@ -2,15 +2,17 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer, useFocusEffect } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {
+  generateKillerSudoku,
+} from 'killer-sudoku-generator';
 import React, { useCallback, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Menu, Provider } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { generate, solve } from 'sudoku-core';
-import { Difficulty, SolvingResult } from 'sudoku-core/dist/cjs/types';
+import { Difficulty } from 'sudoku-gen/dist/types/difficulty.type';
 import BoardScreen from './BoardScreen';
 import { RootStackParamList, SavedGame } from './types';
-import { convertTo2D } from './utils';
+import { sortAreasCells, stringToGrid } from './utils';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -19,7 +21,7 @@ const MainScreen = ({ navigation }: any) => {
   const [menuVisible, setMenuVisible] = useState(false);
 
   const [hasSavedGame, setHasSavedGame] = useState(false);
-  const [savedGameData, setSavedGameData] = useState<SavedGame | null>(null);
+  const [, setSavedGameData] = useState<SavedGame | null>(null);
 
   useFocusEffect(
     useCallback(() => {
@@ -37,24 +39,24 @@ const MainScreen = ({ navigation }: any) => {
           console.error('Lỗi khi đọc saved game:', e);
         }
       };
-  
       checkSavedGame();
     }, [])
   );
 
   const handleNewGame = (level: string) => {
     setMenuVisible(false);
-    const board = generate(level.toLocaleLowerCase() as Difficulty);
-    const solvedBoard = solve(board) as SolvingResult;
-    const cages = [
-      { id: 1, sum: 10, cells: [[0, 0], [0, 1]] },
-    ];
+    const sudoku = generateKillerSudoku(level.toLocaleLowerCase() as Difficulty);
+    console.log(sudoku);
+    const solvedBoard = stringToGrid(sudoku.solution);
+    console.log(sudoku.areas);
+    const cages = sortAreasCells(sudoku.areas);
+    console.log(cages);
 
     navigation.navigate('Board', {
       level: level,
-      score: solvedBoard.analysis?.score ?? 0,
-      initialBoard: convertTo2D(board),
-      solvedBoard: convertTo2D(solvedBoard.board ?? []),
+      score: 0,
+      initialBoard: stringToGrid(sudoku.puzzle),
+      solvedBoard: solvedBoard,
       cages,
     } as RootStackParamList['Board']);
   };
@@ -138,6 +140,7 @@ const StatisticsScreen = () => (
 const BottomTabs = () => (
   <Tab.Navigator
     screenOptions={({ route }) => ({
+      // eslint-disable-next-line react/no-unstable-nested-components
       tabBarIcon: ({ color, size }) => {
         const icons: any = {
           Main: 'home',
