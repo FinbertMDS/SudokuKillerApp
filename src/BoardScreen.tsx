@@ -24,7 +24,6 @@ function BoardScreen() {
   const { savedLevel, initialBoard, solvedBoard, cages, savedBoard, savedMistakeCount, savedElapsedTime, savedHistory } = route.params;
 
   const [selectedCell, setSelectedCell] = useState<{ row: number; col: number } | null>(null);
-  const [activeButton, setActiveButton] = useState<string | null>(null);
   const [level] = useState<string>(savedLevel ? savedLevel : 'easy');
   const [board, setBoard] = useState<number[][]>(savedBoard ? savedBoard : initialBoard);
   const [notes, setNotes] = useState<string[][][]>(
@@ -105,6 +104,7 @@ function BoardScreen() {
         initialBoard,
         solvedBoard,
         cages,
+        savedLevel: level,
         savedBoard: board,
         savedMistakeCount: mistakeCount,
         savedElapsedTime: elapsedTime,
@@ -530,6 +530,8 @@ function BoardScreen() {
     );
 
     setBoard(solvedBoard);
+    saveHistory();
+    // handleCheckSolved(solvedBoard);
   };
 
   const buttons = [

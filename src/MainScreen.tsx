@@ -46,11 +46,8 @@ const MainScreen = ({ navigation }: any) => {
   const handleNewGame = (level: string) => {
     setMenuVisible(false);
     const sudoku = generateKillerSudoku(level.toLocaleLowerCase() as Difficulty);
-    console.log(sudoku);
     const solvedBoard = stringToGrid(sudoku.solution);
-    console.log(sudoku.areas);
     const cages = sortAreasCells(sudoku.areas);
-    console.log(cages);
 
     navigation.navigate('Board', {
       savedLevel: level,
@@ -118,7 +115,6 @@ const MainScreen = ({ navigation }: any) => {
             await AsyncStorage.removeItem('savedGame');
             setHasSavedGame(false);
             setSavedGameData(null);
-            console.log('Saved game deleted');
           } catch (e) {
             console.error('Lỗi khi xoá saved game:', e);
           }
