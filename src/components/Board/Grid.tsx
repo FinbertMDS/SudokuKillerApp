@@ -416,8 +416,7 @@ const styles = {
     height: CELL_SIZE,
     justifyContent: 'center' as const,
     alignItems: 'center' as const,
-    borderWidth: 0.5,
-    borderColor: '#ccc',
+    borderWidth: 0.1,
     zIndex: 20,
   },
   relatedOverlay: {
