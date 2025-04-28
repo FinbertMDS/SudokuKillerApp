@@ -2,7 +2,10 @@
 
 Welcome to **Killer Sudoku**, a modern and highly-optimized Sudoku Killer game built with **React Native**.
 
-![sudoku-screenshot](screenshots/sudoku-screenshot.png)
+
+Board_Dark | Board_Light | Main_Dark | Main_Light
+---------|----------|---------|---------
+![Board_Dark.png](screenshots/Board_Dark.png) | ![Board_Light.png](screenshots/Board_Light.png) | ![Main_Dark.png](screenshots/Main_Dark.png) | ![Main_Light.png](screenshots/Main_Light.png)
 
 ---
 
@@ -16,6 +19,7 @@ Welcome to **Killer Sudoku**, a modern and highly-optimized Sudoku Killer game b
 - ✅ Game timer (pause/resume supported)
 - ✅ Local save & resume for interrupted games
 - ✅ Battery optimization (auto-pause timer when app backgrounded)
+- ✅ Dark Mode / Light Mode switch (auto detects system theme)
 
 ---
 
@@ -47,7 +51,6 @@ npx react-native run-ios   # or run-android
   - Games completed
   - Best time
   - Average time
-- Dark Mode / Light Mode switch (auto detects system theme)
 - Online Multiplayer mode (Challenge your friends!)
 - Daily Killer Sudoku Challenge
 - Cloud Syncing (Login + Save Progress)
