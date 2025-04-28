@@ -27,6 +27,7 @@ export type SavedGame = {
   savedMistakeCount: number;
   savedElapsedTime: number;
   savedHistory: (number | null)[][][];
+  savedNotes: string[][][];
   lastSaved: Date;
 }
 

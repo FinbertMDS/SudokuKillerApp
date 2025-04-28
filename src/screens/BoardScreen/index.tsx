@@ -29,6 +29,7 @@ const BoardScreen = () => {
     savedMistakeCount,
     savedElapsedTime,
     savedHistory,
+    savedNotes,
   } = route.params as InitGame & SavedGame;
 
   const [board, setBoard] = useState<(number | null)[][]>(savedBoard ? deepCloneBoard(savedBoard) : deepCloneBoard(initialBoard));
@@ -46,7 +47,7 @@ const BoardScreen = () => {
   const [pausedDuration, setPausedDuration] = useState(0);
   const [noteMode, setNoteMode] = useState<boolean>(false);
   const [notes, setNotes] = useState<string[][][]>(
-    createEmptyGridNotes<string>()
+    savedNotes !== undefined ? savedNotes : createEmptyGridNotes<string>()
   );
 
   // Xử lý khi người dùng sai quá nhiều lần
@@ -124,6 +125,7 @@ const BoardScreen = () => {
       savedMistakeCount: mistakeCount,
       savedElapsedTime: elapsedTime,
       savedHistory: history,
+      savedNotes: notes,
       lastSaved: new Date(),
     } as SavedGame);
   };
@@ -308,6 +310,7 @@ const BoardScreen = () => {
       savedMistakeCount: mistakeCount,
       savedElapsedTime: elapsedTime,
       savedHistory: history,
+      savedNotes: notes,
       lastSaved: new Date(),
     } as SavedGame);
     navigation.goBack();
