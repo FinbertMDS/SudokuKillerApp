@@ -10,9 +10,9 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Menu, Provider } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Difficulty } from 'sudoku-gen/dist/types/difficulty.type';
+import { RootStackParamList, SavedGame } from '../types';
+import { sortAreasCells, stringToGrid } from '../utils/boardUtil';
 import BoardScreen from './BoardScreen';
-import { RootStackParamList, SavedGame } from './types';
-import { sortAreasCells, stringToGrid } from './utils';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator<RootStackParamList>();

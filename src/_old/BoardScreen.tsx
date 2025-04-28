@@ -6,8 +6,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Alert, AppState, AppStateStatus, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Svg, { Line } from 'react-native-svg';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { RootStackParamList, SavedGame } from './types';
-import { checkIfBoardIsSolved, getAdjacentCellsInSameCage } from './utils';
+import { RootStackParamList, SavedGame } from '../types';
+import { checkIfBoardIsSolved, getAdjacentCellsInSameCage } from '../utils/boardUtil';
 
 const BOARD_SIZE = 9;
 const CELL_SIZE = 40;

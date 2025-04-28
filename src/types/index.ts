@@ -1,3 +1,10 @@
+import { RouteProp } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+
+export type Cell = {
+  row: number;
+  col: number;
+}
 export interface Cage {
   sum: number;
   cells: [number, number][];
@@ -20,3 +27,7 @@ export type SavedGame = {
   lastSaved: Date; // thời gian lưu gần nhất
   savedHistory: number[][][]; // lịch sử các bước đã đi
 }
+
+export type BoardScreenRouteProp = RouteProp<RootStackParamList, 'Board'>;
+
+export type BoardScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Board'>;

@@ -1,5 +1,4 @@
-// utils.ts
-
+// boardUtil.ts
 
 /**
  * Chuyển string thành mảng 2 chiều theo số cột nhất định (thường là 9 với Sudoku).
@@ -17,6 +16,16 @@ export function stringToGrid(input: string, columns = 9): (number | null)[][] {
     grid.push(row);
   }
   return grid;
+}
+
+/**
+ * Tạo mảng 9x9x9 cho mỗi note
+ * @returns Mảng 9x9x9
+ */
+export function createEmptyGridNotes<T>(): T[][][] {
+  return Array.from({ length: BOARD_SIZE }, () =>
+    Array.from({ length: BOARD_SIZE }, () => [])
+  );
 }
 
 /**
@@ -108,7 +117,8 @@ export const checkIfBoardIsSolved = (board: number[][], solvedBoard: number[][])
   return true;
 };
 
-import { Cage } from './types';
+import { Cage } from '../types';
+import { BOARD_SIZE } from './constants';
 
 export function sortAreasCells(areas: Cage[]): Cage[] {
   return areas.map(cage => ({
