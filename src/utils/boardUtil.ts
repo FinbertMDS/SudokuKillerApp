@@ -1,5 +1,4 @@
-// utils.ts
-
+// boardUtil.ts
 
 /**
  * Chuyển string thành mảng 2 chiều theo số cột nhất định (thường là 9 với Sudoku).
@@ -17,6 +16,16 @@ export function stringToGrid(input: string, columns = 9): (number | null)[][] {
     grid.push(row);
   }
   return grid;
+}
+
+/**
+ * Tạo mảng 9x9x9 cho mỗi note
+ * @returns Mảng 9x9x9
+ */
+export function createEmptyGridNotes<T>(): T[][][] {
+  return Array.from({ length: BOARD_SIZE }, () =>
+    Array.from({ length: BOARD_SIZE }, () => [])
+  );
 }
 
 /**
@@ -94,21 +103,47 @@ export function positionToIndex(row: number, col: number, size: number = 9): num
   return row * size + col;
 }
 
-export const checkIfBoardIsSolved = (board: number[][], solvedBoard: number[][]): boolean => {
-  const size = board.length;
-
-  for (let row = 0; row < size; row++) {
-    for (let col = 0; col < size; col++) {
-      if (board[row][col] !== solvedBoard[row][col]) {
-        return false;
-      }
-    }
-  }
-
-  return true;
+/**
+ * Deep clone a 2D array (for board)
+ */
+export const deepCloneBoard = (board: (number | null)[][]): (number | null)[][] => {
+  return board.map(row => [...row]);
 };
 
-import { Cage } from './types';
+/**
+ * Deep clone a 3D array (for notes)
+ */
+export const deepCloneNotes = (notes: string[][][]): string[][][] => {
+  return notes.map(row =>
+    row.map(cell =>
+      [...cell]  // Clone từng mảng string[] trong mỗi cell
+    )
+  );
+};
+
+/**
+ * Kiểm tra xem board đã được giải quyết hay chưa.
+ * @param board Mảng 2 chiều đại diện cho board
+ * @param solvedBoard Mảng 2 chiều đại diện cho board đã được giải quyết
+ * @returns true nếu đã giải quyết, false nếu chưa
+ */
+export const checkBoardIsSolved = (
+  board: (number | null)[][],
+  solvedBoard: (number | null)[][]
+): boolean => {
+  if (board.length !== solvedBoard.length) {
+    return false;
+  }
+
+  return board.every((row, rowIndex) =>
+    row.length === solvedBoard[rowIndex].length &&
+    row.every((cell, colIndex) => cell === solvedBoard[rowIndex][colIndex])
+  );
+};
+
+
+import { Cage } from '../types';
+import { BOARD_SIZE } from './constants';
 
 export function sortAreasCells(areas: Cage[]): Cage[] {
   return areas.map(cage => ({
