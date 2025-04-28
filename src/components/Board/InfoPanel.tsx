@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { MAX_MISTAKES } from '../../utils/constants';
@@ -13,6 +13,8 @@ type InfoPanelProps = {
 };
 
 const InfoPanel = ({ level, mistakes, time, isPaused, onPause }: InfoPanelProps) => {
+  const formattedTime = useMemo(() => formatTime(time), [time]);
+
   return (
     <View style={styles.container}>
       <View style={styles.infoBlock}>
@@ -27,7 +29,7 @@ const InfoPanel = ({ level, mistakes, time, isPaused, onPause }: InfoPanelProps)
 
       <View style={styles.infoBlock}>
         <Text style={styles.title}>Time</Text>
-        <Text style={[styles.value, styles.timeValue]}>{formatTime(time)}</Text>
+        <Text style={[styles.value, styles.timeValue]}>{formattedTime}</Text>
       </View>
 
       <TouchableOpacity style={styles.infoBlock} onPress={onPause}>

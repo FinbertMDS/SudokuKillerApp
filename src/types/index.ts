@@ -25,9 +25,9 @@ export type InitGame = {
 export type SavedGame = {
   savedBoard: (number | null)[][];
   savedMistakeCount: number;
-  savedElapsedTime: number; // thời gian đã trôi qua
-  savedHistory: (number | null)[][][]; // lịch sử các bước đã đi
-  lastSaved: Date; // thời gian lưu gần nhất
+  savedElapsedTime: number;
+  savedHistory: (number | null)[][][];
+  lastSaved: Date;
 }
 
 export type BoardScreenRouteProp = RouteProp<RootStackParamList, 'Board'>;

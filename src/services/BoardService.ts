@@ -41,9 +41,8 @@ export const BoardService = {
     try {
       await AsyncStorage.removeItem(STORAGE_KEY_INIT_GAME);
       await AsyncStorage.removeItem(STORAGE_KEY_SAVED_GAME);
-      console.log('Saved game cleared');
     } catch (e) {
       console.error('Failed to clear saved game:', e);
     }
-  }
+  },
 };

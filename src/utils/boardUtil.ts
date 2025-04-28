@@ -116,7 +116,7 @@ export const deepCloneBoard = (board: (number | null)[][]): (number | null)[][] 
 export const deepCloneNotes = (notes: string[][][]): string[][][] => {
   return notes.map(row =>
     row.map(cell =>
-      [...cell]  // Clone từng mảng string[] trong mỗi cell
+      [...cell]
     )
   );
 };
@@ -150,9 +150,11 @@ export function sortAreasCells(areas: Cage[]): Cage[] {
     ...cage,
     cells: [...cage.cells].sort((a, b) => {
       if (a[0] !== b[0]) {
-        return a[0] - b[0]; // Ưu tiên hàng (row) trước
+        // Ưu tiên hàng (row) trước
+        return a[0] - b[0];
       }
-      return a[1] - b[1];   // Nếu cùng hàng, ưu tiên cột (col)
+      // Nếu cùng hàng, ưu tiên cột (col)
+      return a[1] - b[1];
     }),
   }));
 }
@@ -160,10 +162,10 @@ export function sortAreasCells(areas: Cage[]): Cage[] {
 export function getAdjacentCellsInSameCage(row: number, col: number, cages: Cage[]) {
   // Danh sách các vị trí xung quanh: trên, dưới, trái, phải
   const adjacentCells = [
-    { direction: 'top', row: row - 1, col: col },  // Ô trên
-    { direction: 'bottom', row: row + 1, col: col },  // Ô dưới
-    { direction: 'left', row: row, col: col - 1 },  // Ô trái
-    { direction: 'right', row: row, col: col + 1 }   // Ô phải
+    { direction: 'top', row: row - 1, col: col },
+    { direction: 'bottom', row: row + 1, col: col },
+    { direction: 'left', row: row, col: col - 1 },
+    { direction: 'right', row: row, col: col + 1 },
   ];
 
   const result = {

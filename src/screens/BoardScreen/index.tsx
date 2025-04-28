@@ -38,6 +38,7 @@ const BoardScreen = () => {
     savedHistory !== undefined ? savedHistory : [deepCloneBoard(initialBoard)]
   );
   const [isPaused, setIsPaused] = useState<boolean>(false);
+  const [showPauseModal, setShowPauseModal] = useState<boolean>(false);
   const [pauseTime, setPauseTime] = useState(0);
   const [pausedDuration, setPausedDuration] = useState(0);
   const [noteMode, setNoteMode] = useState<boolean>(false);
@@ -95,6 +96,7 @@ const BoardScreen = () => {
     // setStartTime(Date.now());
     setElapsedTime(0);
     setIsPaused(false);
+    setShowPauseModal(false);
     setPausedDuration(0);
     setTimeAlertShown(false);
     setSelectedCell(null);
@@ -112,6 +114,7 @@ const BoardScreen = () => {
 
   const handlePause = async () => {
     setIsPaused(true);
+    setShowPauseModal(true);
     setPauseTime(Date.now());
     await BoardService.save({
       savedBoard: board,
@@ -124,6 +127,7 @@ const BoardScreen = () => {
 
   const handleResume = () => {
     setIsPaused(false);
+    setShowPauseModal(false);
     setPausedDuration(prev => prev + Date.now() - pauseTime);
   };
 
@@ -131,6 +135,9 @@ const BoardScreen = () => {
     setHistory(prev => [...prev, deepCloneBoard(newBoard)]);
   };
 
+  /**
+   * Quay trở lại trạng thái board trước đó
+   */
   const handleUndo = () => {
     if (history.length <= 1) { return; }
 
@@ -139,15 +146,18 @@ const BoardScreen = () => {
     setHistory(prev => prev.slice(0, -1));
   };
 
-  const handleClear = () => {
-    if (!selectedCell) { return; }
+  /**
+   * Xoá giá trị của ô đã chọn
+   */
+  const handleErase = () => {
+    if (!selectedCell) {
+      return;
+    }
     const { row, col } = selectedCell;
     if (initialBoard[row][col]) {
-      console.log('You cannot clear a cell that is initialized cell');
       return;
     }
     if (board[row][col] === null || board[row][col] === 0) {
-      console.log('You cannot clear a cell that is already empty');
       return;
     }
 
@@ -160,6 +170,9 @@ const BoardScreen = () => {
     saveHistory(newBoard);
   };
 
+  /**
+   * Kiểm tra board đã được giải quyết chưa
+   */
   const handleSolved = () => {
     Alert.alert(
       'Giải pháp',
@@ -174,6 +187,10 @@ const BoardScreen = () => {
     // handleCheckSolved(solvedBoard);
   };
 
+  /**
+   * Điền số vào ô đã chọn
+   * @param num Số
+   */
   const handleNumberPress = (num: number) => {
     if (!selectedCell) { return; }
     const { row, col } = selectedCell;
@@ -221,8 +238,19 @@ const BoardScreen = () => {
     return true; // Nếu tất cả ô trong cột đều khác 0, coi như đã filled
   };
 
+  const timeoutRefs = useRef<{ [key: string]: NodeJS.Timeout }>({});
+  useEffect(() => {
+    return () => {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      Object.values(timeoutRefs.current).forEach(timeoutId => {
+        clearTimeout(timeoutId);
+      });
+    };
+  }, []);
+
   const handleCheckRowOrColResolved = (row: number, col: number, newBoard: (number | null)[][]) => {
     const key = `${row}${ANIMATION_CELL_KEY_SEPARATOR}${col}`;
+
     let animationType = ANIMATION_TYPE.NONE as number;
     if (isRowFilled(row, newBoard) && isColFilled(col, newBoard)) {
       animationType = ANIMATION_TYPE.ROW_COL;
@@ -231,20 +259,29 @@ const BoardScreen = () => {
     } else if (isColFilled(col, newBoard)) {
       animationType = ANIMATION_TYPE.COL;
     }
-    setAnimatedCells(prev => ({ ...prev, [key]: animationType }));
 
-    // Xóa animation sau 300ms để reset lại
-    setTimeout(() => {
+    // Clear timeout cũ nếu có
+    if (timeoutRefs.current[key]) {
+      clearTimeout(timeoutRefs.current[key]);
+    }
+    // Set lại animation
+    setAnimatedCells(prev => ({ ...prev, [key]: animationType }));
+    // Tạo timeout mới
+    timeoutRefs.current[key] = setTimeout(() => {
       setAnimatedCells(prev => {
         const updated = { ...prev };
         delete updated[key];
         return updated;
       });
+      delete timeoutRefs.current[key]; // Xóa timeoutRef sau khi done
     }, ANIMATION_DURATION);
   };
 
   const handleCheckSolved = (newBoard: (number | null)[][]) => {
     if (checkBoardIsSolved(newBoard, solvedBoard)) {
+      setIsPaused(true);
+      setPauseTime(Date.now());
+
       Alert.alert(
         '🎉 Hoàn thành!',
         'Bạn đã giải xong Sudoku!',
@@ -285,7 +322,10 @@ const BoardScreen = () => {
         }, 100);
       }
     },
-    () => { setIsPaused(true); }
+    () => {
+      setIsPaused(true);
+      setShowPauseModal(true);
+    },
   );
 
   return (
@@ -311,14 +351,14 @@ const BoardScreen = () => {
         noteMode={noteMode}
         onNote={setNoteMode}
         onUndo={handleUndo}
-        onClear={handleClear}
+        onErase={handleErase}
         onSolved={handleSolved}
       />
       <NumberPad
         onSelectNumber={handleNumberPress}
       />
       <PauseModal
-        visible={isPaused}
+        visible={showPauseModal}
         level={level}
         mistake={mistakeCount}
         elapsedTime={elapsedTime}

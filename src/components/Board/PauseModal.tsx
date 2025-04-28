@@ -107,5 +107,4 @@ const styles = {
   },
 };
 
-export default PauseModal;
-
+export default React.memo(PauseModal);
