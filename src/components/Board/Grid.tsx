@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withSequence, withTiming } from 'react-native-reanimated';
 import Svg, { Line } from 'react-native-svg';
+import { useTheme } from '../../context/ThemeContext';
 import { Cell } from '../../types';
 import { getAdjacentCellsInSameCage } from '../../utils/boardUtil';
 import { ANIMATION_CELL_KEY_SEPARATOR, ANIMATION_DURATION, ANIMATION_TYPE, BOARD_SIZE, CAGE_PADDING, CELL_SIZE } from '../../utils/constants';
@@ -25,6 +26,7 @@ const Grid = ({
   animatedCells,
   onSelectedCell,
 }: GridProps) => {
+  const { theme } = useTheme();
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const rowScales = Array.from({ length: BOARD_SIZE }, () => useSharedValue(1));
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -112,7 +114,7 @@ const Grid = ({
                 y1={r * CELL_SIZE + (adjacentCells.top ? 0 : CAGE_PADDING)}
                 x2={(c + 1) * CELL_SIZE - CAGE_PADDING}
                 y2={(r + 1) * CELL_SIZE - (adjacentCells.bottom ? 0 : CAGE_PADDING)}
-                stroke="gray"
+                stroke={theme.secondary}
                 strokeWidth={1}
                 strokeDasharray="2,2"
                 strokeLinecap="round"
@@ -132,7 +134,7 @@ const Grid = ({
                 y1={(r + 1) * CELL_SIZE - CAGE_PADDING}
                 x2={(c + 1) * CELL_SIZE - (adjacentCells.right ? 0 : CAGE_PADDING)}
                 y2={(r + 1) * CELL_SIZE - CAGE_PADDING}
-                stroke="gray"
+                stroke={theme.secondary}
                 strokeWidth={1}
                 strokeDasharray="2,2"
                 strokeLinecap="round"
@@ -150,7 +152,7 @@ const Grid = ({
               y1={r * CELL_SIZE + (adjacentCells.top ? 0 : CAGE_PADDING)}
               x2={c * CELL_SIZE + CAGE_PADDING}
               y2={(r + 1) * CELL_SIZE - (adjacentCells.bottom ? 0 : CAGE_PADDING)}
-              stroke="gray"
+              stroke={theme.secondary}
               strokeWidth={1}
               strokeDasharray="2,2"
               strokeLinecap="round"
@@ -167,7 +169,7 @@ const Grid = ({
               y1={r * CELL_SIZE + CAGE_PADDING}
               x2={(c + 1) * CELL_SIZE - (adjacentCells.right ? 0 : CAGE_PADDING)}
               y2={r * CELL_SIZE + CAGE_PADDING}
-              stroke="gray"
+              stroke={theme.secondary}
               strokeWidth={1}
               strokeDasharray="2,2"
               strokeLinecap="round"
@@ -184,7 +186,7 @@ const Grid = ({
               y1={r * CELL_SIZE + CAGE_PADDING}
               x2={c * CELL_SIZE + CAGE_PADDING}
               y2={r * CELL_SIZE + CAGE_PADDING}
-              stroke="gray"
+              stroke={theme.secondary}
               strokeWidth={1}
               strokeDasharray="2,2"
               strokeLinecap="round"
@@ -195,7 +197,7 @@ const Grid = ({
               y1={r * CELL_SIZE}
               x2={c * CELL_SIZE + CAGE_PADDING}
               y2={r * CELL_SIZE + CAGE_PADDING}
-              stroke="gray"
+              stroke={theme.secondary}
               strokeWidth={1}
               strokeDasharray="2,2"
               strokeLinecap="round"
@@ -212,7 +214,7 @@ const Grid = ({
               y1={r * CELL_SIZE + CAGE_PADDING}
               x2={(c + 1) * CELL_SIZE - CAGE_PADDING}
               y2={r * CELL_SIZE + CAGE_PADDING}
-              stroke="gray"
+              stroke={theme.secondary}
               strokeWidth={1}
               strokeDasharray="2,2"
               strokeLinecap="round"
@@ -223,7 +225,7 @@ const Grid = ({
               y1={r * CELL_SIZE}
               x2={(c + 1) * CELL_SIZE - CAGE_PADDING}
               y2={r * CELL_SIZE + CAGE_PADDING}
-              stroke="gray"
+              stroke={theme.secondary}
               strokeWidth={1}
               strokeDasharray="2,2"
               strokeLinecap="round"
@@ -239,7 +241,7 @@ const Grid = ({
               y1={(r + 1) * CELL_SIZE - CAGE_PADDING}
               x2={c * CELL_SIZE + CAGE_PADDING}
               y2={(r + 1) * CELL_SIZE - CAGE_PADDING}
-              stroke="gray"
+              stroke={theme.secondary}
               strokeWidth={1}
               strokeDasharray="2,2"
               strokeLinecap="round"
@@ -250,7 +252,7 @@ const Grid = ({
               y1={(r + 1) * CELL_SIZE}
               x2={c * CELL_SIZE + CAGE_PADDING}
               y2={(r + 1) * CELL_SIZE - CAGE_PADDING}
-              stroke="gray"
+              stroke={theme.secondary}
               strokeWidth={1}
               strokeDasharray="2,2"
               strokeLinecap="round"
@@ -266,7 +268,7 @@ const Grid = ({
               y1={(r + 1) * CELL_SIZE - CAGE_PADDING}
               x2={(c + 1) * CELL_SIZE - CAGE_PADDING}
               y2={(r + 1) * CELL_SIZE - CAGE_PADDING}
-              stroke="gray"
+              stroke={theme.secondary}
               strokeWidth={1}
               strokeDasharray="2,2"
               strokeLinecap="round"
@@ -277,7 +279,7 @@ const Grid = ({
               y1={(r + 1) * CELL_SIZE}
               x2={(c + 1) * CELL_SIZE - CAGE_PADDING}
               y2={(r + 1) * CELL_SIZE - CAGE_PADDING}
-              stroke="gray"
+              stroke={theme.secondary}
               strokeWidth={1}
               strokeDasharray="2,2"
               strokeLinecap="round"
@@ -301,14 +303,15 @@ const Grid = ({
     const isMistake = cellValue !== 0 && cellValue !== solvedBoard[row][col];
 
     return (
-      <View key={`${row}-${col}`} style={styles.cellWrapper}>
-        {isRelated && !isSelected && <View style={styles.relatedOverlay} />}
-        {isSelected && <View style={styles.selectedOverlay} />}
+      <View key={`${row}-${col}`} style={[styles.cellWrapper, { backgroundColor: theme.background }]}>
+        {isRelated && !isSelected && <View style={[styles.relatedOverlay, { backgroundColor: theme.overlayColor }]} />}
+        {isSelected && <View style={[styles.selectedOverlay, {backgroundColor: theme.selectedOverlayColor}]} />}
         <TouchableOpacity
           style={[
             styles.cell,
             // eslint-disable-next-line react-native/no-inline-styles
             {
+              borderColor: theme.cellBorderColor,
               borderTopWidth: (row === 0 || row === 3 || row === 6) ? 1.2 : 0.2,
               borderBottomWidth: (row === 8) ? 1.2 : 0.2,
               borderLeftWidth: (col === 0 || col === 3 || col === 6) ? 1.2 : 0.2,
@@ -319,10 +322,10 @@ const Grid = ({
             onSelectedCell({ row, col });
           }}
         >
-          {isCageFirst && <Text style={styles.cageText}>{cage?.sum}</Text>}
+          {isCageFirst && <Text style={[styles.cageText, {color: theme.secondary}]}>{cage?.sum}</Text>}
           <View style={styles.notesContainerTop}>
             {Array.from({ length: BOARD_SIZE }, (_, i) => (
-              <Text key={i} style={styles.noteText}>
+              <Text key={i} style={[styles.noteText, { color: theme.text }]}>
                 {cellNotes.includes((i + 1).toString()) ? i + 1 : ' '}
               </Text>
             ))}
@@ -330,7 +333,7 @@ const Grid = ({
           <Animated.View style={[styles.cell, animatedStyle]}>
             {cellValue !== 0 && (
               <Text
-                style={[styles.cellText, isMistake && styles.mistakeCellText]}
+                style={[styles.cellText, { color: theme.text }, isMistake && { color: theme.mistake }]}
               >
                 {cellValue}
               </Text>
@@ -408,7 +411,6 @@ const styles = {
     left: 0,
     width: '100%' as const,
     height: '100%' as const,
-    backgroundColor: '#d0e8ff',
     zIndex: 5,
   },
   cell: {
@@ -416,11 +418,10 @@ const styles = {
     height: CELL_SIZE,
     justifyContent: 'center' as const,
     alignItems: 'center' as const,
-    borderWidth: 0.1,
+    // borderWidth: 0.1,
     zIndex: 20,
   },
   relatedOverlay: {
-    backgroundColor: '#f0f8ff',
     position: 'absolute' as const,
     top: 0,
     left: 0,
@@ -431,10 +432,6 @@ const styles = {
   cellText: {
     fontSize: 18,
     fontWeight: 'bold' as const,
-    color: '#333',
-  },
-  mistakeCellText: {
-    color: 'red',
   },
   notesContainerTop: {
     position: 'absolute' as const,
@@ -450,14 +447,12 @@ const styles = {
     fontSize: 8,
     width: 10,
     textAlign: 'center' as const,
-    color: '#888',
   },
   cageText: {
     position: 'absolute' as const,
     top: 2,
     left: 4,
     fontSize: 10,
-    color: '#555',
   },
 };
 

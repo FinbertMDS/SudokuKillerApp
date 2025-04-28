@@ -1,13 +1,15 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { useEffect, useRef, useState } from 'react';
-import { Alert, View } from 'react-native';
+import { Alert } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import ActionButtons from '../../components/Board/ActionButtons';
 import Grid from '../../components/Board/Grid';
-import Header from '../../components/Board/Header';
 import InfoPanel from '../../components/Board/InfoPanel';
 import NumberPad from '../../components/Board/NumberPad';
 import PauseModal from '../../components/Board/PauseModal';
+import Header from '../../components/commons/Header';
+import { useTheme } from '../../context/ThemeContext';
 import { useAppPause } from '../../hooks/useAppPause';
 import { BoardService } from '../../services/BoardService';
 import { BoardScreenNavigationProp, BoardScreenRouteProp, Cell, InitGame, SavedGame } from '../../types';
@@ -15,6 +17,7 @@ import { checkBoardIsSolved, createEmptyGridNotes, deepCloneBoard, deepCloneNote
 import { ANIMATION_CELL_KEY_SEPARATOR, ANIMATION_DURATION, ANIMATION_TYPE, BOARD_SIZE, DIFFICULTY_ALL, MAX_MISTAKES, TIMEOUT_DURATION } from '../../utils/constants';
 
 const BoardScreen = () => {
+  const { theme } = useTheme();
   const route = useRoute<BoardScreenRouteProp>();
   const navigation = useNavigation<BoardScreenNavigationProp>();
   const {
@@ -329,7 +332,7 @@ const BoardScreen = () => {
   );
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView edges={['top']} style={[styles.container, { backgroundColor: theme.background }]}>
       <Header onBack={handleBackPress} />
       <InfoPanel
         level={savedLevel}
@@ -364,7 +367,7 @@ const BoardScreen = () => {
         elapsedTime={elapsedTime}
         onResume={handleResume}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 

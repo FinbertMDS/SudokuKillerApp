@@ -1,20 +1,24 @@
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
+import { useTheme } from '../../context/ThemeContext';
 import { BOARD_SIZE } from '../../utils/constants';
 
 type NumberPadProps = {
   onSelectNumber: (num: number) => void;
 };
 
-const NumberPad = ({ onSelectNumber }: NumberPadProps) => (
-  <View style={styles.container}>
-    {Array.from({ length: BOARD_SIZE }, (_, i) => i + 1).map((num) => (
-      <TouchableOpacity key={num} style={styles.button} onPress={() => onSelectNumber(num)}>
-        <Text style={styles.text}>{num}</Text>
-      </TouchableOpacity>
-    ))}
-  </View>
-);
+const NumberPad = ({ onSelectNumber }: NumberPadProps) => {
+  const { theme } = useTheme();
+  return (
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      {Array.from({ length: BOARD_SIZE }, (_, i) => i + 1).map((num) => (
+        <TouchableOpacity key={num} style={styles.button} onPress={() => onSelectNumber(num)}>
+          <Text style={[styles.text, { color: theme.text }]}>{num}</Text>
+        </TouchableOpacity>
+      ))}
+    </View>
+  );
+};
 
 const styles = {
   container: {

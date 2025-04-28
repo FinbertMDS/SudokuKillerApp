@@ -1,5 +1,6 @@
 import React from 'react';
 import { Modal, Text, TouchableOpacity, View } from 'react-native';
+import { useTheme } from '../../context/ThemeContext';
 import { MAX_MISTAKES } from '../../utils/constants';
 import { formatTime } from '../../utils/dateUtil';
 
@@ -11,60 +12,48 @@ type PauseModalProps = {
   onResume: () => void;
 };
 
-const PauseModal = ({ visible, level, mistake: mistakeCount, elapsedTime, onResume }: PauseModalProps) => (
-  <>
-    {/* Modal tạm dừng */}
-    <Modal visible={visible} transparent animationType="fade">
-      <View style={styles.modalContainer}>
-        <View style={styles.modalBox}>
+const PauseModal = ({ visible, level, mistake: mistakeCount, elapsedTime, onResume }: PauseModalProps) => {
+  const { theme } = useTheme();
+  return (
+    <>
+      {/* Modal tạm dừng */}
+      <Modal visible={visible} transparent animationType="fade">
+        <View style={styles.overlay}>
+          <View style={[styles.modalBox, { backgroundColor: theme.background }]}>
 
-          {/* Header */}
-          <Text style={styles.modalHeader}>Đã dừng</Text>
+            {/* Header */}
+            <Text style={[styles.modalHeader, { color: theme.text }]}>Đã dừng</Text>
 
-          {/* Thông tin Board */}
-          <View style={styles.modalBoardInfo}>
-            <View style={styles.infoBlock}>
-              <Text style={styles.infoTitle}>Level</Text>
-              <Text style={styles.infoValue}>{level}</Text>
+            {/* Thông tin Board */}
+            <View style={styles.modalBoardInfo}>
+              <View style={styles.infoBlock}>
+                <Text style={styles.infoTitle}>Level</Text>
+                <Text style={[styles.infoValue, {color: theme.text}]}>{level}</Text>
+              </View>
+              <View style={styles.infoBlock}>
+                <Text style={styles.infoTitle}>Mistakes</Text>
+                <Text style={[styles.infoValue, {color: theme.text}]}>{mistakeCount}/{MAX_MISTAKES}</Text>
+              </View>
+              <View style={styles.infoBlock}>
+                <Text style={styles.infoTitle}>Time</Text>
+                <Text style={[styles.infoValue, {color: theme.text}]}>{formatTime(elapsedTime)}</Text>
+              </View>
             </View>
-            <View style={styles.infoBlock}>
-              <Text style={styles.infoTitle}>Mistakes</Text>
-              <Text style={styles.infoValue}>{mistakeCount}/{MAX_MISTAKES}</Text>
-            </View>
-            <View style={styles.infoBlock}>
-              <Text style={styles.infoTitle}>Time</Text>
-              <Text style={styles.infoValue}>{formatTime(elapsedTime)}</Text>
-            </View>
+
+            {/* Button Tiếp tục */}
+            <TouchableOpacity style={[styles.resumeButton, {backgroundColor: theme.primary}]} onPress={onResume}>
+              <Text style={[styles.resumeButtonText, { color: theme.buttonText }]}>Tiếp tục</Text>
+            </TouchableOpacity>
+
           </View>
-
-          {/* Button Tiếp tục */}
-          <TouchableOpacity style={styles.resumeButton} onPress={onResume}>
-            <Text style={styles.resumeButtonText}>Tiếp tục</Text>
-          </TouchableOpacity>
-
         </View>
-      </View>
-    </Modal>
-  </>
-);
+      </Modal>
+    </>
+  );
+};
 
 const styles = {
-  infoBlock: {
-    alignItems: 'center' as const,
-  },
-
-  infoTitle: {
-    fontSize: 14,
-    color: '#888',
-  },
-
-  infoValue: {
-    fontSize: 16,
-    fontWeight: 'bold' as const,
-    color: '#333',
-  },
-
-  modalContainer: {
+  overlay: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.5)',
     justifyContent: 'center' as const,
@@ -93,15 +82,27 @@ const styles = {
     marginBottom: 20,
   },
 
+  infoBlock: {
+    alignItems: 'center' as const,
+  },
+
+  infoTitle: {
+    fontSize: 14,
+    color: '#888',
+  },
+
+  infoValue: {
+    fontSize: 16,
+    fontWeight: 'bold' as const,
+  },
+
   resumeButton: {
-    backgroundColor: '#007bff',
     paddingVertical: 12,
     paddingHorizontal: 30,
     borderRadius: 25,
   },
 
   resumeButtonText: {
-    color: 'white',
     fontSize: 16,
     fontWeight: 'bold' as const,
   },

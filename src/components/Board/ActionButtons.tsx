@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useTheme } from '../../context/ThemeContext';
 
 type ActionButtonsProps = {
   noteMode: boolean,
@@ -18,6 +19,7 @@ const ActionButtons = (
     onErase: onClear,
     onSolved,
   }: ActionButtonsProps) => {
+  const { theme } = useTheme();
 
   const handleNote = useCallback((mode: boolean) => {
     onNote(mode);
@@ -45,18 +47,17 @@ const ActionButtons = (
   ], [handleNote, handleUndo, handleErase, handleNote]);
 
   return (
-    <View style={styles.container}>
+      <View style={[styles.container, { backgroundColor: theme.background }]}>
       {buttons.map((btn, idx) => (
         <TouchableOpacity key={idx} style={styles.button} onPress={btn.onPress}>
           <Icon
             name={(btn.icon.length > 0 && btn.iconChangeFlag) ? btn.icon[1] : btn.icon[0]}
             size={24}
-            color={(btn.icon.length > 0 && btn.iconChangeFlag) ? '#325AAF' : '#ADB6C2'}
+            color={(btn.icon.length > 0 && btn.iconChangeFlag) ? theme.primary : theme.secondary}
           />
           <Text
-            // eslint-disable-next-line react-native/no-inline-styles
             style={{
-              color: (btn.icon.length > 0 && btn.iconChangeFlag) ? '#325AAF' : '#ADB6C2',
+              color: (btn.icon.length > 0 && btn.iconChangeFlag) ? theme.primary : theme.secondary,
             }}
           >{btn.label}</Text>
         </TouchableOpacity>
