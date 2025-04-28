@@ -29,7 +29,6 @@ const MainScreen = () => {
   const handleNewGame = async (level: string) => {
     setMenuVisible(false);
     const sudoku = generateKillerSudoku(level as Difficulty);
-    console.log(sudoku);
     const initGame = {
       initialBoard: stringToGrid(sudoku.puzzle),
       solvedBoard: stringToGrid(sudoku.solution),
@@ -37,9 +36,6 @@ const MainScreen = () => {
       savedLevel: level,
     } as InitGame;
     await BoardService.save(initGame);
-    const initGame2 = await BoardService.loadInit();
-    console.log('initGame', initGame);
-    console.log('initGame2', initGame2);
     navigation.navigate(SCREENS.BOARD, {
       ...initGame,
     });

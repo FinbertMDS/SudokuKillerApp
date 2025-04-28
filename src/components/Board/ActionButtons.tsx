@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -6,7 +6,7 @@ type ActionButtonsProps = {
   noteMode: boolean,
   onNote: (mode: boolean) => void,
   onUndo: () => void,
-  onClear: () => void,
+  onErase: () => void,
   onSolved: () => void,
 };
 
@@ -15,16 +15,35 @@ const ActionButtons = (
     noteMode,
     onNote,
     onUndo,
-    onClear,
+    onErase: onClear,
     onSolved,
   }: ActionButtonsProps) => {
-  const buttons = [
-    { label: 'Undo', icon: ['undo'], onPress: onUndo },
-    { label: 'Erase', icon: ['eraser'], onPress: onClear },
-    { label: 'Notes', icon: ['note-outline', 'note-edit-outline'], iconChangeFlag: noteMode, onPress: () => onNote(!noteMode) },
-    { label: 'Solved Board', icon: ['lightbulb-on-outline'], onPress: onSolved },
+
+  const handleNote = useCallback((mode: boolean) => {
+    onNote(mode);
+  }, [onNote]);
+  const handleUndo = useCallback(() => {
+    onUndo();
+  }, [onUndo]);
+
+  const handleErase = useCallback(() => {
+    onClear();
+  }, [onClear]);
+
+  const handleSolved = useCallback(() => {
+    onSolved();
+  }, [onSolved]);
+
+
+  const buttons = useMemo(() => [
+    { label: 'Undo', icon: ['undo'], onPress: handleUndo },
+    { label: 'Erase', icon: ['eraser'], onPress: handleErase },
+    { label: 'Notes', icon: ['note-outline', 'note-edit-outline'], iconChangeFlag: noteMode, onPress: () => handleNote(!noteMode) },
+    { label: 'Solved Board', icon: ['lightbulb-on-outline'], onPress: handleSolved },
     // { label: 'Hint', icon: 'lightbulb-on-outline', onPress: handleHint },
-  ];
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  ], [handleNote, handleUndo, handleErase, handleNote]);
+
   return (
     <View style={styles.container}>
       {buttons.map((btn, idx) => (

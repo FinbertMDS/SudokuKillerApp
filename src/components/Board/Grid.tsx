@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withSequence, withTiming } from 'react-native-reanimated';
 import Svg, { Line } from 'react-native-svg';
@@ -30,10 +30,16 @@ const Grid = ({
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const colScales = Array.from({ length: BOARD_SIZE }, () => useSharedValue(1));
 
-  useEffect(() => {
-    console.log('Grid solvedBoard', solvedBoard);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const animatedStyles = useRef(
+    Array.from({ length: BOARD_SIZE }, (_, row) =>
+      Array.from({ length: BOARD_SIZE }, (_, col) =>
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        useAnimatedStyle(() => ({
+          transform: [{ scale: rowScales[row].value * colScales[col].value }],
+        }))
+      )
+    )
+  ).current;
 
   useEffect(() => {
     // Kiểm tra animatedCells có tồn tại không và có chứa ít nhất 1 key không
@@ -44,8 +50,6 @@ const Grid = ({
     // Chỉ cần lặp qua các ô đã được animate
     Object.keys(animatedCells).forEach(key => {
       const [row, col] = key.split(ANIMATION_CELL_KEY_SEPARATOR).map(Number);
-
-      console.log(`Animate cell: ${key}, row: ${row}, col: ${col}, type: ${animatedCells[key]}`);
 
       if (animatedCells[key] === ANIMATION_TYPE.NONE) { return; }
 
@@ -345,16 +349,8 @@ const Grid = ({
           <View style={styles.grid}>
             {board.map((row, rowIndex) => (
               <View key={rowIndex} style={styles.row}>
-                {row.map((cell, colIndex) => {
-                  // eslint-disable-next-line react-hooks/rules-of-hooks
-                  const animatedStyle = useAnimatedStyle(() => {
-                    return {
-                      transform: [
-                        { scale: rowScales[rowIndex].value * colScales[colIndex].value },
-                      ],
-                    };
-                  });
-                  return renderCell(rowIndex, colIndex, animatedStyle);
+                {row.map((_, colIndex) => {
+                  return renderCell(rowIndex, colIndex, animatedStyles[rowIndex][colIndex]);
                 })}
               </View>
             ))}
