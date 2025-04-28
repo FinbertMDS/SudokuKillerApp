@@ -1,34 +1,35 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { SavedGame } from '../types';
+import { InitGame, SavedGame } from '../types';
 
-const STORAGE_KEY = 'savedGame';
+const STORAGE_KEY_INIT_GAME = 'initGame';
+const STORAGE_KEY_SAVED_GAME = 'savedGame';
 
 export const BoardService = {
-  async save(state: SavedGame) {
+  async save(state: SavedGame | InitGame) {
     try {
-      let data = await this.load();
-      if (data) {
-        data = {
-          ...data,
-          ...state,
-          lastSaved: new Date(),
-        };
-      } else {
-        data = {
-          ...state,
-          lastSaved: new Date(),
-        };
+      if ('initialBoard' in state) {
+        await AsyncStorage.setItem(STORAGE_KEY_INIT_GAME, JSON.stringify(state));
+      } else if ('savedBoard' in state) {
+        await AsyncStorage.setItem(STORAGE_KEY_SAVED_GAME, JSON.stringify(state));
       }
-      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-      console.log('Game state saved successfully');
     } catch (e) {
       console.error('Failed to save game:', e);
     }
   },
 
-  async load(): Promise<SavedGame | null> {
+  async loadInit(): Promise<InitGame | null> {
     try {
-      const data = await AsyncStorage.getItem(STORAGE_KEY);
+      const data = await AsyncStorage.getItem(STORAGE_KEY_INIT_GAME);
+      return data ? JSON.parse(data) : null;
+    } catch (e) {
+      console.error('Failed to load game:', e);
+      return null;
+    }
+  },
+
+  async loadSaved(): Promise<SavedGame | null> {
+    try {
+      const data = await AsyncStorage.getItem(STORAGE_KEY_SAVED_GAME);
       return data ? JSON.parse(data) : null;
     } catch (e) {
       console.error('Failed to load game:', e);
@@ -38,7 +39,8 @@ export const BoardService = {
 
   async clear() {
     try {
-      await AsyncStorage.removeItem(STORAGE_KEY);
+      await AsyncStorage.removeItem(STORAGE_KEY_INIT_GAME);
+      await AsyncStorage.removeItem(STORAGE_KEY_SAVED_GAME);
       console.log('Saved game cleared');
     } catch (e) {
       console.error('Failed to clear saved game:', e);

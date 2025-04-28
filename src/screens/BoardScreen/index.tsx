@@ -10,23 +10,32 @@ import NumberPad from '../../components/Board/NumberPad';
 import PauseModal from '../../components/Board/PauseModal';
 import { useAppPause } from '../../hooks/useAppPause';
 import { BoardService } from '../../services/BoardService';
-import { BoardScreenNavigationProp, BoardScreenRouteProp, Cell, SavedGame } from '../../types';
-import { checkIfBoardIsSolved, createEmptyGridNotes } from '../../utils/boardUtil';
-import { DIFFICULTY_ALL, MAX_MISTAKES, TIMEOUT_DURATION } from '../../utils/constants';
+import { BoardScreenNavigationProp, BoardScreenRouteProp, Cell, InitGame, SavedGame } from '../../types';
+import { checkBoardIsSolved, createEmptyGridNotes, deepCloneBoard, deepCloneNotes } from '../../utils/boardUtil';
+import { ANIMATION_CELL_KEY_SEPARATOR, ANIMATION_DURATION, ANIMATION_TYPE, BOARD_SIZE, DIFFICULTY_ALL, MAX_MISTAKES, TIMEOUT_DURATION } from '../../utils/constants';
 
 const BoardScreen = () => {
   const route = useRoute<BoardScreenRouteProp>();
   const navigation = useNavigation<BoardScreenNavigationProp>();
-  const { initialBoard, savedBoard, solvedBoard, cages, savedLevel, savedHistory, savedElapsedTime, savedMistakeCount } = route.params;
+  const {
+    initialBoard,
+    solvedBoard,
+    cages,
+    savedLevel,
+    savedBoard,
+    savedMistakeCount,
+    savedElapsedTime,
+    savedHistory,
+  } = route.params as InitGame & SavedGame;
 
-  const [board, setBoard] = useState<number[][]>(savedBoard ? savedBoard : initialBoard);
+  const [board, setBoard] = useState<(number | null)[][]>(savedBoard ? deepCloneBoard(savedBoard) : deepCloneBoard(initialBoard));
   const [mistakeCount, setMistakeCount] = useState<number>(savedMistakeCount ? savedMistakeCount : 0);
 
   const [selectedCell, setSelectedCell] = useState<Cell | null>(null);
   const [level] = useState<string>(savedLevel ? savedLevel : DIFFICULTY_ALL[0]);
 
   const [history, setHistory] = useState(() =>
-    savedHistory !== undefined ? savedHistory : []
+    savedHistory !== undefined ? savedHistory : [deepCloneBoard(initialBoard)]
   );
   const [isPaused, setIsPaused] = useState<boolean>(false);
   const [pauseTime, setPauseTime] = useState(0);
@@ -91,25 +100,25 @@ const BoardScreen = () => {
     setSelectedCell(null);
     setNoteMode(false);
     setPauseTime(0);
-    setBoard(initialBoard);
+    setBoard(deepCloneBoard(initialBoard));
     setNotes(createEmptyGridNotes<string>());
     setHistory([]);
     setMistakeCount(0);
   };
   // ===========================================================
 
+  // Xử lý animation khi nhập xong 1 hàng/cột
+  const [animatedCells, setAnimatedCells] = useState<{ [key: string]: number }>({});
+
   const handlePause = async () => {
     setIsPaused(true);
     setPauseTime(Date.now());
     await BoardService.save({
-      initialBoard,
-      solvedBoard,
-      cages,
-      savedLevel: level,
       savedBoard: board,
       savedMistakeCount: mistakeCount,
       savedElapsedTime: elapsedTime,
       savedHistory: history,
+      lastSaved: new Date(),
     } as SavedGame);
   };
 
@@ -118,29 +127,37 @@ const BoardScreen = () => {
     setPausedDuration(prev => prev + Date.now() - pauseTime);
   };
 
-  const saveHistory = () => {
-    const boardCopy = board.map(row => [...row]);
-    setHistory(prev => [...prev, boardCopy]);
+  const saveHistory = (newBoard: (number | null)[][]) => {
+    setHistory(prev => [...prev, deepCloneBoard(newBoard)]);
   };
 
   const handleUndo = () => {
-    if (history.length === 0) { return; }
-    const lastState = history[history.length - 1];
-    setBoard(lastState);
+    if (history.length <= 1) { return; }
+
+    const lastState = history[history.length - 2];
+    setBoard(deepCloneBoard(lastState));
     setHistory(prev => prev.slice(0, -1));
   };
 
   const handleClear = () => {
     if (!selectedCell) { return; }
-    if (initialBoard[selectedCell.row][selectedCell.col]) { return; }
     const { row, col } = selectedCell;
-    saveHistory();
-    const newBoard = [...board];
-    newBoard[row][col] = 0;
+    if (initialBoard[row][col]) {
+      console.log('You cannot clear a cell that is initialized cell');
+      return;
+    }
+    if (board[row][col] === null || board[row][col] === 0) {
+      console.log('You cannot clear a cell that is already empty');
+      return;
+    }
+
+    const newBoard = deepCloneBoard(board);
+    newBoard[row][col] = null;
     setBoard(newBoard);
-    const newNotes = [...notes];
+    const newNotes = deepCloneNotes(notes);
     newNotes[row][col] = [];
     setNotes(newNotes);
+    saveHistory(newBoard);
   };
 
   const handleSolved = () => {
@@ -151,8 +168,9 @@ const BoardScreen = () => {
       { cancelable: false }
     );
 
-    setBoard(solvedBoard);
-    saveHistory();
+    const clonedSolved = deepCloneBoard(solvedBoard);
+    setBoard(clonedSolved);
+    saveHistory(clonedSolved);
     // handleCheckSolved(solvedBoard);
   };
 
@@ -160,10 +178,8 @@ const BoardScreen = () => {
     if (!selectedCell) { return; }
     const { row, col } = selectedCell;
 
-    saveHistory();
-
     if (noteMode) {
-      const newNotes = [...notes];
+      const newNotes = deepCloneNotes(notes);
       const cellNotes = newNotes[row][col];
       if (cellNotes.includes(num.toString())) {
         newNotes[row][col] = cellNotes.filter((n) => n !== num.toString());
@@ -173,22 +189,62 @@ const BoardScreen = () => {
       setNotes(newNotes);
     } else {
       const correctValue = solvedBoard[row][col];
-      const newBoard = [...board];
+      const newBoard = deepCloneBoard(board);
       newBoard[row][col] = num;
       setBoard(newBoard);
-      const newNotes = [...notes];
-      newNotes[row][col] = [];
-      setNotes(newNotes);
+      saveHistory(newBoard);
       if (num !== correctValue) {
         setMistakeCount(prev => prev + 1);
       } else {
+        handleCheckRowOrColResolved(row, col, newBoard);
         handleCheckSolved(newBoard);
       }
     }
   };
 
-  const handleCheckSolved = (newBoard: number[][]) => {
-    if (checkIfBoardIsSolved(newBoard, solvedBoard)) {
+  const isRowFilled = (row: number, newBoard: (number | null)[][]): boolean => {
+    if (!newBoard[row]) { return false; } // Nếu dòng không tồn tại, coi như chưa filled
+    for (let col = 0; col < BOARD_SIZE; col++) {
+      if (!newBoard[row][col]) {
+        return false; // Nếu có ô nào trong dòng là 0, coi như chưa filled
+      }
+    }
+    return true; // Nếu tất cả ô trong dòng đều khác 0, coi như đã filled
+  };
+
+  const isColFilled = (col: number, newBoard: (number | null)[][]): boolean => {
+    for (let row = 0; row < BOARD_SIZE; row++) {
+      if (!newBoard[row][col]) {
+        return false; // Nếu có ô nào trong cột là 0, coi như chưa filled
+      }
+    }
+    return true; // Nếu tất cả ô trong cột đều khác 0, coi như đã filled
+  };
+
+  const handleCheckRowOrColResolved = (row: number, col: number, newBoard: (number | null)[][]) => {
+    const key = `${row}${ANIMATION_CELL_KEY_SEPARATOR}${col}`;
+    let animationType = ANIMATION_TYPE.NONE as number;
+    if (isRowFilled(row, newBoard) && isColFilled(col, newBoard)) {
+      animationType = ANIMATION_TYPE.ROW_COL;
+    } else if (isRowFilled(row, newBoard)) {
+      animationType = ANIMATION_TYPE.ROW;
+    } else if (isColFilled(col, newBoard)) {
+      animationType = ANIMATION_TYPE.COL;
+    }
+    setAnimatedCells(prev => ({ ...prev, [key]: animationType }));
+
+    // Xóa animation sau 300ms để reset lại
+    setTimeout(() => {
+      setAnimatedCells(prev => {
+        const updated = { ...prev };
+        delete updated[key];
+        return updated;
+      });
+    }, ANIMATION_DURATION);
+  };
+
+  const handleCheckSolved = (newBoard: (number | null)[][]) => {
+    if (checkBoardIsSolved(newBoard, solvedBoard)) {
       Alert.alert(
         '🎉 Hoàn thành!',
         'Bạn đã giải xong Sudoku!',
@@ -208,14 +264,11 @@ const BoardScreen = () => {
 
   const handleBackPress = async () => {
     await BoardService.save({
-      initialBoard,
-      solvedBoard,
-      cages,
-      savedLevel: level,
       savedBoard: board,
       savedMistakeCount: mistakeCount,
       savedElapsedTime: elapsedTime,
       savedHistory: history,
+      lastSaved: new Date(),
     } as SavedGame);
     navigation.goBack();
   };
@@ -252,6 +305,7 @@ const BoardScreen = () => {
         solvedBoard={solvedBoard}
         selectedCell={selectedCell}
         onSelectedCell={setSelectedCell}
+        animatedCells={animatedCells}
       />
       <ActionButtons
         noteMode={noteMode}

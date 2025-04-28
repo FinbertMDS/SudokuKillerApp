@@ -6,7 +6,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Menu } from 'react-native-paper';
 import { Difficulty } from 'sudoku-gen/dist/types/difficulty.type';
 import { BoardService } from '../../services/BoardService';
-import { BoardScreenNavigationProp, RootStackParamList } from '../../types/index';
+import { BoardScreenNavigationProp, InitGame } from '../../types/index';
 import { sortAreasCells, stringToGrid } from '../../utils/boardUtil';
 import { DIFFICULTY_ALL, SCREENS } from '../../utils/constants';
 
@@ -22,25 +22,37 @@ const MainScreen = () => {
   );
 
   const checkSavedGame = async () => {
-    const saved = await BoardService.load();
+    const saved = await BoardService.loadSaved();
     setHasSavedGame(!!saved);
   };
 
-  const handleNewGame = (level: string) => {
+  const handleNewGame = async (level: string) => {
     setMenuVisible(false);
     const sudoku = generateKillerSudoku(level as Difficulty);
-    navigation.navigate(SCREENS.BOARD, {
+    console.log(sudoku);
+    const initGame = {
       initialBoard: stringToGrid(sudoku.puzzle),
       solvedBoard: stringToGrid(sudoku.solution),
       cages: sortAreasCells(sudoku.areas),
       savedLevel: level,
-    } as RootStackParamList['Board']);
+    } as InitGame;
+    await BoardService.save(initGame);
+    const initGame2 = await BoardService.loadInit();
+    console.log('initGame', initGame);
+    console.log('initGame2', initGame2);
+    navigation.navigate(SCREENS.BOARD, {
+      ...initGame,
+    });
   };
 
   const handleContinueGame = async () => {
-    const saved = await BoardService.load();
-    if (saved) {
-      navigation.navigate(SCREENS.BOARD, saved);
+    const initGame = await BoardService.loadInit();
+    const savedGame = await BoardService.loadSaved();
+    if (savedGame) {
+      navigation.navigate(SCREENS.BOARD, {
+        ...initGame,
+        ...savedGame,
+      });
     }
   };
 

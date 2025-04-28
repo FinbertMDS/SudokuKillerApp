@@ -103,19 +103,44 @@ export function positionToIndex(row: number, col: number, size: number = 9): num
   return row * size + col;
 }
 
-export const checkIfBoardIsSolved = (board: number[][], solvedBoard: number[][]): boolean => {
-  const size = board.length;
+/**
+ * Deep clone a 2D array (for board)
+ */
+export const deepCloneBoard = (board: (number | null)[][]): (number | null)[][] => {
+  return board.map(row => [...row]);
+};
 
-  for (let row = 0; row < size; row++) {
-    for (let col = 0; col < size; col++) {
-      if (board[row][col] !== solvedBoard[row][col]) {
-        return false;
-      }
-    }
+/**
+ * Deep clone a 3D array (for notes)
+ */
+export const deepCloneNotes = (notes: string[][][]): string[][][] => {
+  return notes.map(row =>
+    row.map(cell =>
+      [...cell]  // Clone từng mảng string[] trong mỗi cell
+    )
+  );
+};
+
+/**
+ * Kiểm tra xem board đã được giải quyết hay chưa.
+ * @param board Mảng 2 chiều đại diện cho board
+ * @param solvedBoard Mảng 2 chiều đại diện cho board đã được giải quyết
+ * @returns true nếu đã giải quyết, false nếu chưa
+ */
+export const checkBoardIsSolved = (
+  board: (number | null)[][],
+  solvedBoard: (number | null)[][]
+): boolean => {
+  if (board.length !== solvedBoard.length) {
+    return false;
   }
 
-  return true;
+  return board.every((row, rowIndex) =>
+    row.length === solvedBoard[rowIndex].length &&
+    row.every((cell, colIndex) => cell === solvedBoard[rowIndex][colIndex])
+  );
 };
+
 
 import { Cage } from '../types';
 import { BOARD_SIZE } from './constants';

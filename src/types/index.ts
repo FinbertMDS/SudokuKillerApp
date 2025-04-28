@@ -12,20 +12,22 @@ export interface Cage {
 
 export type RootStackParamList = {
   HomeTabs: undefined;
-  Board: SavedGame;
+  Board: InitGame | SavedGame;
 };
 
-export type SavedGame = {
-  score: number;
-  initialBoard: number[][];
+export type InitGame = {
+  initialBoard: (number | null)[][];
   solvedBoard: number[][];
   cages: { cells: [number, number][], sum: number }[];
   savedLevel: string;
-  savedBoard: number[][];
+}
+
+export type SavedGame = {
+  savedBoard: (number | null)[][];
   savedMistakeCount: number;
   savedElapsedTime: number; // thời gian đã trôi qua
+  savedHistory: (number | null)[][][]; // lịch sử các bước đã đi
   lastSaved: Date; // thời gian lưu gần nhất
-  savedHistory: number[][][]; // lịch sử các bước đã đi
 }
 
 export type BoardScreenRouteProp = RouteProp<RootStackParamList, 'Board'>;

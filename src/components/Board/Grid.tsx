@@ -1,16 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
+import Animated, { useAnimatedStyle, useSharedValue, withSequence, withTiming } from 'react-native-reanimated';
 import Svg, { Line } from 'react-native-svg';
 import { Cell } from '../../types';
 import { getAdjacentCellsInSameCage } from '../../utils/boardUtil';
-import { BOARD_SIZE, CAGE_PADDING, CELL_SIZE } from '../../utils/constants';
+import { ANIMATION_CELL_KEY_SEPARATOR, ANIMATION_DURATION, ANIMATION_TYPE, BOARD_SIZE, CAGE_PADDING, CELL_SIZE } from '../../utils/constants';
 
 type GridProps = {
-  board: number[][];
+  board: (number | null)[][];
   cages: { cells: [number, number][], sum: number }[];
   notes: string[][][];
   solvedBoard: number[][];
   selectedCell: Cell | null;
+  animatedCells: { [key: string]: number };
   onSelectedCell: (cell: Cell | null) => void;
 };
 
@@ -20,8 +22,49 @@ const Grid = ({
   notes,
   solvedBoard,
   selectedCell,
+  animatedCells,
   onSelectedCell,
 }: GridProps) => {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const rowScales = Array.from({ length: BOARD_SIZE }, () => useSharedValue(1));
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const colScales = Array.from({ length: BOARD_SIZE }, () => useSharedValue(1));
+
+  useEffect(() => {
+    console.log('Grid solvedBoard', solvedBoard);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    // Kiểm tra animatedCells có tồn tại không và có chứa ít nhất 1 key không
+    if (!animatedCells || Object.keys(animatedCells).length === 0) {
+      return;
+    }
+
+    // Chỉ cần lặp qua các ô đã được animate
+    Object.keys(animatedCells).forEach(key => {
+      const [row, col] = key.split(ANIMATION_CELL_KEY_SEPARATOR).map(Number);
+
+      console.log(`Animate cell: ${key}, row: ${row}, col: ${col}, type: ${animatedCells[key]}`);
+
+      if (animatedCells[key] === ANIMATION_TYPE.NONE) { return; }
+
+      if (animatedCells[key] === ANIMATION_TYPE.ROW || animatedCells[key] === ANIMATION_TYPE.ROW_COL) {
+        rowScales[row].value = withSequence(
+          withTiming(0.9, { duration: ANIMATION_DURATION / 3 }),
+          withTiming(1, { duration: ANIMATION_DURATION / 3 }),
+        );
+      }
+      if (animatedCells[key] === ANIMATION_TYPE.COL || animatedCells[key] === ANIMATION_TYPE.ROW_COL) {
+        colScales[col].value = withSequence(
+          withTiming(0.9, { duration: ANIMATION_DURATION / 3 }),
+          withTiming(1, { duration: ANIMATION_DURATION / 3 }),
+        );
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [animatedCells]);
+
 
   const isCellInSameRowOrColOrBox = (row: number, col: number) => {
     if (!selectedCell) { return false; }
@@ -244,7 +287,7 @@ const Grid = ({
     return lines;
   };
 
-  const renderCell = (row: number, col: number) => {
+  const renderCell = (row: number, col: number, animatedStyle: any) => {
     const isSelected = selectedCell?.row === row && selectedCell?.col === col;
     const isRelated = isCellInSameRowOrColOrBox(row, col);
     const cellValue = board[row][col];
@@ -268,7 +311,9 @@ const Grid = ({
               borderRightWidth: (col === 8) ? 1.2 : 0.2,
             },
           ]}
-          onPress={() => onSelectedCell({ row, col })}
+          onPress={() => {
+            onSelectedCell({ row, col });
+          }}
         >
           {isCageFirst && <Text style={styles.cageText}>{cage?.sum}</Text>}
           <View style={styles.notesContainerTop}>
@@ -278,13 +323,15 @@ const Grid = ({
               </Text>
             ))}
           </View>
-          {cellValue !== 0 && (
-            <Text
-              style={[styles.cellText, isMistake && styles.mistakeCellText]}
-            >
-              {cellValue}
-            </Text>
-          )}
+          <Animated.View style={[styles.cell, animatedStyle]}>
+            {cellValue !== 0 && (
+              <Text
+                style={[styles.cellText, isMistake && styles.mistakeCellText]}
+              >
+                {cellValue}
+              </Text>
+            )}
+          </Animated.View>
         </TouchableOpacity>
       </View>
     );
@@ -298,7 +345,17 @@ const Grid = ({
           <View style={styles.grid}>
             {board.map((row, rowIndex) => (
               <View key={rowIndex} style={styles.row}>
-                {row.map((_, colIndex) => renderCell(rowIndex, colIndex))}
+                {row.map((cell, colIndex) => {
+                  // eslint-disable-next-line react-hooks/rules-of-hooks
+                  const animatedStyle = useAnimatedStyle(() => {
+                    return {
+                      transform: [
+                        { scale: rowScales[rowIndex].value * colScales[colIndex].value },
+                      ],
+                    };
+                  });
+                  return renderCell(rowIndex, colIndex, animatedStyle);
+                })}
               </View>
             ))}
           </View>
@@ -359,11 +416,12 @@ const styles = {
     zIndex: 5,
   },
   cell: {
-    flex: 1,
-    borderColor: '#000',
+    width: CELL_SIZE,
+    height: CELL_SIZE,
     justifyContent: 'center' as const,
     alignItems: 'center' as const,
-    position: 'relative' as const,
+    borderWidth: 0.5,
+    borderColor: '#ccc',
     zIndex: 20,
   },
   relatedOverlay: {
@@ -378,6 +436,7 @@ const styles = {
   cellText: {
     fontSize: 18,
     fontWeight: 'bold' as const,
+    color: '#333',
   },
   mistakeCellText: {
     color: 'red',
