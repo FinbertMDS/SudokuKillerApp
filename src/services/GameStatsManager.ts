@@ -1,16 +1,8 @@
 // GameStatsManager.ts
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Level } from '../types';
-import { STORAGE_KEY_GAME_STATS } from '../utils/constants';
-
-export interface GameStats {
-  gamesStarted: number;
-  gamesCompleted: number;
-  bestTimeSeconds: number | null;
-  averageTimeSeconds: number | null;
-  totalTimeSeconds: number;
-}
+import { DailyStats, GameLogEntry, GameStats, Level } from '../types';
+import { STORAGE_KEY_GAME_LOGS, STORAGE_KEY_GAME_STATS } from '../utils/constants';
 
 export const GameStatsManager = {
   async getStats(): Promise<Record<Level, GameStats>> {
@@ -37,6 +29,38 @@ export const GameStatsManager = {
       await AsyncStorage.setItem(STORAGE_KEY_GAME_STATS, JSON.stringify(stats));
     } catch (error) {
       console.error('Error saving stats:', error);
+    }
+  },
+
+  async getLogs(): Promise<GameLogEntry[]> {
+    try {
+      const json = await AsyncStorage.getItem(STORAGE_KEY_GAME_LOGS);
+      if (json) {
+        return JSON.parse(json);
+      }
+    } catch (error) {
+      console.error('Error loading logs:', error);
+    }
+    return [];
+  },
+
+  async saveLog(log: GameLogEntry) {
+    try {
+      const existing = await this.getLogs();
+      existing.push(log);
+      await AsyncStorage.setItem(STORAGE_KEY_GAME_LOGS, JSON.stringify(existing));
+    } catch (error) {
+      console.error('Error saving logs:', error);
+    }
+  },
+
+  async saveLogs(logs: GameLogEntry[]) {
+    try {
+      const existing = await this.getLogs();
+      const updated = [...existing, ...logs];
+      await AsyncStorage.setItem(STORAGE_KEY_GAME_LOGS, JSON.stringify(updated));
+    } catch (error) {
+      console.error('Error saving logs:', error);
     }
   },
 
@@ -72,6 +96,17 @@ export const GameStatsManager = {
     }
 
     await this.saveStats(stats);
+
+    // 👉 Record daily log
+    const now = new Date();
+    const today = now.toISOString().split('T')[0]; // 'YYYY-MM-DD'
+    const newEntry: GameLogEntry = {
+      level,
+      date: today,
+      durationSeconds: timeSeconds,
+    };
+
+    await this.saveLog(newEntry);
   },
 
   async resetStats() {
@@ -82,6 +117,45 @@ export const GameStatsManager = {
       expert: this.createEmptyStats(),
     };
     await this.saveStats(defaultStats);
+  },
+
+  async getDailyStats(): Promise<DailyStats[]> {
+    const logs: GameLogEntry[] = await this.getLogs();
+
+    if (logs.length === 0) {
+      return [];
+    }
+    const map = new Map<string, { games: number; time: number }>();
+
+    for (const entry of logs) {
+      if (!map.has(entry.date)) {
+        map.set(entry.date, { games: 0, time: 0 });
+      }
+      const stat = map.get(entry.date)!;
+      stat.games += 1;
+      stat.time += entry.durationSeconds;
+    }
+
+    const result: DailyStats[] = [];
+    for (const [date, data] of map.entries()) {
+      result.push({
+        date,
+        games: data.games,
+        totalTimeSeconds: data.time,
+      });
+    }
+
+    // Sắp xếp theo ngày gần nhất lên đầu
+    return result.sort((a, b) => b.date.localeCompare(a.date));
+  },
+
+  async resetStatistics() {
+    try {
+      await this.resetStats();
+      await AsyncStorage.removeItem(STORAGE_KEY_GAME_LOGS);
+    } catch (error) {
+      console.error('Error clearing all data:', error);
+    }
   },
 };
 

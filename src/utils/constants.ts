@@ -33,3 +33,21 @@ export const ANIMATION_TYPE = {
 export const STORAGE_KEY_INIT_GAME = 'initGame';
 export const STORAGE_KEY_SAVED_GAME = 'savedGame';
 export const STORAGE_KEY_GAME_STATS = 'gameStats';
+export const STORAGE_KEY_GAME_LOGS = 'gameLogs';
+
+export const CHART_WIDTH = 60;
+export const CHART2_WIDTH = 70;
+
+export const chartConfig = {
+  backgroundGradientFrom: '#1E2923',
+  backgroundGradientTo: '#08130D',
+  color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+  labelColor: () => '#ccc',
+};
+// const chartConfig = {
+//   backgroundGradientFrom: '#1E1E1E',
+//   backgroundGradientTo: '#1E1E1E',
+//   decimalPlaces: 0,
+//   color: (opacity = 1) => `rgba(255,255,255,${opacity})`,
+//   labelColor: () => '#ccc',
+// };

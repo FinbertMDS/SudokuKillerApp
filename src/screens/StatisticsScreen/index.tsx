@@ -2,46 +2,37 @@
 
 import { useFocusEffect } from '@react-navigation/native';
 import React, { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, Dimensions, ScrollView, Text, useColorScheme, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from '../../components/commons/Header';
+import ChartsStats from '../../components/Statistics/ChartsStats';
+import LevelStats from '../../components/Statistics/LevelStats';
 import { useTheme } from '../../context/ThemeContext';
-import { GameStats, GameStatsManager } from '../../services/GameStatsManager';
-import { Level } from '../../types';
-import { LEVELS } from '../../utils/constants';
-import { formatTime } from '../../utils/dateUtil';
-import { getLevelColor } from '../../utils/getLevelColor';
-
-const SCREEN_WIDTH = Dimensions.get('window').width;
+import { GameStatsManager } from '../../services/GameStatsManager';
+import { GameLogEntry, GameStats, Level } from '../../types';
 
 export default function StatisticsScreen() {
   const { theme } = useTheme();
   const [stats, setStats] = useState<Record<Level, GameStats> | null>(null);
-  const scheme = useColorScheme() ?? 'light';
+  const [logs, setLogs] = useState<GameLogEntry[]>([]);
+  const [activeTab, setActiveTab] = useState<'level' | 'chart'>('level');
 
   // Sau khi navigation.goBack() sẽ gọi hàm này
   useFocusEffect(
     useCallback(() => {
-      load();
+      loadData();
     }, [])
   );
 
   useEffect(() => {
-    load();
+    loadData();
   }, []);
 
-  async function load() {
+  async function loadData() {
     const loadedStats = await GameStatsManager.getStats();
     setStats(loadedStats);
-  }
-
-  if (!stats) {
-    return (
-      <View style={[styles.loadingContainer, { backgroundColor: theme.background }]}>
-        <ActivityIndicator size="large" color={theme.secondary} />
-        <Text style={styles.title}>Loading...</Text>
-      </View>
-    );
+    const loadedLogs = await GameStatsManager.getLogs();
+    setLogs(loadedLogs);
   }
 
   return (
@@ -52,37 +43,45 @@ export default function StatisticsScreen() {
         showSettings={true}
         showTheme={true}
       />
-      <ScrollView style={{ backgroundColor: theme.background }}>
-        {LEVELS.map(level => (
-          <View key={level}
+      <View style={styles.container}>
+        {/* Tab Chip Selector */}
+        <View style={styles.tabRow}>
+          <TouchableOpacity
+            onPress={() => setActiveTab('level')}
             style={[
-              styles.card,
-              {
-                backgroundColor: theme.background,
-                borderLeftColor: getLevelColor(level, scheme),
-              },
+              styles.chip,
+              activeTab === 'level' && styles.chipActive,
             ]}
           >
-            <Text style={[styles.level, { color: theme.text }]}>{level}</Text>
-            <View style={styles.row}>
-              <Text style={[styles.label, { color: theme.secondary }]}>Games Started</Text>
-              <Text style={[styles.value, { color: theme.text }]}>{stats[level].gamesStarted}</Text>
-            </View>
-            <View style={styles.row}>
-              <Text style={[styles.label, { color: theme.secondary }]}>Games Completed</Text>
-              <Text style={[styles.value, { color: theme.text }]}>{stats[level].gamesCompleted}</Text>
-            </View>
-            <View style={styles.row}>
-              <Text style={[styles.label, { color: theme.secondary }]}>Best Time</Text>
-              <Text style={[styles.value, { color: theme.text }]}>{formatTime(stats[level].bestTimeSeconds)}</Text>
-            </View>
-            <View style={styles.row}>
-              <Text style={[styles.label, { color: theme.secondary }]}>Average Time</Text>
-              <Text style={[styles.value, { color: theme.text }]}>{formatTime(stats[level].averageTimeSeconds)}</Text>
-            </View>
-          </View>
-        ))}
-      </ScrollView>
+            <Text style={[
+              styles.chipText,
+              activeTab === 'level' && styles.chipTextActive
+            ]}>By Level</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => setActiveTab('chart')}
+            style={[
+              styles.chip,
+              activeTab === 'chart' && styles.chipActive,
+            ]}
+          >
+            <Text style={[
+              styles.chipText,
+              activeTab === 'chart' && styles.chipTextActive
+            ]}>Charts</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Content */}
+        <View style={styles.content}>
+          {
+            activeTab === 'level' ?
+              <LevelStats stats={stats} /> :
+              <ChartsStats logs={logs} />
+          }
+        </View>
+      </View>
     </SafeAreaView>
   );
 }
@@ -93,42 +92,29 @@ const styles = {
     alignItems: 'center' as const,
     paddingBottom: 20,
   },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center' as const,
-    alignItems: 'center' as const,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold' as const,
-    marginBottom: 20,
-  },
-  card: {
-    width: SCREEN_WIDTH - 100,
-    padding: 8,
-    marginBottom: 16,
-    borderRadius: 10,
-    borderLeftWidth: 6,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-  },
-  level: {
-    fontSize: 20 as const,
-    fontWeight: '600' as const,
-    marginBottom: 8,
-  },
-  row: {
+  tabRow: {
     flexDirection: 'row' as const,
-    justifyContent: 'space-between' as const,
+    justifyContent: 'center' as const,
+    marginBottom: 16,
   },
-  label: {
-    fontSize: 14,
+  chip: {
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 20,
+    backgroundColor: '#1e293b',
+    marginHorizontal: 6,
   },
-  value: {
-    fontSize: 16,
-    fontWeight: 'bold' as const,
+  chipActive: {
+    backgroundColor: '#3b82f6',
+  },
+  chipText: {
+    color: '#94a3b8',
+    fontWeight: '500',
+  },
+  chipTextActive: {
+    color: '#fff',
+  },
+  content: {
+    flex: 1,
   },
 };

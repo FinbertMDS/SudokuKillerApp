@@ -1,0 +1,116 @@
+// StatisticsScreen.tsx
+
+import React from 'react';
+import { ActivityIndicator, Dimensions, ScrollView, Text, View } from 'react-native';
+import { useTheme } from '../../context/ThemeContext';
+import { GameStats, Level } from '../../types';
+import { getLevelColor } from '../../utils/colorUtil';
+import { LEVELS } from '../../utils/constants';
+import { formatTime } from '../../utils/dateUtil';
+
+const SCREEN_WIDTH = Dimensions.get('window').width;
+
+type LevelStatsProps = {
+  stats: Record<Level, GameStats> | null;
+};
+
+const LevelStats = ({ stats }: LevelStatsProps) => {
+  const { mode, theme } = useTheme();
+
+  if (!stats) {
+    return (
+      <View style={[styles.loadingContainer, { backgroundColor: theme.background }]}>
+        <ActivityIndicator size="large" color={theme.secondary} />
+        <Text style={styles.title}>Loading...</Text>
+      </View>
+    );
+  }
+
+  return (
+    <View style={[styles.cardsContainer, { backgroundColor: theme.background }]}>
+      <ScrollView style={{ backgroundColor: theme.background }}>
+        {LEVELS.map(level => (
+          <View key={level}
+            style={[
+              styles.card,
+              {
+                backgroundColor: theme.background,
+                borderLeftColor: getLevelColor(level, mode),
+              },
+            ]}
+          >
+            <Text style={[styles.level, { color: theme.text }]}>{level}</Text>
+            <View style={styles.row}>
+              <Text style={[styles.label, { color: theme.secondary }]}>Games Started</Text>
+              <Text style={[styles.value, { color: theme.text }]}>{stats[level].gamesStarted}</Text>
+            </View>
+            <View style={styles.row}>
+              <Text style={[styles.label, { color: theme.secondary }]}>Games Completed</Text>
+              <Text style={[styles.value, { color: theme.text }]}>{stats[level].gamesCompleted}</Text>
+            </View>
+            <View style={styles.row}>
+              <Text style={[styles.label, { color: theme.secondary }]}>Best Time</Text>
+              <Text style={[styles.value, { color: theme.text }]}>{formatTime(stats[level].bestTimeSeconds)}</Text>
+            </View>
+            <View style={styles.row}>
+              <Text style={[styles.label, { color: theme.secondary }]}>Average Time</Text>
+              <Text style={[styles.value, { color: theme.text }]}>{formatTime(stats[level].averageTimeSeconds)}</Text>
+            </View>
+          </View>
+        ))}
+      </ScrollView>
+    </View>
+  );
+}
+
+const styles = {
+  container: {
+    flex: 1,
+    alignItems: 'center' as const,
+    paddingBottom: 20,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center' as const,
+    alignItems: 'center' as const,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold' as const,
+    marginBottom: 20,
+  },
+  cardsContainer: {
+    justifyContent: 'center' as const,
+    alignItems: 'center' as const,
+  },
+  card: {
+    width: SCREEN_WIDTH - 100,
+    padding: 8,
+    marginBottom: 16,
+    borderRadius: 10,
+    borderLeftWidth: 6,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+  },
+  level: {
+    fontSize: 20 as const,
+    fontWeight: '600' as const,
+    marginBottom: 8,
+  },
+  row: {
+    flexDirection: 'row' as const,
+    justifyContent: 'space-between' as const,
+  },
+  label: {
+    fontSize: 14,
+  },
+  value: {
+    fontSize: 16,
+    fontWeight: 'bold' as const,
+  },
+};
+
+export default LevelStats;

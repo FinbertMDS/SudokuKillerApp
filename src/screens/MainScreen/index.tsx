@@ -59,6 +59,11 @@ const MainScreen = () => {
     }
   };
 
+  const handleDeleteSavedGame = async () => {
+    BoardService.clear().then(checkSavedGame);
+    GameStatsManager.resetStatistics();
+  };
+
   return (
     <SafeAreaView edges={['top']} style={[styles.container, { backgroundColor: theme.background }]}>
       <Header
@@ -108,7 +113,7 @@ const MainScreen = () => {
             backgroundColor: theme.mistake,
             borderColor: theme.buttonBorder,
           },
-        ]} onPress={() => BoardService.clear().then(checkSavedGame)}>
+        ]} onPress={handleDeleteSavedGame}>
           <Text style={[styles.buttonText, { color: theme.buttonText }]}>Delete Saved Game</Text>
         </TouchableOpacity>
       </View>
