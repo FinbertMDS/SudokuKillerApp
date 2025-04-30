@@ -3,9 +3,12 @@
 Welcome to **Killer Sudoku**, a modern and highly-optimized Sudoku Killer game built with **React Native**.
 
 
-Board_Dark | Board_Light | Main_Dark | Main_Light
----------|----------|---------|---------
-![Board_Dark.png](screenshots/Board_Dark.png) | ![Board_Light.png](screenshots/Board_Light.png) | ![Main_Dark.png](screenshots/Main_Dark.png) | ![Main_Light.png](screenshots/Main_Light.png)
+Screen | Light | Dark
+---------|---------|----------
+Main | ![Main_Light.png](screenshots/Main_Light.png) | ![Main_Dark.png](screenshots/Main_Dark.png)
+Board | ![Board_Light.png](screenshots/Board_Light.png) | ![Board_Dark.png](screenshots/Board_Dark.png)
+Level Stats | ![LevelStats_Light](LevelStats_Light.png) | ![LevelStats_Dark](LevelStats_Dark.png)
+Charts Stats | ![ChartsStats_Light](ChartsStats_Light.png) | ![ChartsStats_Dark](ChartsStats_Dark.png)
 
 ---
 
@@ -20,6 +23,14 @@ Board_Dark | Board_Light | Main_Dark | Main_Light
 - ✅ Local save & resume for interrupted games
 - ✅ Battery optimization (auto-pause timer when app backgrounded)
 - ✅ Dark Mode / Light Mode switch (auto detects system theme)
+- ✅ Statistics tracking per difficulty level:
+  - Games started
+  - Games completed
+  - Best time
+  - Average time
+  - Games per Day
+  - Times per Day
+  - Game Distribution by Level (PieChart, StackedBarChart)
 
 ---
 
@@ -46,11 +57,7 @@ npx react-native run-ios   # or run-android
 
 ## 📈 Planned Features (Coming Soon)
 
-- Statistics tracking per difficulty level:
-  - Games started
-  - Games completed
-  - Best time
-  - Average time
+- Multi-language support: English, Vietnamese, and Japanese
 - Online Multiplayer mode (Challenge your friends!)
 - Daily Killer Sudoku Challenge
 - Cloud Syncing (Login + Save Progress)
