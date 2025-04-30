@@ -25,7 +25,7 @@ export type InitGame = {
 export type SavedGame = {
   savedBoard: (number | null)[][];
   savedMistakeCount: number;
-  savedElapsedTime: number;
+  savedTimePlayed: number;
   savedHistory: (number | null)[][][];
   savedNotes: string[][][];
   lastSaved: Date;

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useTheme } from '../../context/ThemeContext';
@@ -15,7 +15,6 @@ type InfoPanelProps = {
 
 const InfoPanel = ({ level, mistakes, time, isPaused, onPause }: InfoPanelProps) => {
   const { theme } = useTheme();
-  const formattedTime = useMemo(() => formatTime(time), [time]);
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
@@ -31,7 +30,7 @@ const InfoPanel = ({ level, mistakes, time, isPaused, onPause }: InfoPanelProps)
 
       <View style={styles.infoBlock}>
         <Text style={[styles.title, { color: theme.text }]}>Time</Text>
-        <Text style={[styles.value, styles.timeValue, { color: theme.text }]}>{formattedTime}</Text>
+        <Text style={[styles.value, styles.timeValue, { color: theme.text }]}>{formatTime(time)}</Text>
       </View>
 
       <TouchableOpacity style={styles.infoBlock} onPress={onPause}>

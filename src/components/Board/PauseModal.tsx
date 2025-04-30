@@ -8,11 +8,11 @@ type PauseModalProps = {
   visible: boolean;
   level: string;
   mistake: number;
-  elapsedTime: number;
+  time: number;
   onResume: () => void;
 };
 
-const PauseModal = ({ visible, level, mistake: mistakeCount, elapsedTime, onResume }: PauseModalProps) => {
+const PauseModal = ({ visible, level, mistake, time, onResume }: PauseModalProps) => {
   const { theme } = useTheme();
   return (
     <>
@@ -32,11 +32,11 @@ const PauseModal = ({ visible, level, mistake: mistakeCount, elapsedTime, onResu
               </View>
               <View style={styles.infoBlock}>
                 <Text style={styles.infoTitle}>Mistakes</Text>
-                <Text style={[styles.infoValue, {color: theme.text}]}>{mistakeCount}/{MAX_MISTAKES}</Text>
+                <Text style={[styles.infoValue, {color: theme.text}]}>{mistake}/{MAX_MISTAKES}</Text>
               </View>
               <View style={styles.infoBlock}>
                 <Text style={styles.infoTitle}>Time</Text>
-                <Text style={[styles.infoValue, {color: theme.text}]}>{formatTime(elapsedTime)}</Text>
+                <Text style={[styles.infoValue, {color: theme.text}]}>{formatTime(time)}</Text>
               </View>
             </View>
 

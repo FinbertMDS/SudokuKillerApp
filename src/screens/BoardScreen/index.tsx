@@ -11,10 +11,12 @@ import PauseModal from '../../components/Board/PauseModal';
 import Header from '../../components/commons/Header';
 import { useTheme } from '../../context/ThemeContext';
 import { useAppPause } from '../../hooks/useAppPause';
+import { useGameTimer } from '../../hooks/useGameTimer';
 import { BoardService } from '../../services/BoardService';
 import { BoardScreenNavigationProp, BoardScreenRouteProp, Cell, InitGame, SavedGame } from '../../types';
 import { checkBoardIsSolved, createEmptyGridNotes, deepCloneBoard, deepCloneNotes } from '../../utils/boardUtil';
 import { ANIMATION_CELL_KEY_SEPARATOR, ANIMATION_DURATION, ANIMATION_TYPE, BOARD_SIZE, DIFFICULTY_ALL, MAX_MISTAKES, TIMEOUT_DURATION } from '../../utils/constants';
+import { formatTime } from '../../utils/dateUtil';
 
 const BoardScreen = () => {
   const { theme } = useTheme();
@@ -27,7 +29,6 @@ const BoardScreen = () => {
     savedLevel,
     savedBoard,
     savedMistakeCount,
-    savedElapsedTime,
     savedHistory,
     savedNotes,
   } = route.params as InitGame & SavedGame;
@@ -43,8 +44,6 @@ const BoardScreen = () => {
   );
   const [isPaused, setIsPaused] = useState<boolean>(false);
   const [showPauseModal, setShowPauseModal] = useState<boolean>(false);
-  const [pauseTime, setPauseTime] = useState(0);
-  const [pausedDuration, setPausedDuration] = useState(0);
   const [noteMode, setNoteMode] = useState<boolean>(false);
   const [notes, setNotes] = useState<string[][][]>(
     savedNotes !== undefined ? savedNotes : createEmptyGridNotes<string>()
@@ -61,51 +60,45 @@ const BoardScreen = () => {
 
   // Hiển thị thời gian đã chơi
   // ===========================================================
-  const [startTime] = useState(() =>
-    savedElapsedTime !== undefined ? Date.now() - savedElapsedTime : Date.now()
-  );
-  const [elapsedTime, setElapsedTime] = useState(
-    savedElapsedTime !== undefined ? savedElapsedTime : 0
-  );
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  useEffect(() => {
-    if (!isPaused) {
-      intervalRef.current = setInterval(() => {
-        setElapsedTime(Date.now() - startTime - pausedDuration);
-      }, 1000);
-    } else {
-      if (intervalRef.current) { clearInterval(intervalRef.current); }
-    }
-
-    return () => {
-      if (intervalRef.current) { clearInterval(intervalRef.current); }
-    };
-  }, [isPaused, startTime, pausedDuration]);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const { seconds, resetTimer } = useGameTimer(isPlaying);
   // ===========================================================
 
   // Xử lý quá thời gian chơi
   // ===========================================================
   const [timeAlertShown, setTimeAlertShown] = useState(false);
   useEffect(() => {
-    if (elapsedTime > TIMEOUT_DURATION && !timeAlertShown) {
+    if (seconds >= TIMEOUT_DURATION && !timeAlertShown) {
       setTimeAlertShown(true);
-      Alert.alert('⏰ Time Warning', 'Bạn đã chơi hơn 10 giây rồi!');
       handleResetGame();
+      Alert.alert(
+        '⏰ Time Warning',
+        `Bạn đã chơi hơn ${formatTime(TIMEOUT_DURATION)} rồi!`,
+        [
+          {
+            text: 'OK',
+            onPress: () => {
+              setIsPlaying(true);
+            },
+          },
+        ],
+        {
+          cancelable: false,
+        },
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [elapsedTime, timeAlertShown]);
+  }, [seconds, timeAlertShown]);
 
-  const handleResetGame = () => {
-    if (intervalRef.current) { clearInterval(intervalRef.current); }
-    // setStartTime(Date.now());
-    setElapsedTime(0);
+  const handleResetGame = async () => {
+    await BoardService.clearSavedTimePlayed();
+    setIsPlaying(false);
+    resetTimer();
     setIsPaused(false);
     setShowPauseModal(false);
-    setPausedDuration(0);
     setTimeAlertShown(false);
     setSelectedCell(null);
     setNoteMode(false);
-    setPauseTime(0);
     setBoard(deepCloneBoard(initialBoard));
     setNotes(createEmptyGridNotes<string>());
     setHistory([]);
@@ -116,24 +109,37 @@ const BoardScreen = () => {
   // Xử lý animation khi nhập xong 1 hàng/cột
   const [animatedCells, setAnimatedCells] = useState<{ [key: string]: number }>({});
 
-  const handlePause = async () => {
-    setIsPaused(true);
-    setShowPauseModal(true);
-    setPauseTime(Date.now());
+  const handleBackPress = async () => {
     await BoardService.save({
       savedBoard: board,
       savedMistakeCount: mistakeCount,
-      savedElapsedTime: elapsedTime,
+      savedTimePlayed: seconds,
       savedHistory: history,
       savedNotes: notes,
       lastSaved: new Date(),
     } as SavedGame);
+    setIsPlaying(false);
+    navigation.goBack();
+  };
+
+  const handlePause = async () => {
+    await BoardService.save({
+      savedBoard: board,
+      savedMistakeCount: mistakeCount,
+      savedTimePlayed: seconds,
+      savedHistory: history,
+      savedNotes: notes,
+      lastSaved: new Date(),
+    } as SavedGame);
+    setIsPlaying(false);
+    setIsPaused(true);
+    setShowPauseModal(true);
   };
 
   const handleResume = () => {
+    setIsPlaying(true);
     setIsPaused(false);
     setShowPauseModal(false);
-    setPausedDuration(prev => prev + Date.now() - pauseTime);
   };
 
   const saveHistory = (newBoard: (number | null)[][]) => {
@@ -284,8 +290,8 @@ const BoardScreen = () => {
 
   const handleCheckSolved = (newBoard: (number | null)[][]) => {
     if (checkBoardIsSolved(newBoard, solvedBoard)) {
+      setIsPlaying(false);
       setIsPaused(true);
-      setPauseTime(Date.now());
 
       Alert.alert(
         '🎉 Hoàn thành!',
@@ -302,18 +308,6 @@ const BoardScreen = () => {
         { cancelable: false }
       );
     }
-  };
-
-  const handleBackPress = async () => {
-    await BoardService.save({
-      savedBoard: board,
-      savedMistakeCount: mistakeCount,
-      savedElapsedTime: elapsedTime,
-      savedHistory: history,
-      savedNotes: notes,
-      lastSaved: new Date(),
-    } as SavedGame);
-    navigation.goBack();
   };
 
   useAppPause(
@@ -340,7 +334,7 @@ const BoardScreen = () => {
       <InfoPanel
         level={savedLevel}
         mistakes={mistakeCount}
-        time={elapsedTime}
+        time={seconds}
         isPaused={isPaused}
         onPause={handlePause}
       />
@@ -367,7 +361,7 @@ const BoardScreen = () => {
         visible={showPauseModal}
         level={level}
         mistake={mistakeCount}
-        elapsedTime={elapsedTime}
+        time={seconds}
         onResume={handleResume}
       />
     </SafeAreaView>
