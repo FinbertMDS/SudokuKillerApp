@@ -1,8 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { InitGame, SavedGame } from '../types';
-
-const STORAGE_KEY_INIT_GAME = 'initGame';
-const STORAGE_KEY_SAVED_GAME = 'savedGame';
+import { STORAGE_KEY_INIT_GAME, STORAGE_KEY_SAVED_GAME } from '../utils/constants';
 
 export const BoardService = {
   async save(state: SavedGame | InitGame) {

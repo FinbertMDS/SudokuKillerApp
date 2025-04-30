@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { useEffect, useRef, useState } from 'react';
 import { Alert } from 'react-native';
@@ -11,12 +10,13 @@ import PauseModal from '../../components/Board/PauseModal';
 import Header from '../../components/commons/Header';
 import { useTheme } from '../../context/ThemeContext';
 import { useAppPause } from '../../hooks/useAppPause';
+import { useGameStats } from '../../hooks/useGameStats';
 import { useGameTimer } from '../../hooks/useGameTimer';
 import { useMistakeCounter } from '../../hooks/useMistakeCounter';
 import { BoardService } from '../../services/BoardService';
-import { BoardScreenNavigationProp, BoardScreenRouteProp, Cell, InitGame, SavedGame } from '../../types';
+import { BoardScreenNavigationProp, BoardScreenRouteProp, Cell, InitGame, Level, SavedGame } from '../../types';
 import { checkBoardIsSolved, createEmptyGridNotes, deepCloneBoard, deepCloneNotes } from '../../utils/boardUtil';
-import { ANIMATION_CELL_KEY_SEPARATOR, ANIMATION_DURATION, ANIMATION_TYPE, BOARD_SIZE, DIFFICULTY_ALL, MAX_MISTAKES, MAX_TIMEPLAYED } from '../../utils/constants';
+import { ANIMATION_CELL_KEY_SEPARATOR, ANIMATION_DURATION, ANIMATION_TYPE, BOARD_SIZE, LEVELS, MAX_MISTAKES, MAX_TIMEPLAYED } from '../../utils/constants';
 import { formatTime } from '../../utils/dateUtil';
 
 const BoardScreen = () => {
@@ -34,9 +34,8 @@ const BoardScreen = () => {
   } = route.params as InitGame & SavedGame;
 
   const [board, setBoard] = useState<(number | null)[][]>(savedBoard ? deepCloneBoard(savedBoard) : deepCloneBoard(initialBoard));
-
   const [selectedCell, setSelectedCell] = useState<Cell | null>(null);
-  const [level] = useState<string>(savedLevel ? savedLevel : DIFFICULTY_ALL[0]);
+  const [level] = useState<Level>(savedLevel ? savedLevel : LEVELS[0]);
 
   const [history, setHistory] = useState(() =>
     savedHistory !== undefined ? savedHistory : [deepCloneBoard(initialBoard)]
@@ -47,6 +46,8 @@ const BoardScreen = () => {
   const [notes, setNotes] = useState<string[][][]>(
     savedNotes !== undefined ? savedNotes : createEmptyGridNotes<string>()
   );
+  const { completeGame } = useGameStats(level);
+
   // Hiển thị số lần sai
   // ===========================================================
   const {
@@ -316,7 +317,7 @@ const BoardScreen = () => {
           {
             text: 'Quay về Main',
             onPress: async () => {
-              await AsyncStorage.removeItem('savedGame');
+              onWin();
               navigation.goBack();   // quay lại MainScreen
             },
           },
@@ -324,6 +325,11 @@ const BoardScreen = () => {
         { cancelable: false }
       );
     }
+  };
+
+  const onWin = async () => {
+    await BoardService.clear();
+    completeGame(seconds);
   };
 
   useAppPause(
@@ -346,7 +352,13 @@ const BoardScreen = () => {
 
   return (
     <SafeAreaView edges={['top']} style={[styles.container, { backgroundColor: theme.background }]}>
-      <Header onBack={handleBackPress} />
+      <Header
+        title="Killer Sudoku"
+        showBack={true}
+        showSettings={true}
+        showTheme={true}
+        onBack={handleBackPress}
+      />
       <InfoPanel
         level={savedLevel}
         mistakes={mistakes}

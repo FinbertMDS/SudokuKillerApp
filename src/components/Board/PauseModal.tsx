@@ -1,12 +1,13 @@
 import React from 'react';
 import { Modal, Text, TouchableOpacity, View } from 'react-native';
 import { useTheme } from '../../context/ThemeContext';
+import { Level } from '../../types';
 import { MAX_MISTAKES } from '../../utils/constants';
 import { formatTime } from '../../utils/dateUtil';
 
 type PauseModalProps = {
   visible: boolean;
-  level: string;
+  level: Level;
   mistake: number;
   time: number;
   onResume: () => void;

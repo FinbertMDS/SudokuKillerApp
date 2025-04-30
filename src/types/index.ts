@@ -19,7 +19,7 @@ export type InitGame = {
   initialBoard: (number | null)[][];
   solvedBoard: number[][];
   cages: { cells: [number, number][], sum: number }[];
-  savedLevel: string;
+  savedLevel: Level;
 }
 
 export type SavedGame = {
@@ -34,3 +34,5 @@ export type SavedGame = {
 export type BoardScreenRouteProp = RouteProp<RootStackParamList, 'Board'>;
 
 export type BoardScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Board'>;
+
+export type Level = 'easy' | 'medium' | 'hard' | 'expert';

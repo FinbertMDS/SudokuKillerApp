@@ -1,9 +1,11 @@
-export const DIFFICULTY_ALL = [
+import { Level } from '../types';
+
+export const LEVELS = [
   'easy',
   'medium',
   'hard',
   'expert',
-];
+] as Level[];
 
 export const SCREENS = {
   MAIN: 'Main',
@@ -26,3 +28,8 @@ export const ANIMATION_TYPE = {
   ROW_COL: 3,
   NONE: 0,
 } as const;
+
+// Game Storage Keys
+export const STORAGE_KEY_INIT_GAME = 'initGame';
+export const STORAGE_KEY_SAVED_GAME = 'savedGame';
+export const STORAGE_KEY_GAME_STATS = 'gameStats';

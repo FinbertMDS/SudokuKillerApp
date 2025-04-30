@@ -22,7 +22,7 @@ export const darkTheme = {
   buttonBackground: '#333333',
   buttonText: '#ffffff',
   buttonBorder: '#666666',
-  iconColor: '#FFD700', 
+  iconColor: '#FFD700',
   primary: '#BB86FC',
   secondary: '#b0b0b0',
   cell: '#1e1e1e',

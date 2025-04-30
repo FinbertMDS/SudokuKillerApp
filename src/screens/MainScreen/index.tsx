@@ -9,9 +9,10 @@ import { Difficulty } from 'sudoku-gen/dist/types/difficulty.type';
 import Header from '../../components/commons/Header';
 import { useTheme } from '../../context/ThemeContext';
 import { BoardService } from '../../services/BoardService';
-import { BoardScreenNavigationProp, InitGame } from '../../types/index';
+import { GameStatsManager } from '../../services/GameStatsManager';
+import { BoardScreenNavigationProp, InitGame, Level } from '../../types/index';
 import { sortAreasCells, stringToGrid } from '../../utils/boardUtil';
-import { DIFFICULTY_ALL, SCREENS } from '../../utils/constants';
+import { LEVELS, SCREENS } from '../../utils/constants';
 
 const MainScreen = () => {
   const { theme } = useTheme();
@@ -19,6 +20,7 @@ const MainScreen = () => {
   const [menuVisible, setMenuVisible] = useState(false);
   const [hasSavedGame, setHasSavedGame] = useState(false);
 
+  // Sau khi navigation.goBack() sẽ gọi hàm này
   useFocusEffect(
     useCallback(() => {
       checkSavedGame();
@@ -30,7 +32,7 @@ const MainScreen = () => {
     setHasSavedGame(!!saved);
   };
 
-  const handleNewGame = async (level: string) => {
+  const handleNewGame = async (level: Level) => {
     setMenuVisible(false);
     const sudoku = generateKillerSudoku(level as Difficulty);
     const initGame = {
@@ -40,6 +42,7 @@ const MainScreen = () => {
       savedLevel: level,
     } as InitGame;
     await BoardService.save(initGame);
+    await GameStatsManager.recordGameStart(level);
     navigation.navigate(SCREENS.BOARD, {
       ...initGame,
     });
@@ -57,11 +60,14 @@ const MainScreen = () => {
   };
 
   return (
-    <SafeAreaView edges={['top']} style={styles.container}>
-      <Header />
+    <SafeAreaView edges={['top']} style={[styles.container, { backgroundColor: theme.background }]}>
+      <Header
+        title="Killer Sudoku"
+        showBack={false}
+        showSettings={true}
+        showTheme={true}
+      />
       <View style={[styles.content, { backgroundColor: theme.background }]}>
-        <Text style={[styles.title, { color: theme.text }]}>Killer Sudoku</Text>
-
         {hasSavedGame && (
           <TouchableOpacity style={[
             styles.continueButton,
@@ -91,7 +97,7 @@ const MainScreen = () => {
             </TouchableOpacity>
           }
         >
-          {DIFFICULTY_ALL.map((level) => (
+          {LEVELS.map((level) => (
             <Menu.Item key={level} onPress={() => handleNewGame(level)} title={level} titleStyle={{ color: theme.text }} />
           ))}
         </Menu>
@@ -118,10 +124,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  title: {
-    fontSize: 28,
-    marginBottom: 30,
   },
   continueButton: {
     padding: 14,
