@@ -31,7 +31,7 @@ export const BoardService = {
     try {
       const savedGame = await this.loadSaved();
       if (savedGame) {
-        savedGame.savedTimePlayed = seconds; // Update the saved elapsed time
+        savedGame.savedTimePlayed = seconds;
         await AsyncStorage.setItem(STORAGE_KEY_SAVED_GAME, JSON.stringify(savedGame));
       }
     } catch (e) {
@@ -65,22 +65,22 @@ export const BoardService = {
       if (savedGame) {
         return savedGame.savedTimePlayed;
       }
-      return 0; // Default to 0 if no saved game is found
+      return 0;
     } catch (e) {
       console.error('Failed to load saved time played:', e);
-      return 0; // Default to 0 in case of error
+      return 0;
     }
   },
-  async loadSavedMistakeCount(): Promise<number> {
+  async loadSavedMistake(): Promise<number> {
     try {
       const savedGame = await this.loadSaved();
       if (savedGame) {
-        return savedGame.savedMistakeCount;
+        return savedGame.savedMistake;
       }
-      return 0; // Default to 0 if no saved game is found
+      return 0;
     } catch (e) {
       console.error('Failed to load saved mistake count:', e);
-      return 0; // Default to 0 in case of error
+      return 0;
     }
   },
 
@@ -97,7 +97,7 @@ export const BoardService = {
     try {
       const savedGame = await this.loadSaved();
       if (savedGame) {
-        savedGame.savedTimePlayed = 0; // Reset the saved elapsed time
+        savedGame.savedTimePlayed = 0;
         await AsyncStorage.setItem(STORAGE_KEY_SAVED_GAME, JSON.stringify(savedGame));
       }
     } catch (e) {

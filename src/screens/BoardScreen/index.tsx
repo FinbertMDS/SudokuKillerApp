@@ -12,10 +12,11 @@ import Header from '../../components/commons/Header';
 import { useTheme } from '../../context/ThemeContext';
 import { useAppPause } from '../../hooks/useAppPause';
 import { useGameTimer } from '../../hooks/useGameTimer';
+import { useMistakeCounter } from '../../hooks/useMistakeCounter';
 import { BoardService } from '../../services/BoardService';
 import { BoardScreenNavigationProp, BoardScreenRouteProp, Cell, InitGame, SavedGame } from '../../types';
 import { checkBoardIsSolved, createEmptyGridNotes, deepCloneBoard, deepCloneNotes } from '../../utils/boardUtil';
-import { ANIMATION_CELL_KEY_SEPARATOR, ANIMATION_DURATION, ANIMATION_TYPE, BOARD_SIZE, DIFFICULTY_ALL, MAX_MISTAKES, TIMEOUT_DURATION } from '../../utils/constants';
+import { ANIMATION_CELL_KEY_SEPARATOR, ANIMATION_DURATION, ANIMATION_TYPE, BOARD_SIZE, DIFFICULTY_ALL, MAX_MISTAKES, MAX_TIMEPLAYED } from '../../utils/constants';
 import { formatTime } from '../../utils/dateUtil';
 
 const BoardScreen = () => {
@@ -28,13 +29,11 @@ const BoardScreen = () => {
     cages,
     savedLevel,
     savedBoard,
-    savedMistakeCount,
     savedHistory,
     savedNotes,
   } = route.params as InitGame & SavedGame;
 
   const [board, setBoard] = useState<(number | null)[][]>(savedBoard ? deepCloneBoard(savedBoard) : deepCloneBoard(initialBoard));
-  const [mistakeCount, setMistakeCount] = useState<number>(savedMistakeCount ? savedMistakeCount : 0);
 
   const [selectedCell, setSelectedCell] = useState<Cell | null>(null);
   const [level] = useState<string>(savedLevel ? savedLevel : DIFFICULTY_ALL[0]);
@@ -48,32 +47,21 @@ const BoardScreen = () => {
   const [notes, setNotes] = useState<string[][][]>(
     savedNotes !== undefined ? savedNotes : createEmptyGridNotes<string>()
   );
-
-  // Xử lý khi người dùng sai quá nhiều lần
+  // Hiển thị số lần sai
   // ===========================================================
-  useEffect(() => {
-    if (mistakeCount > MAX_MISTAKES) {
-      Alert.alert('Too many mistakes', 'You have made more than 5 mistakes. Please be careful!');
-    }
-  }, [mistakeCount]);
-  // ===========================================================
-
-  // Hiển thị thời gian đã chơi
-  // ===========================================================
-  const [isPlaying, setIsPlaying] = useState(true);
-  const { seconds, resetTimer } = useGameTimer(isPlaying);
-  // ===========================================================
-
-  // Xử lý quá thời gian chơi
-  // ===========================================================
-  const [timeAlertShown, setTimeAlertShown] = useState(false);
-  useEffect(() => {
-    if (seconds >= TIMEOUT_DURATION && !timeAlertShown) {
-      setTimeAlertShown(true);
+  const {
+    mistakes,
+    incrementMistake,
+    resetMistakes,
+  } = useMistakeCounter({
+    maxMistakes: MAX_MISTAKES,
+    onLimitReached: () => {
+      // Gọi khi người chơi đã sai quá nhiều lần
       handleResetGame();
+      // Bạn có thể show modal thua hoặc reset game
       Alert.alert(
-        '⏰ Time Warning',
-        `Bạn đã chơi hơn ${formatTime(TIMEOUT_DURATION)} rồi!`,
+        '⏰ Mistake Warning',
+        `Bạn đã sai hơn ${MAX_MISTAKES} rồi!`,
         [
           {
             text: 'OK',
@@ -86,9 +74,38 @@ const BoardScreen = () => {
           cancelable: false,
         },
       );
+    },
+  });
+  // ===========================================================
+
+  // Hiển thị thời gian đã chơi
+  // ===========================================================
+  const [isPlaying, setIsPlaying] = useState(true);
+  const { seconds, resetTimer } = useGameTimer(
+    isPlaying,
+    {
+      maxTimePlayed: MAX_TIMEPLAYED,
+      onLimitReached: () => {
+        handleResetGame();
+        Alert.alert(
+          '⏰ Time Warning',
+          `Bạn đã chơi hơn ${formatTime(MAX_TIMEPLAYED)} rồi!`,
+          [
+            {
+              text: 'OK',
+              onPress: () => {
+                setIsPlaying(true);
+              },
+            },
+          ],
+          {
+            cancelable: false,
+          },
+        );
+      },
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [seconds, timeAlertShown]);
+  );
+  // ===========================================================
 
   const handleResetGame = async () => {
     await BoardService.clearSavedTimePlayed();
@@ -96,13 +113,12 @@ const BoardScreen = () => {
     resetTimer();
     setIsPaused(false);
     setShowPauseModal(false);
-    setTimeAlertShown(false);
     setSelectedCell(null);
     setNoteMode(false);
     setBoard(deepCloneBoard(initialBoard));
     setNotes(createEmptyGridNotes<string>());
     setHistory([]);
-    setMistakeCount(0);
+    resetMistakes();
   };
   // ===========================================================
 
@@ -112,7 +128,7 @@ const BoardScreen = () => {
   const handleBackPress = async () => {
     await BoardService.save({
       savedBoard: board,
-      savedMistakeCount: mistakeCount,
+      savedMistake: mistakes,
       savedTimePlayed: seconds,
       savedHistory: history,
       savedNotes: notes,
@@ -125,7 +141,7 @@ const BoardScreen = () => {
   const handlePause = async () => {
     await BoardService.save({
       savedBoard: board,
-      savedMistakeCount: mistakeCount,
+      savedMistake: mistakes,
       savedTimePlayed: seconds,
       savedHistory: history,
       savedNotes: notes,
@@ -222,7 +238,7 @@ const BoardScreen = () => {
       setBoard(newBoard);
       saveHistory(newBoard);
       if (num !== correctValue) {
-        setMistakeCount(prev => prev + 1);
+        incrementMistake();
       } else {
         handleCheckRowOrColResolved(row, col, newBoard);
         handleCheckSolved(newBoard);
@@ -333,7 +349,7 @@ const BoardScreen = () => {
       <Header onBack={handleBackPress} />
       <InfoPanel
         level={savedLevel}
-        mistakes={mistakeCount}
+        mistakes={mistakes}
         time={seconds}
         isPaused={isPaused}
         onPause={handlePause}
@@ -360,7 +376,7 @@ const BoardScreen = () => {
       <PauseModal
         visible={showPauseModal}
         level={level}
-        mistake={mistakeCount}
+        mistake={mistakes}
         time={seconds}
         onResume={handleResume}
       />
