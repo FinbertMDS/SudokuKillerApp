@@ -1,41 +1,36 @@
 // LanguageSwitcher.tsx
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, {useEffect, useState} from 'react';
+import {useFocusEffect} from '@react-navigation/native';
+import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import i18n from './i18n';
-
-const LANG_KEY = 'sudoku_language';
-const LANGUAGES = [
-  {code: 'en', label: 'English'},
-  {code: 'vi', label: 'Tiếng Việt'},
-  {code: 'ja', label: '日本語'},
-];
+import {LANGUAGES, STORAGE_KEY_LANG_KEY_PREFERRED} from '../utils/constants';
+import i18n, {autoDetectLanguage} from './i18n';
 
 export default function LanguageSwitcher() {
   const {t} = useTranslation();
   const [selectedLang, setSelectedLang] = useState(i18n.language);
 
+  useFocusEffect(
+    useCallback(() => {
+      autoDetectLanguage();
+    }, []),
+  );
+
   useEffect(() => {
-    AsyncStorage.getItem(LANG_KEY).then(storedLang => {
-      if (storedLang && storedLang !== selectedLang) {
-        i18n.changeLanguage(storedLang);
-        setSelectedLang(storedLang);
-      }
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    autoDetectLanguage();
   }, []);
 
   const changeLanguage = async (code: string) => {
     await i18n.changeLanguage(code);
-    await AsyncStorage.setItem(LANG_KEY, code);
+    await AsyncStorage.setItem(STORAGE_KEY_LANG_KEY_PREFERRED, code);
     setSelectedLang(code);
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>{t('language') || 'Language'}</Text>
+      <Text style={styles.label}>{t('language')}</Text>
       <View style={styles.buttons}>
         {LANGUAGES.map(lang => (
           <TouchableOpacity

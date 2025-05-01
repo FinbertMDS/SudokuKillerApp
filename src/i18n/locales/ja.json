@@ -1,5 +1,6 @@
 {
   "appName": "キラー数独",
+  "language": "言語",
   "level.easy": "簡単",
   "level.medium": "普通",
   "level.hard": "難しい",

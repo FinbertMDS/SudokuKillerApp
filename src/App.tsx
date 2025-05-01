@@ -4,6 +4,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
 import {Provider as PaperProvider} from 'react-native-paper';
 import {ThemeProvider} from './context/ThemeContext';
+import './i18n/i18n';
 import BottomTabs from './navigation/BottomTabs';
 import BoardScreen from './screens/BoardScreen';
 import {RootStackParamList} from './types/index';

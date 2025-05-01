@@ -1,5 +1,6 @@
 {
   "appName": "Killer Sudoku",
+  "language": "Language",
   "level.easy": "Easy",
   "level.medium": "Medium",
   "level.hard": "Hard",

@@ -9,6 +9,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {Difficulty} from 'sudoku-gen/dist/types/difficulty.type';
 import Header from '../../components/commons/Header';
 import {useTheme} from '../../context/ThemeContext';
+import LanguageSwitcher from '../../i18n/LanguageSwitcher';
 import {BoardService} from '../../services/BoardService';
 import {GameStatsManager} from '../../services/GameStatsManager';
 import {BoardScreenNavigationProp, InitGame, Level} from '../../types/index';
@@ -76,6 +77,10 @@ const MainScreen = () => {
         showSettings={true}
         showTheme={true}
       />
+
+      <View>
+        <LanguageSwitcher />
+      </View>
       <View style={[styles.content, {backgroundColor: theme.background}]}>
         {hasSavedGame && (
           <TouchableOpacity
