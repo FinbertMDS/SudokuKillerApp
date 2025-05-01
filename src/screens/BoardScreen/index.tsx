@@ -19,6 +19,7 @@ import {
   BoardScreenNavigationProp,
   BoardScreenRouteProp,
   Cell,
+  CellValue,
   InitGame,
   Level,
   SavedGame,
@@ -55,7 +56,7 @@ const BoardScreen = () => {
     savedNotes,
   } = route.params as InitGame & SavedGame;
 
-  const [board, setBoard] = useState<(number | null)[][]>(
+  const [board, setBoard] = useState<CellValue[][]>(
     savedBoard ? deepCloneBoard(savedBoard) : deepCloneBoard(initialBoard),
   );
   const [selectedCell, setSelectedCell] = useState<Cell | null>(null);
@@ -178,7 +179,7 @@ const BoardScreen = () => {
     setShowPauseModal(false);
   };
 
-  const saveHistory = (newBoard: (number | null)[][]) => {
+  const saveHistory = (newBoard: CellValue[][]) => {
     setHistory(prev => [...prev, deepCloneBoard(newBoard)]);
   };
 
@@ -267,7 +268,7 @@ const BoardScreen = () => {
     }
   };
 
-  const isRowFilled = (row: number, newBoard: (number | null)[][]): boolean => {
+  const isRowFilled = (row: number, newBoard: CellValue[][]): boolean => {
     if (!newBoard[row]) {
       return false;
     } // Nếu dòng không tồn tại, coi như chưa filled
@@ -279,7 +280,7 @@ const BoardScreen = () => {
     return true; // Nếu tất cả ô trong dòng đều khác 0, coi như đã filled
   };
 
-  const isColFilled = (col: number, newBoard: (number | null)[][]): boolean => {
+  const isColFilled = (col: number, newBoard: CellValue[][]): boolean => {
     for (let row = 0; row < BOARD_SIZE; row++) {
       if (!newBoard[row][col]) {
         return false; // Nếu có ô nào trong cột là 0, coi như chưa filled
@@ -301,7 +302,7 @@ const BoardScreen = () => {
   const handleCheckRowOrColResolved = (
     row: number,
     col: number,
-    newBoard: (number | null)[][],
+    newBoard: CellValue[][],
   ) => {
     const key = `${row}${ANIMATION_CELL_KEY_SEPARATOR}${col}`;
 
@@ -331,7 +332,7 @@ const BoardScreen = () => {
     }, ANIMATION_DURATION);
   };
 
-  const handleCheckSolved = (newBoard: (number | null)[][]) => {
+  const handleCheckSolved = (newBoard: CellValue[][]) => {
     if (checkBoardIsSolved(newBoard, solvedBoard)) {
       setIsPlaying(false);
       setIsPaused(true);
@@ -410,7 +411,7 @@ const BoardScreen = () => {
         onErase={handleErase}
         onSolved={handleSolved}
       />
-      <NumberPad onSelectNumber={handleNumberPress} />
+      <NumberPad board={board} onSelectNumber={handleNumberPress} />
       <PauseModal
         visible={showPauseModal}
         level={level}
