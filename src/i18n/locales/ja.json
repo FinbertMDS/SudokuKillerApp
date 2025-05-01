@@ -5,15 +5,18 @@
   "level.medium": "普通",
   "level.hard": "難しい",
   "level.expert": "エキスパート",
+
   "undo": "元に戻す",
   "erase": "消す",
   "notes": "メモ",
   "solvedBoard": "解決済みボード",
+
   "level": "レベル",
   "mistakes": "ミス",
   "time": "時間",
   "paused": "一時停止",
   "continue": "続ける",
+
   "noDataAvailable": "データがありません",
   "gamesPerDay": "1日のゲーム数",
   "Games per Day": "1日のゲーム数",
@@ -24,8 +27,10 @@
   "bestTime": "最速時間",
   "averageTime": "平均時間",
   "timesPerDay": "1日の回数",
+
   "main": "メイン",
   "statistics": "統計",
+
   "mistakeWarning": "⏰ ミス警告",
   "tooManyMistakes": "{{max}}回以上のミスがあります！",
   "timeWarning": "⏰ 時間警告",
@@ -33,12 +38,47 @@
   "ok": "OK",
   "solution": "解答",
   "allDone": "すべて完了",
+  "done": "🎉 完了！",
+  "congratulations": "数独を解きました！",
+  "backToMain": "メイン画面に戻る",
+
   "continueGame": "ゲームを続ける",
   "newGame": "新しいゲーム",
   "deleteSavedGame": "保存したゲームを削除",
+
   "levelStats": "レベル統計",
   "chartsStats": "チャート統計",
-  "done": "🎉 完了！",
-  "congratulations": "数独を解きました！",
-  "backToMain": "メイン画面に戻る"
+
+  "options": "オプション",
+  "settings": "設定",
+  "howToPlay": "遊び方",
+  "help": "ヘルプ",
+  "aboutGame": "ゲームについて",
+  "privacyRights": "プライバシーの権利",
+  "privacyPreferences": "プライバシー設定",
+  "mathPuzzle": "数学パズル",
+  "removeAds": "広告を削除",
+  "restorePurchase": "購入を復元",
+
+  "setting.sounds": "サウンド",
+  "setting.autoLock": "自動ロック",
+  "setting.timer": "タイマー",
+  "setting.score": "スコア",
+  "setting.statisticsMsg": "統計メッセージ",
+  "setting.numberFirst": "数字から入力",
+  "setting.mistakeLimit": "ミスの制限",
+  "setting.autoCheck": "ミスを自動チェック",
+  "setting.highlightDuplicates": "重複をハイライト",
+
+  "desc.statisticsMsg": "レベルを解けた人数に関するメッセージを表示",
+  "desc.numberFirst": "数字を長押しして固定し、複数セルに使用",
+  "desc.mistakeLimit": "1ゲームあたりのミス数を3に制限",
+  "desc.autoCheck": "正解と一致しない数字をマークする",
+
+  "howToPlay.title": "遊び方",
+  "howToPlay.slide1": "グリッドは不規則な形のエリアに分割されています。これらのエリアは「ケージ」と呼ばれます。",
+  "howToPlay.slide2": "ケージ内のセルの数の合計は、左上隅に表示されている数と一致する必要があります。",
+  "howToPlay.slide3": "すべてのブロック、行、列の数字の合計は常に45になります。引き算を使って解を導きましょう。",
+  "howToPlay.slide4": "レベルを解けない？ヒントを試してみましょう！難しい部分で行き詰まったときに役立ちます。",
+  "common.skip": "スキップ"
 }

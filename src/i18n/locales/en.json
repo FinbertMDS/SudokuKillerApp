@@ -5,15 +5,18 @@
   "level.medium": "Medium",
   "level.hard": "Hard",
   "level.expert": "Expert",
+
   "undo": "Undo",
   "erase": "Erase",
   "notes": "Notes",
   "solvedBoard": "Solved Board",
+
   "level": "Level",
   "mistakes": "Mistakes",
   "time": "Time",
   "paused": "Paused",
   "continue": "Continue",
+
   "noDataAvailable": "No data available",
   "gamesPerDay": "Games per Day",
   "Games per Day": "Games per Day",
@@ -24,8 +27,10 @@
   "bestTime": "Best Time",
   "averageTime": "Average Time",
   "timesPerDay": "Times per Day",
+
   "main": "Main",
   "statistics": "Statistics",
+
   "mistakeWarning": "⏰ Mistake Warning",
   "tooManyMistakes": "You've made more than {{max}} mistakes!",
   "timeWarning": "⏰ Time Warning",
@@ -33,12 +38,47 @@
   "ok": "OK",
   "solution": "Solution",
   "allDone": "All Done",
+  "done": "🎉 Done!",
+  "congratulations": "You have completed the Sudoku!",
+  "backToMain": "Back to Main Screen",
+
   "continueGame": "Continue Game",
   "newGame": "New Game",
   "deleteSavedGame": "Delete Saved Game",
+
   "levelStats": "Level Stats",
   "chartsStats": "Charts Stats",
-  "done": "🎉 Done!",
-  "congratulations": "You have completed the Sudoku!",
-  "backToMain": "Back to Main Screen"
+
+  "options": "Options",
+  "settings": "Settings",
+  "howToPlay": "How to Play",
+  "help": "Help",
+  "aboutGame": "About Game",
+  "privacyRights": "Privacy Rights",
+  "privacyPreferences": "Privacy Preferences",
+  "mathPuzzle": "Math Puzzle",
+  "removeAds": "Remove Ads",
+  "restorePurchase": "Restore Purchase",
+
+  "setting.sounds": "Sounds",
+  "setting.autoLock": "Auto-Lock",
+  "setting.timer": "Timer",
+  "setting.score": "Score",
+  "setting.statisticsMsg": "Statistics Message",
+  "setting.numberFirst": "Number-First Input",
+  "setting.mistakeLimit": "Mistake Limit",
+  "setting.autoCheck": "Auto-Check for Mistakes",
+  "setting.highlightDuplicates": "Highlight Duplicates",
+
+  "desc.statisticsMsg": "Show messages about the number of people who were able to solve a level",
+  "desc.numberFirst": "Lock a number by tapping and holding it, then use it for multiple cells",
+  "desc.mistakeLimit": "Limit the number of possible mistakes to 3 per game",
+  "desc.autoCheck": "Mark numbers that don't match the final sudoku solution",
+
+  "howToPlay.title": "How to Play",
+  "howToPlay.slide1": "The field is divided into irregularly shaped areas. These areas are called cages.",
+  "howToPlay.slide2": "The sum of the numbers in the cells of a cage needs to match the value in the upper left corner.",
+  "howToPlay.slide3": "The sum of all numbers in each block, row, or column always equals 45. Use subtraction to find the solution.",
+  "howToPlay.slide4": "Can't solve a level? Try a hint! They can help if you get stuck on a tricky bit!",
+  "common.skip": "Skip"
 }

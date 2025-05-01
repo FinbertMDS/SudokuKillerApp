@@ -5,6 +5,7 @@ export const LEVELS = ['easy', 'medium', 'hard', 'expert'] as Level[];
 export const SCREENS = {
   MAIN: 'Main',
   BOARD: 'Board',
+  OPTIONS: 'Options',
   SETTINGS: 'Settings',
   STATISTICS: 'Statistics',
 } as const;

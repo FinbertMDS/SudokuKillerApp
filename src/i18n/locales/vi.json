@@ -5,15 +5,18 @@
   "level.medium": "Trung bình",
   "level.hard": "Khó",
   "level.expert": "Chuyên gia",
+
   "undo": "Hoàn tác",
   "erase": "Xóa",
   "notes": "Ghi chú",
   "solvedBoard": "Bảng đã giải",
+
   "level": "Mức độ",
   "mistakes": "Lỗi",
   "time": "Thời gian",
   "paused": "Tạm dừng",
   "continue": "Tiếp tục",
+
   "noDataAvailable": "Không có dữ liệu",
   "gamesPerDay": "Số ván mỗi ngày",
   "Games per Day": "Số ván mỗi ngày",
@@ -24,8 +27,10 @@
   "bestTime": "Thời gian tốt nhất",
   "averageTime": "Thời gian trung bình",
   "timesPerDay": "Số lần mỗi ngày",
+
   "main": "Chính",
   "statistics": "Thống kê",
+
   "mistakeWarning": "⏰ Cảnh báo lỗi",
   "tooManyMistakes": "Bạn đã mắc quá {{max}} lỗi!",
   "timeWarning": "⏰ Cảnh báo thời gian",
@@ -33,12 +38,47 @@
   "ok": "OK",
   "solution": "Giải pháp",
   "allDone": "Hoàn thành",
+  "done": "🎉 Hoàn thành!",
+  "congratulations": "Bạn đã giải xong Sudoku!",
+  "backToMain": "Quay lại trang chính",
+
   "continueGame": "Tiếp tục trò chơi",
   "newGame": "Trò chơi mới",
   "deleteSavedGame": "Xóa trò chơi đã lưu",
+
   "levelStats": "Thống kê mức độ",
   "chartsStats": "Biểu đồ thống kê",
-  "done": "🎉 Hoàn thành!",
-  "congratulations": "Bạn đã giải xong Sudoku!",
-  "backToMain": "Quay lại trang chính"
+
+  "options": "Tùy chọn",
+  "settings": "Cài đặt",
+  "howToPlay": "Cách chơi",
+  "help": "Trợ giúp",
+  "aboutGame": "Về trò chơi",
+  "privacyRights": "Quyền riêng tư",
+  "privacyPreferences": "Tùy chọn riêng tư",
+  "mathPuzzle": "Câu đố toán học",
+  "removeAds": "Gỡ quảng cáo",
+  "restorePurchase": "Khôi phục mua hàng",
+
+  "setting.sounds": "Âm thanh",
+  "setting.autoLock": "Tự khóa màn hình",
+  "setting.timer": "Hẹn giờ",
+  "setting.score": "Điểm số",
+  "setting.statisticsMsg": "Thông báo thống kê",
+  "setting.numberFirst": "Nhập số trước",
+  "setting.mistakeLimit": "Giới hạn lỗi",
+  "setting.autoCheck": "Tự động kiểm tra lỗi",
+  "setting.highlightDuplicates": "Tô sáng số trùng",
+
+  "desc.statisticsMsg": "Hiển thị thông báo về số người đã giải được một cấp độ",
+  "desc.numberFirst": "Giữ một số bằng cách nhấn giữ, sau đó sử dụng cho nhiều ô",
+  "desc.mistakeLimit": "Giới hạn số lỗi tối đa là 3 trong mỗi trò chơi",
+  "desc.autoCheck": "Đánh dấu những số không khớp với lời giải sudoku cuối cùng",
+
+  "howToPlay.title": "Cách chơi",
+  "howToPlay.slide1": "Lưới được chia thành các vùng có hình dạng không đều. Những vùng này được gọi là các lồng (cages).",
+  "howToPlay.slide2": "Tổng các số trong một lồng phải bằng với giá trị ở góc trên bên trái của lồng đó.",
+  "howToPlay.slide3": "Tổng của tất cả các số trong mỗi khối, hàng hoặc cột luôn bằng 45. Hãy dùng phép trừ để tìm ra lời giải.",
+  "howToPlay.slide4": "Không thể giải được cấp độ? Hãy thử một gợi ý! Gợi ý có thể giúp bạn khi bị mắc kẹt ở phần khó.",
+  "common.skip": "Bỏ qua"
 }
