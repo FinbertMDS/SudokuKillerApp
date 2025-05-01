@@ -1,18 +1,20 @@
 // StatisticsScreen.tsx
 
-import { useFocusEffect } from '@react-navigation/native';
-import React, { useCallback, useEffect, useState } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {useFocusEffect} from '@react-navigation/native';
+import React, {useCallback, useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import {Text, TouchableOpacity, View} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import Header from '../../components/commons/Header';
 import ChartsStats from '../../components/Statistics/ChartsStats';
 import LevelStats from '../../components/Statistics/LevelStats';
-import { useTheme } from '../../context/ThemeContext';
-import { GameStatsManager } from '../../services/GameStatsManager';
-import { GameLogEntry, GameStats, Level } from '../../types';
+import {useTheme} from '../../context/ThemeContext';
+import {GameStatsManager} from '../../services/GameStatsManager';
+import {GameLogEntry, GameStats, Level} from '../../types';
 
 export default function StatisticsScreen() {
-  const { theme } = useTheme();
+  const {theme} = useTheme();
+  const {t} = useTranslation();
   const [stats, setStats] = useState<Record<Level, GameStats> | null>(null);
   const [logs, setLogs] = useState<GameLogEntry[]>([]);
   const [activeTab, setActiveTab] = useState<'level' | 'chart'>('level');
@@ -21,7 +23,7 @@ export default function StatisticsScreen() {
   useFocusEffect(
     useCallback(() => {
       loadData();
-    }, [])
+    }, []),
   );
 
   useEffect(() => {
@@ -36,9 +38,11 @@ export default function StatisticsScreen() {
   }
 
   return (
-    <SafeAreaView edges={['top']} style={[styles.container, { backgroundColor: theme.background }]}>
+    <SafeAreaView
+      edges={['top']}
+      style={[styles.container, {backgroundColor: theme.background}]}>
       <Header
-        title="Statistics"
+        title={t('statistics')}
         showBack={false}
         showSettings={true}
         showTheme={true}
@@ -48,38 +52,36 @@ export default function StatisticsScreen() {
         <View style={styles.tabRow}>
           <TouchableOpacity
             onPress={() => setActiveTab('level')}
-            style={[
-              styles.chip,
-              activeTab === 'level' && styles.chipActive,
-            ]}
-          >
-            <Text style={[
-              styles.chipText,
-              activeTab === 'level' && styles.chipTextActive
-            ]}>By Level</Text>
+            style={[styles.chip, activeTab === 'level' && styles.chipActive]}>
+            <Text
+              style={[
+                styles.chipText,
+                activeTab === 'level' && styles.chipTextActive,
+              ]}>
+              {t('levelStats')}
+            </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             onPress={() => setActiveTab('chart')}
-            style={[
-              styles.chip,
-              activeTab === 'chart' && styles.chipActive,
-            ]}
-          >
-            <Text style={[
-              styles.chipText,
-              activeTab === 'chart' && styles.chipTextActive
-            ]}>Charts</Text>
+            style={[styles.chip, activeTab === 'chart' && styles.chipActive]}>
+            <Text
+              style={[
+                styles.chipText,
+                activeTab === 'chart' && styles.chipTextActive,
+              ]}>
+              {t('chartsStats')}
+            </Text>
           </TouchableOpacity>
         </View>
 
         {/* Content */}
         <View style={styles.content}>
-          {
-            activeTab === 'level' ?
-              <LevelStats stats={stats} /> :
-              <ChartsStats logs={logs} />
-          }
+          {activeTab === 'level' ? (
+            <LevelStats stats={stats} />
+          ) : (
+            <ChartsStats logs={logs} />
+          )}
         </View>
       </View>
     </SafeAreaView>

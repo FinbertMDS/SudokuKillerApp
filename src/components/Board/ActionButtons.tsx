@@ -2,6 +2,7 @@ import React, { useCallback, useMemo } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useTheme } from '../../context/ThemeContext';
+import { useTranslation } from 'react-i18next';
 
 type ActionButtonsProps = {
   noteMode: boolean,
@@ -20,6 +21,7 @@ const ActionButtons = (
     onSolved,
   }: ActionButtonsProps) => {
   const { theme } = useTheme();
+  const { t } = useTranslation();
 
   const handleNote = useCallback((mode: boolean) => {
     onNote(mode);
@@ -38,13 +40,11 @@ const ActionButtons = (
 
 
   const buttons = useMemo(() => [
-    { label: 'Undo', icon: ['undo'], onPress: handleUndo },
-    { label: 'Erase', icon: ['eraser'], onPress: handleErase },
-    { label: 'Notes', icon: ['note-outline', 'note-edit-outline'], iconChangeFlag: noteMode, onPress: () => handleNote(!noteMode) },
-    { label: 'Solved Board', icon: ['lightbulb-on-outline'], onPress: handleSolved },
-    // { label: 'Hint', icon: 'lightbulb-on-outline', onPress: handleHint },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  ], [handleNote, handleUndo, handleErase, handleNote]);
+    { label: t('undo'), icon: ['undo'], onPress: handleUndo },
+    { label: t('erase'), icon: ['eraser'], onPress: handleErase },
+    { label: t('notes'), icon: ['note-outline', 'note-edit-outline'], iconChangeFlag: noteMode, onPress: () => handleNote(!noteMode) },
+    { label: t('solvedBoard'), icon: ['lightbulb-on-outline'], onPress: handleSolved },
+  ], [t, noteMode, handleNote, handleUndo, handleErase, handleSolved]);
 
   return (
       <View style={[styles.container, { backgroundColor: theme.background }]}>

@@ -1,11 +1,6 @@
-import { Level } from '../types';
+import {Level} from '../types';
 
-export const LEVELS = [
-  'easy',
-  'medium',
-  'hard',
-  'expert',
-] as Level[];
+export const LEVELS = ['easy', 'medium', 'hard', 'expert'] as Level[];
 
 export const SCREENS = {
   MAIN: 'Main',

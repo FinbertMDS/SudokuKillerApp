@@ -1,7 +1,7 @@
 import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
-import { default as Icon } from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useTheme } from '../../context/ThemeContext';
+import {Text, TouchableOpacity, View} from 'react-native';
+import {default as Icon} from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useTheme} from '../../context/ThemeContext';
 
 type HeaderProps = {
   title?: string;
@@ -14,55 +14,48 @@ type HeaderProps = {
 const Header = ({
   title,
   showBack = false,
-  onBack = () => { },
+  onBack = () => {},
   showSettings = true,
   showTheme = true,
 }: HeaderProps) => {
-  const { theme, toggleTheme, mode } = useTheme();
+  const {theme, toggleTheme, mode} = useTheme();
+
   return (
     <>
       {/* Header */}
-      <View style={[styles.header, { backgroundColor: theme.background }]}>
-        {
-          showBack && (
-            <View style={styles.side}>
-              <TouchableOpacity onPress={onBack}>
-                <Icon name="arrow-left" size={28} color={theme.iconColor} />
+      <View style={[styles.header, {backgroundColor: theme.background}]}>
+        {showBack && (
+          <View style={styles.side}>
+            <TouchableOpacity onPress={onBack}>
+              <Icon name="arrow-left" size={28} color={theme.iconColor} />
+            </TouchableOpacity>
+          </View>
+        )}
+        {title && title.length > 0 && (
+          <View style={styles.center}>
+            <Text style={[styles.title, {color: theme.text}]}>{title}</Text>
+          </View>
+        )}
+        {showTheme || showSettings ? (
+          <View style={[styles.side, styles.right]}>
+            {showTheme && (
+              <TouchableOpacity onPress={toggleTheme} style={styles.iconButton}>
+                <Icon
+                  name={mode === 'light' ? 'weather-night' : 'weather-sunny'}
+                  size={24}
+                  color={theme.iconColor}
+                />
               </TouchableOpacity>
-            </View>
-          )
-        }
-        {
-          title && title.length > 0 && (
-            <View style={styles.center}>
-              <Text style={[styles.title, { color: theme.text }]}>{title}</Text>
-            </View>
-          )
-        }
-        {
-          showTheme || showSettings ? (
-            <View style={[styles.side, styles.right]}>
-              {
-                showTheme && (
-                  <TouchableOpacity onPress={toggleTheme} style={styles.iconButton}>
-                    <Icon
-                      name={mode === 'light' ? 'weather-night' : 'weather-sunny'}
-                      size={24}
-                      color={theme.iconColor}
-                    />
-                  </TouchableOpacity>
-                )
-              }
-              {
-                showSettings && (
-                  <TouchableOpacity onPress={() => console.log('Open settings')} style={styles.iconButton}>
-                    <Icon name="cog-outline" size={24} color={theme.iconColor} />
-                  </TouchableOpacity>
-                )
-              }
-            </View>
-          )
-            : null}
+            )}
+            {showSettings && (
+              <TouchableOpacity
+                onPress={() => console.log('Open settings')}
+                style={styles.iconButton}>
+                <Icon name="cog-outline" size={24} color={theme.iconColor} />
+              </TouchableOpacity>
+            )}
+          </View>
+        ) : null}
       </View>
     </>
   );
