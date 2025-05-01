@@ -1,19 +1,31 @@
-import React, { useEffect, useRef } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
-import Animated, { useAnimatedStyle, useSharedValue, withSequence, withTiming } from 'react-native-reanimated';
-import Svg, { Line } from 'react-native-svg';
-import { useTheme } from '../../context/ThemeContext';
-import { Cell } from '../../types';
-import { getAdjacentCellsInSameCage } from '../../utils/boardUtil';
-import { ANIMATION_CELL_KEY_SEPARATOR, ANIMATION_DURATION, ANIMATION_TYPE, BOARD_SIZE, CAGE_PADDING, CELL_SIZE } from '../../utils/constants';
+import React, {useEffect, useRef} from 'react';
+import {Text, TouchableOpacity, View} from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSequence,
+  withTiming,
+} from 'react-native-reanimated';
+import Svg, {Line} from 'react-native-svg';
+import {useTheme} from '../../context/ThemeContext';
+import {Cell} from '../../types';
+import {getAdjacentCellsInSameCage} from '../../utils/boardUtil';
+import {
+  ANIMATION_CELL_KEY_SEPARATOR,
+  ANIMATION_DURATION,
+  ANIMATION_TYPE,
+  BOARD_SIZE,
+  CAGE_PADDING,
+  CELL_SIZE,
+} from '../../utils/constants';
 
 type GridProps = {
   board: (number | null)[][];
-  cages: { cells: [number, number][], sum: number }[];
+  cages: {cells: [number, number][]; sum: number}[];
   notes: string[][][];
   solvedBoard: number[][];
   selectedCell: Cell | null;
-  animatedCells: { [key: string]: number };
+  animatedCells: {[key: string]: number};
   onSelectedCell: (cell: Cell | null) => void;
 };
 
@@ -26,21 +38,22 @@ const Grid = ({
   animatedCells,
   onSelectedCell,
 }: GridProps) => {
-  const { theme } = useTheme();
+  const {theme} = useTheme();
+
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const rowScales = Array.from({ length: BOARD_SIZE }, () => useSharedValue(1));
+  const rowScales = Array.from({length: BOARD_SIZE}, () => useSharedValue(1));
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const colScales = Array.from({ length: BOARD_SIZE }, () => useSharedValue(1));
+  const colScales = Array.from({length: BOARD_SIZE}, () => useSharedValue(1));
 
   const animatedStyles = useRef(
-    Array.from({ length: BOARD_SIZE }, (_, row) =>
-      Array.from({ length: BOARD_SIZE }, (_, col) =>
+    Array.from({length: BOARD_SIZE}, (_, row) =>
+      Array.from({length: BOARD_SIZE}, (_, col) =>
         // eslint-disable-next-line react-hooks/rules-of-hooks
         useAnimatedStyle(() => ({
-          transform: [{ scale: rowScales[row].value * colScales[col].value }],
-        }))
-      )
-    )
+          transform: [{scale: rowScales[row].value * colScales[col].value}],
+        })),
+      ),
+    ),
   ).current;
 
   useEffect(() => {
@@ -53,35 +66,48 @@ const Grid = ({
     Object.keys(animatedCells).forEach(key => {
       const [row, col] = key.split(ANIMATION_CELL_KEY_SEPARATOR).map(Number);
 
-      if (animatedCells[key] === ANIMATION_TYPE.NONE) { return; }
+      if (animatedCells[key] === ANIMATION_TYPE.NONE) {
+        return;
+      }
 
-      if (animatedCells[key] === ANIMATION_TYPE.ROW || animatedCells[key] === ANIMATION_TYPE.ROW_COL) {
+      if (
+        animatedCells[key] === ANIMATION_TYPE.ROW ||
+        animatedCells[key] === ANIMATION_TYPE.ROW_COL
+      ) {
         rowScales[row].value = withSequence(
-          withTiming(0.9, { duration: ANIMATION_DURATION / 3 }),
-          withTiming(1, { duration: ANIMATION_DURATION / 3 }),
+          withTiming(0.9, {duration: ANIMATION_DURATION / 3}),
+          withTiming(1, {duration: ANIMATION_DURATION / 3}),
         );
       }
-      if (animatedCells[key] === ANIMATION_TYPE.COL || animatedCells[key] === ANIMATION_TYPE.ROW_COL) {
+      if (
+        animatedCells[key] === ANIMATION_TYPE.COL ||
+        animatedCells[key] === ANIMATION_TYPE.ROW_COL
+      ) {
         colScales[col].value = withSequence(
-          withTiming(0.9, { duration: ANIMATION_DURATION / 3 }),
-          withTiming(1, { duration: ANIMATION_DURATION / 3 }),
+          withTiming(0.9, {duration: ANIMATION_DURATION / 3}),
+          withTiming(1, {duration: ANIMATION_DURATION / 3}),
         );
       }
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [animatedCells]);
 
-
   const isCellInSameRowOrColOrBox = (row: number, col: number) => {
-    if (!selectedCell) { return false; }
+    if (!selectedCell) {
+      return false;
+    }
     const selRow = selectedCell.row;
     const selCol = selectedCell.col;
-    const inSameBox = Math.floor(selRow / 3) === Math.floor(row / 3) && Math.floor(selCol / 3) === Math.floor(col / 3);
+    const inSameBox =
+      Math.floor(selRow / 3) === Math.floor(row / 3) &&
+      Math.floor(selCol / 3) === Math.floor(col / 3);
     return selRow === row || selCol === col || inSameBox;
   };
 
   const getCageForCell = (row: number, col: number) => {
-    return cages.find(cage => cage.cells.some(cell => cell[0] === row && cell[1] === col));
+    return cages.find(cage =>
+      cage.cells.some(cell => cell[0] === row && cell[1] === col),
+    );
   };
 
   const renderCageBorders = () => {
@@ -99,7 +125,9 @@ const Grid = ({
       for (let c = 0; c < BOARD_SIZE; c++) {
         const thisCageIdx = cageMap.get(`${r},${c}`);
 
-        if (thisCageIdx == null) { continue; } // bỏ qua ô không thuộc cage nào
+        if (thisCageIdx == null) {
+          continue;
+        } // bỏ qua ô không thuộc cage nào
 
         const adjacentCells = getAdjacentCellsInSameCage(r, c, cages);
 
@@ -113,12 +141,15 @@ const Grid = ({
                 x1={(c + 1) * CELL_SIZE - CAGE_PADDING}
                 y1={r * CELL_SIZE + (adjacentCells.top ? 0 : CAGE_PADDING)}
                 x2={(c + 1) * CELL_SIZE - CAGE_PADDING}
-                y2={(r + 1) * CELL_SIZE - (adjacentCells.bottom ? 0 : CAGE_PADDING)}
+                y2={
+                  (r + 1) * CELL_SIZE -
+                  (adjacentCells.bottom ? 0 : CAGE_PADDING)
+                }
                 stroke={theme.secondary}
                 strokeWidth={1}
                 strokeDasharray="2,2"
                 strokeLinecap="round"
-              />
+              />,
             );
           }
         }
@@ -132,13 +163,15 @@ const Grid = ({
                 key={`bottom-${r}-${c}`}
                 x1={c * CELL_SIZE + (adjacentCells.left ? 0 : CAGE_PADDING)}
                 y1={(r + 1) * CELL_SIZE - CAGE_PADDING}
-                x2={(c + 1) * CELL_SIZE - (adjacentCells.right ? 0 : CAGE_PADDING)}
+                x2={
+                  (c + 1) * CELL_SIZE - (adjacentCells.right ? 0 : CAGE_PADDING)
+                }
                 y2={(r + 1) * CELL_SIZE - CAGE_PADDING}
                 stroke={theme.secondary}
                 strokeWidth={1}
                 strokeDasharray="2,2"
                 strokeLinecap="round"
-              />
+              />,
             );
           }
         }
@@ -151,12 +184,14 @@ const Grid = ({
               x1={c * CELL_SIZE + CAGE_PADDING}
               y1={r * CELL_SIZE + (adjacentCells.top ? 0 : CAGE_PADDING)}
               x2={c * CELL_SIZE + CAGE_PADDING}
-              y2={(r + 1) * CELL_SIZE - (adjacentCells.bottom ? 0 : CAGE_PADDING)}
+              y2={
+                (r + 1) * CELL_SIZE - (adjacentCells.bottom ? 0 : CAGE_PADDING)
+              }
               stroke={theme.secondary}
               strokeWidth={1}
               strokeDasharray="2,2"
               strokeLinecap="round"
-            />
+            />,
           );
         }
 
@@ -165,15 +200,24 @@ const Grid = ({
           lines.push(
             <Line
               key={`top-${r}-${c}`}
-              x1={c * CELL_SIZE + (adjacentCells.left ? (adjacentCells.right ? -CAGE_PADDING : 0) : CAGE_PADDING)}
+              x1={
+                c * CELL_SIZE +
+                (adjacentCells.left
+                  ? adjacentCells.right
+                    ? -CAGE_PADDING
+                    : 0
+                  : CAGE_PADDING)
+              }
               y1={r * CELL_SIZE + CAGE_PADDING}
-              x2={(c + 1) * CELL_SIZE - (adjacentCells.right ? 0 : CAGE_PADDING)}
+              x2={
+                (c + 1) * CELL_SIZE - (adjacentCells.right ? 0 : CAGE_PADDING)
+              }
               y2={r * CELL_SIZE + CAGE_PADDING}
               stroke={theme.secondary}
               strokeWidth={1}
               strokeDasharray="2,2"
               strokeLinecap="round"
-            />
+            />,
           );
         }
 
@@ -206,7 +250,11 @@ const Grid = ({
         }
 
         // 6. Vẽ góc phần tư thứ hai nếu có neighbor trên và bên phải cùng cage
-        if (adjacentCells.top && adjacentCells.right && !adjacentCells.topright) {
+        if (
+          adjacentCells.top &&
+          adjacentCells.right &&
+          !adjacentCells.topright
+        ) {
           lines.push(
             <Line
               key={`top-right-corner-${r}-${c}`}
@@ -233,7 +281,11 @@ const Grid = ({
           );
         }
         // 7. Vẽ góc phần tư thứ ba nếu có neighbor dưới và bên trái cùng cage
-        if (adjacentCells.bottom && adjacentCells.left && !adjacentCells.bottomleft) {
+        if (
+          adjacentCells.bottom &&
+          adjacentCells.left &&
+          !adjacentCells.bottomleft
+        ) {
           lines.push(
             <Line
               key={`bottom-left-corner-${r}-${c}`}
@@ -260,7 +312,11 @@ const Grid = ({
           );
         }
         // 8. Vẽ góc phần tư thứ tư nếu có neighbor dưới và bên phải cùng cage
-        if (adjacentCells.bottom && adjacentCells.right && !adjacentCells.bottomright) {
+        if (
+          adjacentCells.bottom &&
+          adjacentCells.right &&
+          !adjacentCells.bottomright
+        ) {
           lines.push(
             <Line
               key={`bottom-right-corner-${r}-${c}`}
@@ -286,7 +342,6 @@ const Grid = ({
             />,
           );
         }
-
       }
     }
 
@@ -303,29 +358,48 @@ const Grid = ({
     const isMistake = cellValue !== 0 && cellValue !== solvedBoard[row][col];
 
     return (
-      <View key={`${row}-${col}`} style={[styles.cellWrapper, { backgroundColor: theme.background }]}>
-        {isRelated && !isSelected && <View style={[styles.relatedOverlay, { backgroundColor: theme.overlayColor }]} />}
-        {isSelected && <View style={[styles.selectedOverlay, {backgroundColor: theme.selectedOverlayColor}]} />}
+      <View
+        key={`${row}-${col}`}
+        style={[styles.cellWrapper, {backgroundColor: theme.background}]}>
+        {isRelated && !isSelected && (
+          <View
+            style={[
+              styles.relatedOverlay,
+              {backgroundColor: theme.overlayColor},
+            ]}
+          />
+        )}
+        {isSelected && (
+          <View
+            style={[
+              styles.selectedOverlay,
+              {backgroundColor: theme.selectedOverlayColor},
+            ]}
+          />
+        )}
         <TouchableOpacity
           style={[
             styles.cell,
             // eslint-disable-next-line react-native/no-inline-styles
             {
               borderColor: theme.cellBorderColor,
-              borderTopWidth: (row === 0 || row === 3 || row === 6) ? 1.2 : 0.2,
-              borderBottomWidth: (row === 8) ? 1.2 : 0.2,
-              borderLeftWidth: (col === 0 || col === 3 || col === 6) ? 1.2 : 0.2,
-              borderRightWidth: (col === 8) ? 1.2 : 0.2,
+              borderTopWidth: row === 0 || row === 3 || row === 6 ? 1.2 : 0.2,
+              borderBottomWidth: row === 8 ? 1.2 : 0.2,
+              borderLeftWidth: col === 0 || col === 3 || col === 6 ? 1.2 : 0.2,
+              borderRightWidth: col === 8 ? 1.2 : 0.2,
             },
           ]}
           onPress={() => {
-            onSelectedCell({ row, col });
-          }}
-        >
-          {isCageFirst && <Text style={[styles.cageText, {color: theme.secondary}]}>{cage?.sum}</Text>}
+            onSelectedCell({row, col});
+          }}>
+          {isCageFirst && (
+            <Text style={[styles.cageText, {color: theme.secondary}]}>
+              {cage?.sum}
+            </Text>
+          )}
           <View style={styles.notesContainerTop}>
-            {Array.from({ length: BOARD_SIZE }, (_, i) => (
-              <Text key={i} style={[styles.noteText, { color: theme.text }]}>
+            {Array.from({length: BOARD_SIZE}, (_, i) => (
+              <Text key={i} style={[styles.noteText, {color: theme.text}]}>
                 {cellNotes.includes((i + 1).toString()) ? i + 1 : ' '}
               </Text>
             ))}
@@ -333,8 +407,11 @@ const Grid = ({
           <Animated.View style={[styles.cell, animatedStyle]}>
             {cellValue !== 0 && (
               <Text
-                style={[styles.cellText, { color: theme.text }, isMistake && { color: theme.mistake }]}
-              >
+                style={[
+                  styles.cellText,
+                  {color: theme.text},
+                  isMistake && {color: theme.mistake},
+                ]}>
                 {cellValue}
               </Text>
             )}
@@ -353,7 +430,11 @@ const Grid = ({
             {board.map((row, rowIndex) => (
               <View key={rowIndex} style={styles.row}>
                 {row.map((_, colIndex) => {
-                  return renderCell(rowIndex, colIndex, animatedStyles[rowIndex][colIndex]);
+                  return renderCell(
+                    rowIndex,
+                    colIndex,
+                    animatedStyles[rowIndex][colIndex],
+                  );
                 })}
               </View>
             ))}
@@ -364,8 +445,7 @@ const Grid = ({
             width={CELL_SIZE * BOARD_SIZE}
             height={CELL_SIZE * BOARD_SIZE}
             style={styles.cageBordersSvg}
-            pointerEvents="none"
-          >
+            pointerEvents="none">
             {renderCageBorders()}
           </Svg>
         </View>

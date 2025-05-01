@@ -7,8 +7,8 @@ Screen | Light | Dark
 ---------|---------|----------
 Main | ![Main_Light.png](screenshots/Main_Light.png) | ![Main_Dark.png](screenshots/Main_Dark.png)
 Board | ![Board_Light.png](screenshots/Board_Light.png) | ![Board_Dark.png](screenshots/Board_Dark.png)
-Level Stats | ![LevelStats_Light](LevelStats_Light.png) | ![LevelStats_Dark](LevelStats_Dark.png)
-Charts Stats | ![ChartsStats_Light](ChartsStats_Light.png) | ![ChartsStats_Dark](ChartsStats_Dark.png)
+Level Stats | ![LevelStats_Light](screenshots/LevelStats_Light.png) | ![LevelStats_Dark](screenshots/LevelStats_Dark.png)
+Charts Stats | ![ChartsStats_Light](screenshots/ChartsStats_Light.png) | ![ChartsStats_Dark](screenshots/ChartsStats_Dark.png)
 
 ---
 

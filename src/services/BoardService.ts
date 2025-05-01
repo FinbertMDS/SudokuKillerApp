@@ -1,12 +1,18 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { InitGame, SavedGame } from '../types';
-import { STORAGE_KEY_INIT_GAME, STORAGE_KEY_SAVED_GAME } from '../utils/constants';
+import {InitGame, SavedGame} from '../types';
+import {
+  STORAGE_KEY_INIT_GAME,
+  STORAGE_KEY_SAVED_GAME,
+} from '../utils/constants';
 
 export const BoardService = {
   async save(state: SavedGame | InitGame) {
     try {
       if ('initialBoard' in state) {
-        await AsyncStorage.setItem(STORAGE_KEY_INIT_GAME, JSON.stringify(state));
+        await AsyncStorage.setItem(
+          STORAGE_KEY_INIT_GAME,
+          JSON.stringify(state),
+        );
       } else if ('savedBoard' in state) {
         const savedGame = await this.loadSaved();
         if (savedGame) {
@@ -15,9 +21,15 @@ export const BoardService = {
             ...state,
             lastSaved: new Date(),
           };
-          await AsyncStorage.setItem(STORAGE_KEY_SAVED_GAME, JSON.stringify(updatedSavedGame));
+          await AsyncStorage.setItem(
+            STORAGE_KEY_SAVED_GAME,
+            JSON.stringify(updatedSavedGame),
+          );
         } else {
-          await AsyncStorage.setItem(STORAGE_KEY_SAVED_GAME, JSON.stringify(state));
+          await AsyncStorage.setItem(
+            STORAGE_KEY_SAVED_GAME,
+            JSON.stringify(state),
+          );
         }
       }
     } catch (e) {
@@ -30,7 +42,10 @@ export const BoardService = {
       const savedGame = await this.loadSaved();
       if (savedGame) {
         savedGame.savedTimePlayed = seconds;
-        await AsyncStorage.setItem(STORAGE_KEY_SAVED_GAME, JSON.stringify(savedGame));
+        await AsyncStorage.setItem(
+          STORAGE_KEY_SAVED_GAME,
+          JSON.stringify(savedGame),
+        );
       }
     } catch (e) {
       console.error('Failed to save time played:', e);
@@ -96,7 +111,10 @@ export const BoardService = {
       const savedGame = await this.loadSaved();
       if (savedGame) {
         savedGame.savedTimePlayed = 0;
-        await AsyncStorage.setItem(STORAGE_KEY_SAVED_GAME, JSON.stringify(savedGame));
+        await AsyncStorage.setItem(
+          STORAGE_KEY_SAVED_GAME,
+          JSON.stringify(savedGame),
+        );
       }
     } catch (e) {
       console.error('Failed to clear time played:', e);

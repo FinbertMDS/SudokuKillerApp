@@ -70,6 +70,11 @@
 			<string>Zocial.ttf</string>
 			<string>Fontisto.ttf</string>
 		</array>
-
+		<key>CFBundleLocalizations</key>
+		<array>
+			<string>en</string>
+			<string>vi</string>
+			<string>ja</string>
+		</array>
 	</dict>
 </plist>

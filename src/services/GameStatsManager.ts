@@ -1,8 +1,11 @@
 // GameStatsManager.ts
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { DailyStats, GameLogEntry, GameStats, Level } from '../types';
-import { STORAGE_KEY_GAME_LOGS, STORAGE_KEY_GAME_STATS } from '../utils/constants';
+import {DailyStats, GameLogEntry, GameStats, Level} from '../types';
+import {
+  STORAGE_KEY_GAME_LOGS,
+  STORAGE_KEY_GAME_STATS,
+} from '../utils/constants';
 
 export const GameStatsManager = {
   async getStats(): Promise<Record<Level, GameStats>> {
@@ -48,7 +51,10 @@ export const GameStatsManager = {
     try {
       const existing = await this.getLogs();
       existing.push(log);
-      await AsyncStorage.setItem(STORAGE_KEY_GAME_LOGS, JSON.stringify(existing));
+      await AsyncStorage.setItem(
+        STORAGE_KEY_GAME_LOGS,
+        JSON.stringify(existing),
+      );
     } catch (error) {
       console.error('Error saving logs:', error);
     }
@@ -58,7 +64,10 @@ export const GameStatsManager = {
     try {
       const existing = await this.getLogs();
       const updated = [...existing, ...logs];
-      await AsyncStorage.setItem(STORAGE_KEY_GAME_LOGS, JSON.stringify(updated));
+      await AsyncStorage.setItem(
+        STORAGE_KEY_GAME_LOGS,
+        JSON.stringify(updated),
+      );
     } catch (error) {
       console.error('Error saving logs:', error);
     }
@@ -125,11 +134,11 @@ export const GameStatsManager = {
     if (logs.length === 0) {
       return [];
     }
-    const map = new Map<string, { games: number; time: number }>();
+    const map = new Map<string, {games: number; time: number}>();
 
     for (const entry of logs) {
       if (!map.has(entry.date)) {
-        map.set(entry.date, { games: 0, time: 0 });
+        map.set(entry.date, {games: 0, time: 0});
       }
       const stat = map.get(entry.date)!;
       stat.games += 1;
@@ -158,4 +167,3 @@ export const GameStatsManager = {
     }
   },
 };
-

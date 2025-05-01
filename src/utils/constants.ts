@@ -1,11 +1,6 @@
-import { Level } from '../types';
+import {Level} from '../types';
 
-export const LEVELS = [
-  'easy',
-  'medium',
-  'hard',
-  'expert',
-] as Level[];
+export const LEVELS = ['easy', 'medium', 'hard', 'expert'] as Level[];
 
 export const SCREENS = {
   MAIN: 'Main',
@@ -34,20 +29,14 @@ export const STORAGE_KEY_INIT_GAME = 'initGame';
 export const STORAGE_KEY_SAVED_GAME = 'savedGame';
 export const STORAGE_KEY_GAME_STATS = 'gameStats';
 export const STORAGE_KEY_GAME_LOGS = 'gameLogs';
+export const STORAGE_KEY_LANG_KEY_DEFAULT = 'defaultLanguage';
+export const STORAGE_KEY_LANG_KEY_PREFERRED = 'preferredLanguage';
 
 export const CHART_WIDTH = 60;
 export const CHART2_WIDTH = 70;
 
-export const chartConfig = {
-  backgroundGradientFrom: '#1E2923',
-  backgroundGradientTo: '#08130D',
-  color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-  labelColor: () => '#ccc',
-};
-// const chartConfig = {
-//   backgroundGradientFrom: '#1E1E1E',
-//   backgroundGradientTo: '#1E1E1E',
-//   decimalPlaces: 0,
-//   color: (opacity = 1) => `rgba(255,255,255,${opacity})`,
-//   labelColor: () => '#ccc',
-// };
+export const LANGUAGES = [
+  {code: 'en', label: 'English'},
+  {code: 'vi', label: 'Tiếng Việt'},
+  {code: 'ja', label: '日本語'},
+];

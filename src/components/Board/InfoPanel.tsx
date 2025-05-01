@@ -1,9 +1,10 @@
 import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import {useTranslation} from 'react-i18next';
+import {Text, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useTheme } from '../../context/ThemeContext';
-import { MAX_MISTAKES } from '../../utils/constants';
-import { formatTime } from '../../utils/dateUtil';
+import {useTheme} from '../../context/ThemeContext';
+import {MAX_MISTAKES} from '../../utils/constants';
+import {formatTime} from '../../utils/dateUtil';
 
 type InfoPanelProps = {
   level: string;
@@ -13,24 +14,35 @@ type InfoPanelProps = {
   onPause: () => void;
 };
 
-const InfoPanel = ({ level, mistakes, time, isPaused, onPause }: InfoPanelProps) => {
-  const { theme } = useTheme();
+const InfoPanel = ({
+  level,
+  mistakes,
+  time,
+  isPaused,
+  onPause,
+}: InfoPanelProps) => {
+  const {theme} = useTheme();
+  const {t} = useTranslation();
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.background }]}>
+    <View style={[styles.container, {backgroundColor: theme.background}]}>
       <View style={styles.infoBlock}>
-        <Text style={[styles.title, { color: theme.text }]}>Level</Text>
-        <Text style={[styles.value, { color: theme.text }]}>{level}</Text>
+        <Text style={[styles.title, {color: theme.text}]}>{t('level')}</Text>
+        <Text style={[styles.value, {color: theme.text}]}>{level}</Text>
       </View>
 
       <View style={styles.infoBlock}>
-        <Text style={[styles.title, { color: theme.text }]}>Mistakes</Text>
-        <Text style={[styles.value, { color: theme.text }]}>{mistakes}/{MAX_MISTAKES}</Text>
+        <Text style={[styles.title, {color: theme.text}]}>{t('mistakes')}</Text>
+        <Text style={[styles.value, {color: theme.text}]}>
+          {mistakes}/{MAX_MISTAKES}
+        </Text>
       </View>
 
       <View style={styles.infoBlock}>
-        <Text style={[styles.title, { color: theme.text }]}>Time</Text>
-        <Text style={[styles.value, styles.timeValue, { color: theme.text }]}>{formatTime(time)}</Text>
+        <Text style={[styles.title, {color: theme.text}]}>{t('time')}</Text>
+        <Text style={[styles.value, styles.timeValue, {color: theme.text}]}>
+          {formatTime(time)}
+        </Text>
       </View>
 
       <TouchableOpacity style={styles.infoBlock} onPress={onPause}>
@@ -43,7 +55,6 @@ const InfoPanel = ({ level, mistakes, time, isPaused, onPause }: InfoPanelProps)
     </View>
   );
 };
-
 
 const styles = {
   container: {

@@ -1,8 +1,9 @@
-import { Dimensions, ScrollView, Text, View } from 'react-native';
-import { PieChart } from 'react-native-chart-kit';
-import { AbstractChartConfig } from 'react-native-chart-kit/dist/AbstractChart';
-import { useTheme } from '../../context/ThemeContext';
-import { DailyStatsPieData } from '../../types';
+import {useTranslation} from 'react-i18next';
+import {Dimensions, ScrollView, Text, View} from 'react-native';
+import {PieChart} from 'react-native-chart-kit';
+import {AbstractChartConfig} from 'react-native-chart-kit/dist/AbstractChart';
+import {useTheme} from '../../context/ThemeContext';
+import {DailyStatsPieData} from '../../types';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -11,14 +12,17 @@ type GamePieChartProps = {
   chartConfig: AbstractChartConfig;
 };
 
-const GamePieChart = ({ levelCounts, chartConfig }: GamePieChartProps) => {
-  const { theme } = useTheme();
+const GamePieChart = ({levelCounts, chartConfig}: GamePieChartProps) => {
+  const {theme} = useTheme();
+  const {t} = useTranslation();
 
   if (levelCounts.length === 0) {
     return (
-      <View style={[styles.container, { backgroundColor: theme.background }]}>
-        <Text style={[styles.title, { color: theme.text }]}>Game Distribution by Level</Text>
-        <Text style={[{ color: theme.text }]}>No data available</Text>
+      <View style={[styles.container, {backgroundColor: theme.background}]}>
+        <Text style={[styles.title, {color: theme.text}]}>
+          {t('gamesDistributionByLevel')}
+        </Text>
+        <Text style={[{color: theme.text}]}>{t('noDataAvailable')}</Text>
       </View>
     );
   }
@@ -26,8 +30,10 @@ const GamePieChart = ({ levelCounts, chartConfig }: GamePieChartProps) => {
   const chartWidth = screenWidth - 32;
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.background }]}>
-      <Text style={[styles.title, { color: theme.text }]}>Game Distribution by Level</Text>
+    <View style={[styles.container, {backgroundColor: theme.background}]}>
+      <Text style={[styles.title, {color: theme.text}]}>
+        {t('gamesDistributionByLevel')}
+      </Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         <PieChart
           data={levelCounts}

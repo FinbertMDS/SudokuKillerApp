@@ -1,21 +1,24 @@
 // src/screens/MainScreen/index.tsx
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import { generateKillerSudoku } from 'killer-sudoku-generator';
-import React, { useCallback, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { Menu } from 'react-native-paper';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Difficulty } from 'sudoku-gen/dist/types/difficulty.type';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {generateKillerSudoku} from 'killer-sudoku-generator';
+import React, {useCallback, useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Menu} from 'react-native-paper';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {Difficulty} from 'sudoku-gen/dist/types/difficulty.type';
 import Header from '../../components/commons/Header';
-import { useTheme } from '../../context/ThemeContext';
-import { BoardService } from '../../services/BoardService';
-import { GameStatsManager } from '../../services/GameStatsManager';
-import { BoardScreenNavigationProp, InitGame, Level } from '../../types/index';
-import { sortAreasCells, stringToGrid } from '../../utils/boardUtil';
-import { LEVELS, SCREENS } from '../../utils/constants';
+import {useTheme} from '../../context/ThemeContext';
+import LanguageSwitcher from '../../i18n/LanguageSwitcher';
+import {BoardService} from '../../services/BoardService';
+import {GameStatsManager} from '../../services/GameStatsManager';
+import {BoardScreenNavigationProp, InitGame, Level} from '../../types/index';
+import {sortAreasCells, stringToGrid} from '../../utils/boardUtil';
+import {LEVELS, SCREENS} from '../../utils/constants';
 
 const MainScreen = () => {
-  const { theme } = useTheme();
+  const {theme} = useTheme();
+  const {t} = useTranslation();
   const navigation = useNavigation<BoardScreenNavigationProp>();
   const [menuVisible, setMenuVisible] = useState(false);
   const [hasSavedGame, setHasSavedGame] = useState(false);
@@ -24,7 +27,7 @@ const MainScreen = () => {
   useFocusEffect(
     useCallback(() => {
       checkSavedGame();
-    }, [])
+    }, []),
   );
 
   const checkSavedGame = async () => {
@@ -65,56 +68,78 @@ const MainScreen = () => {
   };
 
   return (
-    <SafeAreaView edges={['top']} style={[styles.container, { backgroundColor: theme.background }]}>
+    <SafeAreaView
+      edges={['top']}
+      style={[styles.container, {backgroundColor: theme.background}]}>
       <Header
-        title="Killer Sudoku"
+        title={t('appName')}
         showBack={false}
         showSettings={true}
         showTheme={true}
       />
-      <View style={[styles.content, { backgroundColor: theme.background }]}>
+
+      <View>
+        <LanguageSwitcher />
+      </View>
+      <View style={[styles.content, {backgroundColor: theme.background}]}>
         {hasSavedGame && (
-          <TouchableOpacity style={[
-            styles.continueButton,
-            {
-              backgroundColor: theme.primary,
-              borderColor: theme.buttonBorder,
-            },
-          ]} onPress={handleContinueGame}>
-            <Text style={[styles.buttonText, { color: theme.buttonText }]}>Continue Game</Text>
+          <TouchableOpacity
+            style={[
+              styles.continueButton,
+              {
+                backgroundColor: theme.primary,
+                borderColor: theme.buttonBorder,
+              },
+            ]}
+            onPress={handleContinueGame}>
+            <Text style={[styles.buttonText, {color: theme.buttonText}]}>
+              {t('continueGame')}
+            </Text>
           </TouchableOpacity>
         )}
 
         <Menu
           visible={menuVisible}
           onDismiss={() => setMenuVisible(false)}
-          style={{ backgroundColor: theme.background }}
-          contentStyle={{ backgroundColor: theme.background }}
+          style={{backgroundColor: theme.background}}
+          contentStyle={{backgroundColor: theme.background}}
           anchor={
-            <TouchableOpacity style={[
-              styles.newGameButton,
-              {
-                backgroundColor: theme.secondary,
-                borderColor: theme.buttonBorder,
-              },
-            ]} onPress={() => setMenuVisible(true)}>
-              <Text style={[styles.buttonText, { color: theme.buttonText }]}>New Game</Text>
+            <TouchableOpacity
+              style={[
+                styles.newGameButton,
+                {
+                  backgroundColor: theme.secondary,
+                  borderColor: theme.buttonBorder,
+                },
+              ]}
+              onPress={() => setMenuVisible(true)}>
+              <Text style={[styles.buttonText, {color: theme.buttonText}]}>
+                {t('newGame')}
+              </Text>
             </TouchableOpacity>
-          }
-        >
-          {LEVELS.map((level) => (
-            <Menu.Item key={level} onPress={() => handleNewGame(level)} title={level} titleStyle={{ color: theme.text }} />
+          }>
+          {LEVELS.map(level => (
+            <Menu.Item
+              key={level}
+              onPress={() => handleNewGame(level)}
+              title={t(`level.${level}`)}
+              titleStyle={{color: theme.text}}
+            />
           ))}
         </Menu>
 
-        <TouchableOpacity style={[
-          styles.deleteButton,
-          {
-            backgroundColor: theme.mistake,
-            borderColor: theme.buttonBorder,
-          },
-        ]} onPress={handleDeleteSavedGame}>
-          <Text style={[styles.buttonText, { color: theme.buttonText }]}>Delete Saved Game</Text>
+        <TouchableOpacity
+          style={[
+            styles.deleteButton,
+            {
+              backgroundColor: theme.mistake,
+              borderColor: theme.buttonBorder,
+            },
+          ]}
+          onPress={handleDeleteSavedGame}>
+          <Text style={[styles.buttonText, {color: theme.buttonText}]}>
+            {t('deleteSavedGame')}
+          </Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
