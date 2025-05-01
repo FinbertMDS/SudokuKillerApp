@@ -19,11 +19,10 @@
 
   "noDataAvailable": "Không có dữ liệu",
   "gamesPerDay": "Số ván mỗi ngày",
-  "Games per Day": "Số ván mỗi ngày",
   "gamesDistributionByLevel": "Phân bố ván theo mức độ",
   "loading": "Đang tải...",
-  "gameStarted": "Ván đã bắt đầu",
-  "gameCompleted": "Ván đã hoàn thành",
+  "gamesStarted": "Ván đã bắt đầu",
+  "gamesCompleted": "Ván đã hoàn thành",
   "bestTime": "Thời gian tốt nhất",
   "averageTime": "Thời gian trung bình",
   "timesPerDay": "Số lần mỗi ngày",

@@ -19,11 +19,10 @@
 
   "noDataAvailable": "No data available",
   "gamesPerDay": "Games per Day",
-  "Games per Day": "Games per Day",
   "gamesDistributionByLevel": "Game Distribution by Level",
   "loading": "Loading...",
-  "gameStarted": "Games Started",
-  "gameCompleted": "Games Completed",
+  "gamesStarted": "Games Started",
+  "gamesCompleted": "Games Completed",
   "bestTime": "Best Time",
   "averageTime": "Average Time",
   "timesPerDay": "Times per Day",

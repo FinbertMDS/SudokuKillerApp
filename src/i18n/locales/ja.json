@@ -19,11 +19,10 @@
 
   "noDataAvailable": "データがありません",
   "gamesPerDay": "1日のゲーム数",
-  "Games per Day": "1日のゲーム数",
   "gamesDistributionByLevel": "レベル別ゲーム分布",
   "loading": "読み込み中...",
-  "gameStarted": "開始したゲーム",
-  "gameCompleted": "完了したゲーム",
+  "gamesStarted": "開始したゲーム",
+  "gamesCompleted": "完了したゲーム",
   "bestTime": "最速時間",
   "averageTime": "平均時間",
   "timesPerDay": "1日の回数",
