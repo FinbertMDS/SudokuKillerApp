@@ -108,7 +108,7 @@ export const GameStatsManager = {
 
     // 👉 Record daily log
     const now = new Date();
-    const today = now.toISOString().split('T')[0]; // 'YYYY-MM-DD'
+    const today = now.toLocaleDateString('sv-SE'); // local time at 'YYYY-MM-DD'
     const newEntry: GameLogEntry = {
       level,
       date: today,
