@@ -19,19 +19,10 @@ const NumberPad = ({board, onSelectNumber}: NumberPadProps) => {
       {Array.from({length: BOARD_SIZE}, (_, i) => i + 1).map(num => (
         <TouchableOpacity
           key={num}
-          style={[
-            styles.button,
-            counts[num] === BOARD_SIZE && {
-              backgroundColor: theme.disableNumpad,
-            },
-          ]}
+          style={[styles.button]}
           onPress={() => onSelectNumber(num)}
           disabled={counts[num] === BOARD_SIZE}>
-          <Text
-            style={[
-              styles.text,
-              counts[num] === BOARD_SIZE && {color: theme.disableText},
-            ]}>
+          <Text style={[styles.text]}>
             {counts[num] === BOARD_SIZE ? ' ' : num}
           </Text>
         </TouchableOpacity>
