@@ -1,22 +1,30 @@
 import React from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
 import {useTheme} from '../../context/ThemeContext';
+import {useNumberCounts} from '../../hooks/useNumberCounts';
+import {CellValue} from '../../types';
 import {BOARD_SIZE} from '../../utils/constants';
 
 type NumberPadProps = {
+  board: CellValue[][];
   onSelectNumber: (num: number) => void;
 };
 
-const NumberPad = ({onSelectNumber}: NumberPadProps) => {
+const NumberPad = ({board, onSelectNumber}: NumberPadProps) => {
   const {theme} = useTheme();
+  const counts = useNumberCounts(board);
+
   return (
     <View style={[styles.container, {backgroundColor: theme.background}]}>
       {Array.from({length: BOARD_SIZE}, (_, i) => i + 1).map(num => (
         <TouchableOpacity
           key={num}
-          style={styles.button}
-          onPress={() => onSelectNumber(num)}>
-          <Text style={[styles.text, {color: theme.text}]}>{num}</Text>
+          style={[styles.button]}
+          onPress={() => onSelectNumber(num)}
+          disabled={counts[num] === BOARD_SIZE}>
+          <Text style={[styles.text]}>
+            {counts[num] === BOARD_SIZE ? ' ' : num}
+          </Text>
         </TouchableOpacity>
       ))}
     </View>

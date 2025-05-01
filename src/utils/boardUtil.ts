@@ -1,6 +1,6 @@
 // boardUtil.ts
 
-import {Cage} from '../types';
+import {Cage, CellValue} from '../types';
 import {BOARD_SIZE} from './constants';
 
 /**
@@ -9,8 +9,8 @@ import {BOARD_SIZE} from './constants';
  * @param size Số cột trong mảng 2 chiều
  * @returns Mảng 2 chiều
  */
-export function stringToGrid(input: string, columns = 9): (number | null)[][] {
-  const grid: (number | null)[][] = [];
+export function stringToGrid(input: string, columns = 9): CellValue[][] {
+  const grid: CellValue[][] = [];
   for (let i = 0; i < input.length; i += columns) {
     const row = input
       .slice(i, i + columns)
@@ -34,9 +34,7 @@ export function createEmptyGridNotes<T>(): T[][][] {
 /**
  * Deep clone a 2D array (for board)
  */
-export const deepCloneBoard = (
-  board: (number | null)[][],
-): (number | null)[][] => {
+export const deepCloneBoard = (board: CellValue[][]): CellValue[][] => {
   return board.map(row => [...row]);
 };
 
@@ -54,8 +52,8 @@ export const deepCloneNotes = (notes: string[][][]): string[][][] => {
  * @returns true nếu đã giải quyết, false nếu chưa
  */
 export const checkBoardIsSolved = (
-  board: (number | null)[][],
-  solvedBoard: (number | null)[][],
+  board: CellValue[][],
+  solvedBoard: CellValue[][],
 ): boolean => {
   if (board.length !== solvedBoard.length) {
     return false;

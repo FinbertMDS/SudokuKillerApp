@@ -8,7 +8,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import Svg, {Line} from 'react-native-svg';
 import {useTheme} from '../../context/ThemeContext';
-import {Cell} from '../../types';
+import {Cell, CellValue} from '../../types';
 import {getAdjacentCellsInSameCage} from '../../utils/boardUtil';
 import {
   ANIMATION_CELL_KEY_SEPARATOR,
@@ -20,7 +20,7 @@ import {
 } from '../../utils/constants';
 
 type GridProps = {
-  board: (number | null)[][];
+  board: CellValue[][];
   cages: {cells: [number, number][]; sum: number}[];
   notes: string[][][];
   solvedBoard: number[][];

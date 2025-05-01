@@ -5,6 +5,9 @@ export type Cell = {
   row: number;
   col: number;
 };
+
+export type CellValue = number | null;
+
 export interface Cage {
   sum: number;
   cells: [number, number][];
@@ -16,17 +19,17 @@ export type RootStackParamList = {
 };
 
 export type InitGame = {
-  initialBoard: (number | null)[][];
+  initialBoard: CellValue[][];
   solvedBoard: number[][];
   cages: {cells: [number, number][]; sum: number}[];
   savedLevel: Level;
 };
 
 export type SavedGame = {
-  savedBoard: (number | null)[][];
+  savedBoard: CellValue[][];
   savedMistake: number;
   savedTimePlayed: number;
-  savedHistory: (number | null)[][][];
+  savedHistory: CellValue[][][];
   savedNotes: string[][][];
   lastSaved: Date;
 };
