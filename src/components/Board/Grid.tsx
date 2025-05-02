@@ -49,7 +49,7 @@ const Grid = ({
 
   const animatedStyles = useRef(
     Array.from({length: BOARD_SIZE}, (_, row) =>
-      Array.from({length: BOARD_SIZE}, (_, col) =>
+      Array.from({length: BOARD_SIZE}, (__, col) =>
         // eslint-disable-next-line react-hooks/rules-of-hooks
         useAnimatedStyle(() => ({
           transform: [{scale: rowScales[row].value * colScales[col].value}],
@@ -351,10 +351,16 @@ const Grid = ({
   };
 
   const renderCell = (row: number, col: number, animatedStyle: any) => {
-    const isSelected = selectedCell?.row === row && selectedCell?.col === col;
-    const isRelated = isCellInSameRowOrColOrBox(row, col);
     const cellValue = board[row][col];
     const cellNotes = notes[row][col];
+    const isSelected = selectedCell?.row === row && selectedCell?.col === col;
+    const isRelated = isCellInSameRowOrColOrBox(row, col);
+    const isSameValue =
+      settings.highlightDuplicates &&
+      selectedCell &&
+      selectedCell.value &&
+      cellValue === selectedCell.value &&
+      !isSelected;
     const cage = getCageForCell(row, col);
     const isCageFirst = cage?.cells[0][0] === row && cage?.cells[0][1] === col;
     const isMistake = cellValue !== 0 && cellValue !== solvedBoard[row][col];
@@ -371,11 +377,15 @@ const Grid = ({
             ]}
           />
         )}
-        {isSelected && (
+        {(isSelected || isSameValue) && (
           <View
             style={[
               styles.selectedOverlay,
-              {backgroundColor: theme.selectedOverlayColor},
+              {
+                backgroundColor: isSelected
+                  ? theme.selectedOverlayColor
+                  : theme.sameValueOverlayColor,
+              },
             ]}
           />
         )}
@@ -392,7 +402,7 @@ const Grid = ({
             },
           ]}
           onPress={() => {
-            onSelectedCell({row, col});
+            onSelectedCell({row, col, value: board[row][col]});
           }}>
           {isCageFirst && (
             <Text style={[styles.cageText, {color: theme.secondary}]}>
