@@ -4,11 +4,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFocusEffect} from '@react-navigation/native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Text, TouchableOpacity, View} from 'react-native';
+import {useTheme} from '../context/ThemeContext';
 import {LANGUAGES, STORAGE_KEY_LANG_KEY_PREFERRED} from '../utils/constants';
 import i18n, {autoDetectLanguage} from './i18n';
 
 export default function LanguageSwitcher() {
+  const {theme} = useTheme();
   const {t} = useTranslation();
   const [selectedLang, setSelectedLang] = useState(i18n.language);
 
@@ -29,21 +31,22 @@ export default function LanguageSwitcher() {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.label}>{t('language')}</Text>
+    <View style={[styles.container, {backgroundColor: theme.background}]}>
+      <Text style={[styles.label, {color: theme.text}]}>{t('language')}</Text>
       <View style={styles.buttons}>
         {LANGUAGES.map(lang => (
           <TouchableOpacity
             key={lang.code}
             style={[
               styles.button,
-              selectedLang === lang.code && styles.selectedButton,
+              selectedLang === lang.code && {backgroundColor: theme.buttonBlue},
             ]}
             onPress={() => changeLanguage(lang.code)}>
             <Text
-              style={
-                selectedLang === lang.code ? styles.selectedText : styles.text
-              }>
+              style={[
+                selectedLang === lang.code ? styles.selectedText : styles.text,
+                {color: theme.text},
+              ]}>
               {lang.label}
             </Text>
           </TouchableOpacity>
@@ -53,40 +56,33 @@ export default function LanguageSwitcher() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   container: {
     marginTop: 20,
     paddingHorizontal: 20,
   },
   label: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: 'bold' as const,
     marginBottom: 8,
-    color: '#374151',
   },
   buttons: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: 'row' as const,
+    flexWrap: 'wrap' as const,
     gap: 10,
   },
   button: {
     paddingVertical: 8,
     paddingHorizontal: 14,
     borderRadius: 8,
-    backgroundColor: '#e5e7eb',
     marginRight: 10,
     marginBottom: 10,
   },
-  selectedButton: {
-    backgroundColor: '#60a5fa',
-  },
   text: {
     fontSize: 14,
-    color: '#1f2937',
   },
   selectedText: {
     fontSize: 14,
-    color: '#fff',
     fontWeight: 'bold',
   },
-});
+};

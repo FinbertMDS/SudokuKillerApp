@@ -3,10 +3,13 @@ import {Level} from '../types';
 export const LEVELS = ['easy', 'medium', 'hard', 'expert'] as Level[];
 
 export const SCREENS = {
+  HOME_TABS: 'HomeTabs',
   MAIN: 'Main',
-  BOARD: 'Board',
-  SETTINGS: 'Settings',
   STATISTICS: 'Statistics',
+  BOARD: 'Board',
+  OPTIONS: 'Options',
+  SETTINGS: 'Settings',
+  HOW_TO_PLAY: 'HowToPlay',
 } as const;
 
 export const BOARD_SIZE = 9;

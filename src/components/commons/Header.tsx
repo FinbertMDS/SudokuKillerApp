@@ -1,7 +1,11 @@
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
 import {default as Icon} from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useTheme} from '../../context/ThemeContext';
+import {RootStackParamList} from '../../types';
+import {SCREENS} from '../../utils/constants';
 
 type HeaderProps = {
   title?: string;
@@ -14,11 +18,21 @@ type HeaderProps = {
 const Header = ({
   title,
   showBack = false,
-  onBack = () => {},
   showSettings = true,
   showTheme = true,
+  onBack = undefined,
 }: HeaderProps) => {
   const {theme, toggleTheme, mode} = useTheme();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
+  const goToSettings = () => {
+    navigation.navigate(SCREENS.OPTIONS);
+  };
+
+  const defaultOnBack = () => {
+    navigation.goBack();
+  };
 
   return (
     <>
@@ -26,8 +40,8 @@ const Header = ({
       <View style={[styles.header, {backgroundColor: theme.background}]}>
         {showBack && (
           <View style={styles.side}>
-            <TouchableOpacity onPress={onBack}>
-              <Icon name="arrow-left" size={28} color={theme.iconColor} />
+            <TouchableOpacity onPress={onBack ? onBack : defaultOnBack}>
+              <Icon name="chevron-left" size={28} color={theme.iconColor} />
             </TouchableOpacity>
           </View>
         )}
@@ -49,7 +63,7 @@ const Header = ({
             )}
             {showSettings && (
               <TouchableOpacity
-                onPress={() => console.log('Open settings')}
+                onPress={goToSettings}
                 style={styles.iconButton}>
                 <Icon name="cog-outline" size={24} color={theme.iconColor} />
               </TouchableOpacity>

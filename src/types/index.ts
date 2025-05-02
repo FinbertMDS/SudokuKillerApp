@@ -16,6 +16,9 @@ export interface Cage {
 export type RootStackParamList = {
   HomeTabs: undefined;
   Board: InitGame | SavedGame;
+  Options: undefined;
+  Settings: undefined;
+  HowToPlay: undefined;
 };
 
 export type InitGame = {
@@ -77,3 +80,10 @@ export interface DailyStatsStackedData {
   data: number[][];
   barColors: string[];
 }
+
+export type OptionMenuItem = {
+  icon: string;
+  label: string;
+  screen?: keyof RootStackParamList;
+  onPress?: () => void;
+};

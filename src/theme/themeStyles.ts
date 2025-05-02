@@ -14,6 +14,8 @@ export const lightTheme = {
   selectedOverlayColor: '#d0e8ff',
   overlayColor: '#f0f8ff',
   cellBorderColor: '#ccc',
+  settingItemBackground: '#95a5a6',
+  buttonBlue: '#60a5fa',
 };
 
 export const darkTheme = {
@@ -32,4 +34,6 @@ export const darkTheme = {
   selectedOverlayColor: '#1d3557',
   overlayColor: '#0a192f',
   cellBorderColor: '#555',
+  settingItemBackground: '#2c3e50',
+  buttonBlue: '#3b82f6',
 };
