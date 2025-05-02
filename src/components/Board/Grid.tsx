@@ -27,10 +27,10 @@ type GridProps = {
   selectedCell: Cell | null;
   animatedCells: {[key: string]: number};
   settings: AppSettings;
-  onSelectedCell: (cell: Cell | null) => void;
+  onPress: (cell: Cell | null) => void;
 };
 
-const Grid = ({
+export const Grid = React.memo(function Grid({
   board,
   cages,
   notes,
@@ -38,8 +38,8 @@ const Grid = ({
   selectedCell,
   animatedCells,
   settings,
-  onSelectedCell,
-}: GridProps) => {
+  onPress,
+}: GridProps) {
   const {theme} = useTheme();
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -351,8 +351,6 @@ const Grid = ({
   };
 
   const renderCell = (row: number, col: number, animatedStyle: any) => {
-    console.log('renderCell');
-
     const cellValue = board[row][col];
     const cellNotes = notes[row][col];
     const isSelected = selectedCell?.row === row && selectedCell?.col === col;
@@ -421,7 +419,7 @@ const Grid = ({
             },
           ]}
           onPress={() => {
-            onSelectedCell({row, col, value: board[row][col]});
+            onPress({row, col, value: cellValue});
           }}>
           {isCageFirst && (
             <Text style={[styles.cageText, {color: theme.secondary}]}>
@@ -484,7 +482,7 @@ const Grid = ({
       </View>
     </>
   );
-};
+});
 
 const styles = {
   boardContainer: {
@@ -567,5 +565,3 @@ const styles = {
     fontSize: 10,
   },
 };
-
-export default Grid;

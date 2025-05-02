@@ -9,7 +9,7 @@ import {useTranslation} from 'react-i18next';
 import {Alert} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import ActionButtons from '../../components/Board/ActionButtons';
-import Grid from '../../components/Board/Grid';
+import {Grid} from '../../components/Board/Grid';
 import InfoPanel from '../../components/Board/InfoPanel';
 import NumberPad from '../../components/Board/NumberPad';
 import PauseModal from '../../components/Board/PauseModal';
@@ -72,6 +72,10 @@ const BoardScreen = () => {
     savedBoard ? deepCloneBoard(savedBoard) : deepCloneBoard(initialBoard),
   );
   const [selectedCell, setSelectedCell] = useState<Cell | null>(null);
+  const handleCellPress = useCallback((cell: Cell | null) => {
+    setSelectedCell(cell);
+  }, []);
+
   const [level] = useState<Level>(savedLevel ? savedLevel : LEVELS[0]);
 
   const [history, setHistory] = useState(() =>
@@ -454,7 +458,7 @@ const BoardScreen = () => {
         solvedBoard={solvedBoard}
         selectedCell={selectedCell}
         settings={settings}
-        onSelectedCell={setSelectedCell}
+        onPress={handleCellPress}
         animatedCells={animatedCells}
       />
       <ActionButtons
