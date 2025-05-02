@@ -13,20 +13,22 @@ type HeaderProps = {
   showSettings?: boolean;
   showTheme?: boolean;
   onBack?: () => void;
+  onSettings?: () => void;
 };
 
 const Header = ({
   title,
   showBack = false,
-  showSettings = true,
+  showSettings = false,
   showTheme = true,
   onBack = undefined,
+  onSettings = undefined,
 }: HeaderProps) => {
   const {theme, toggleTheme, mode} = useTheme();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-  const goToSettings = () => {
+  const defaultOnSettings = () => {
     navigation.navigate(SCREENS.OPTIONS);
   };
 
@@ -63,7 +65,7 @@ const Header = ({
             )}
             {showSettings && (
               <TouchableOpacity
-                onPress={goToSettings}
+                onPress={onSettings ? onSettings : defaultOnSettings}
                 style={styles.iconButton}>
                 <Icon name="cog-outline" size={24} color={theme.iconColor} />
               </TouchableOpacity>

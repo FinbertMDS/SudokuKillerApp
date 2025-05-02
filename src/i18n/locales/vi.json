@@ -43,7 +43,7 @@
 
   "continueGame": "Tiếp tục trò chơi",
   "newGame": "Trò chơi mới",
-  "deleteSavedGame": "Xóa trò chơi đã lưu",
+  "clearStorage": "Xóa dữ liệu đã lưu",
 
   "levelStats": "Thống kê mức độ",
   "chartsStats": "Biểu đồ thống kê",
@@ -66,13 +66,13 @@
   "setting.statisticsMsg": "Thông báo thống kê",
   "setting.numberFirst": "Nhập số trước",
   "setting.mistakeLimit": "Giới hạn lỗi",
-  "setting.autoCheck": "Tự động kiểm tra lỗi",
+  "setting.autoCheckMistake": "Tự động kiểm tra lỗi",
   "setting.highlightDuplicates": "Tô sáng số trùng",
 
   "desc.statisticsMsg": "Hiển thị thông báo về số người đã giải được một cấp độ",
   "desc.numberFirst": "Giữ một số bằng cách nhấn giữ, sau đó sử dụng cho nhiều ô",
   "desc.mistakeLimit": "Giới hạn số lỗi tối đa là 3 trong mỗi trò chơi",
-  "desc.autoCheck": "Đánh dấu những số không khớp với lời giải sudoku cuối cùng",
+  "desc.autoCheckMistake": "Đánh dấu những số không khớp với lời giải sudoku cuối cùng",
 
   "howToPlay.title": "Cách chơi",
   "howToPlay.slide1": "Lưới được chia thành các vùng có hình dạng không đều. Những vùng này được gọi là các lồng (cages).",

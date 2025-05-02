@@ -43,7 +43,7 @@
 
   "continueGame": "ゲームを続ける",
   "newGame": "新しいゲーム",
-  "deleteSavedGame": "保存したゲームを削除",
+  "clearStorage": "保存したデータを削除",
 
   "levelStats": "レベル統計",
   "chartsStats": "チャート統計",
@@ -66,13 +66,13 @@
   "setting.statisticsMsg": "統計メッセージ",
   "setting.numberFirst": "数字から入力",
   "setting.mistakeLimit": "ミスの制限",
-  "setting.autoCheck": "ミスを自動チェック",
+  "setting.autoCheckMistake": "ミスを自動チェック",
   "setting.highlightDuplicates": "重複をハイライト",
 
   "desc.statisticsMsg": "レベルを解けた人数に関するメッセージを表示",
   "desc.numberFirst": "数字を長押しして固定し、複数セルに使用",
   "desc.mistakeLimit": "1ゲームあたりのミス数を3に制限",
-  "desc.autoCheck": "正解と一致しない数字をマークする",
+  "desc.autoCheckMistake": "正解と一致しない数字をマークする",
 
   "howToPlay.title": "遊び方",
   "howToPlay.slide1": "グリッドは不規則な形のエリアに分割されています。これらのエリアは「ケージ」と呼ばれます。",

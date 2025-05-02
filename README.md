@@ -31,6 +31,7 @@ Charts Stats | ![ChartsStats_Light](screenshots/ChartsStats_Light.png) | ![Chart
   - Games per Day
   - Times per Day
   - Game Distribution by Level (PieChart, StackedBarChart)
+- ✅ Multi-language support: English, Vietnamese, and Japanese
 
 ---
 
@@ -57,7 +58,6 @@ npx react-native run-ios   # or run-android
 
 ## 📈 Planned Features (Coming Soon)
 
-- Multi-language support: English, Vietnamese, and Japanese
 - Online Multiplayer mode (Challenge your friends!)
 - Daily Killer Sudoku Challenge
 - Cloud Syncing (Login + Save Progress)

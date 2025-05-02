@@ -13,6 +13,7 @@ import {useTheme} from '../../context/ThemeContext';
 import LanguageSwitcher from '../../i18n/LanguageSwitcher';
 import {BoardService} from '../../services/BoardService';
 import {GameStatsManager} from '../../services/GameStatsManager';
+import {SettingsService} from '../../services/SettingsService';
 import {InitGame, Level, RootStackParamList} from '../../types/index';
 import {sortAreasCells, stringToGrid} from '../../utils/boardUtil';
 import {LEVELS, SCREENS} from '../../utils/constants';
@@ -67,6 +68,7 @@ const MainScreen = () => {
   const handleDeleteSavedGame = async () => {
     BoardService.clear().then(checkSavedGame);
     GameStatsManager.resetStatistics();
+    SettingsService.clear();
   };
 
   return (
@@ -138,7 +140,7 @@ const MainScreen = () => {
           ]}
           onPress={handleDeleteSavedGame}>
           <Text style={[styles.buttonText, {color: theme.buttonText}]}>
-            {t('deleteSavedGame')}
+            {t('clearStorage')}
           </Text>
         </TouchableOpacity>
       </View>

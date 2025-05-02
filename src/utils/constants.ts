@@ -1,4 +1,4 @@
-import {Level} from '../types';
+import {AppSettings, Level} from '../types';
 
 export const LEVELS = ['easy', 'medium', 'hard', 'expert'] as Level[];
 
@@ -34,6 +34,7 @@ export const STORAGE_KEY_GAME_STATS = 'gameStats';
 export const STORAGE_KEY_GAME_LOGS = 'gameLogs';
 export const STORAGE_KEY_LANG_KEY_DEFAULT = 'defaultLanguage';
 export const STORAGE_KEY_LANG_KEY_PREFERRED = 'preferredLanguage';
+export const STORAGE_KEY_SETTINGS = 'settings';
 
 export const CHART_WIDTH = 60;
 export const CHART2_WIDTH = 70;
@@ -43,3 +44,10 @@ export const LANGUAGES = [
   {code: 'vi', label: 'Tiếng Việt'},
   {code: 'ja', label: '日本語'},
 ];
+
+export const DEFAULT_SETTINGS: AppSettings = {
+  timer: true,
+  mistakeLimit: true,
+  autoCheckMistake: true,
+  highlightDuplicates: true,
+};

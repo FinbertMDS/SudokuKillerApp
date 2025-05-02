@@ -3,6 +3,7 @@ import {useTranslation} from 'react-i18next';
 import {Text, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useTheme} from '../../context/ThemeContext';
+import {AppSettings} from '../../types';
 import {MAX_MISTAKES} from '../../utils/constants';
 import {formatTime} from '../../utils/dateUtil';
 
@@ -11,6 +12,7 @@ type InfoPanelProps = {
   mistakes: number;
   time: number;
   isPaused: boolean;
+  settings: AppSettings;
   onPause: () => void;
 };
 
@@ -19,6 +21,7 @@ const InfoPanel = ({
   mistakes,
   time,
   isPaused,
+  settings,
   onPause,
 }: InfoPanelProps) => {
   const {theme} = useTheme();
@@ -31,19 +34,25 @@ const InfoPanel = ({
         <Text style={[styles.value, {color: theme.text}]}>{level}</Text>
       </View>
 
-      <View style={styles.infoBlock}>
-        <Text style={[styles.title, {color: theme.text}]}>{t('mistakes')}</Text>
-        <Text style={[styles.value, {color: theme.text}]}>
-          {mistakes}/{MAX_MISTAKES}
-        </Text>
-      </View>
+      {settings.mistakeLimit && (
+        <View style={styles.infoBlock}>
+          <Text style={[styles.title, {color: theme.text}]}>
+            {t('mistakes')}
+          </Text>
+          <Text style={[styles.value, {color: theme.text}]}>
+            {mistakes}/{MAX_MISTAKES}
+          </Text>
+        </View>
+      )}
 
-      <View style={styles.infoBlock}>
-        <Text style={[styles.title, {color: theme.text}]}>{t('time')}</Text>
-        <Text style={[styles.value, styles.timeValue, {color: theme.text}]}>
-          {formatTime(time)}
-        </Text>
-      </View>
+      {settings.timer && (
+        <View style={styles.infoBlock}>
+          <Text style={[styles.title, {color: theme.text}]}>{t('time')}</Text>
+          <Text style={[styles.value, styles.timeValue, {color: theme.text}]}>
+            {formatTime(time)}
+          </Text>
+        </View>
+      )}
 
       <TouchableOpacity style={styles.infoBlock} onPress={onPause}>
         {!isPaused ? (

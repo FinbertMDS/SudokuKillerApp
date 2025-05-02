@@ -86,7 +86,7 @@ export const OptionsScreen = () => {
       <Header
         title={t('options')}
         showBack={true}
-        showSettings={true}
+        showSettings={false}
         showTheme={true}
       />
       <ScrollView

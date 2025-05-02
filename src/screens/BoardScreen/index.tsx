@@ -1,6 +1,10 @@
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Alert} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -11,15 +15,19 @@ import NumberPad from '../../components/Board/NumberPad';
 import PauseModal from '../../components/Board/PauseModal';
 import Header from '../../components/commons/Header';
 import {useTheme} from '../../context/ThemeContext';
+import eventBus from '../../events/eventBus';
 import {useAppPause} from '../../hooks/useAppPause';
 import {useGameStats} from '../../hooks/useGameStats';
 import {useGameTimer} from '../../hooks/useGameTimer';
 import {useMistakeCounter} from '../../hooks/useMistakeCounter';
 import {BoardService} from '../../services/BoardService';
+import {SettingsService} from '../../services/SettingsService';
 import {
+  AppSettings,
   BoardScreenRouteProp,
   Cell,
   CellValue,
+  CORE_EVENTS,
   InitGame,
   Level,
   RootStackParamList,
@@ -36,9 +44,11 @@ import {
   ANIMATION_DURATION,
   ANIMATION_TYPE,
   BOARD_SIZE,
+  DEFAULT_SETTINGS,
   LEVELS,
   MAX_MISTAKES,
   MAX_TIMEPLAYED,
+  SCREENS,
 } from '../../utils/constants';
 import {formatTime} from '../../utils/dateUtil';
 
@@ -74,6 +84,26 @@ const BoardScreen = () => {
     savedNotes !== undefined ? savedNotes : createEmptyGridNotes<string>(),
   );
   const {completeGame} = useGameStats(level);
+
+  // Lấy settings
+  // ===========================================================
+  const [settings, setSettings] = useState<AppSettings>(DEFAULT_SETTINGS);
+  const savedSettingsRef = useRef<AppSettings>(null);
+  useEffect(() => {
+    SettingsService.load().then(data => {
+      if (data) {
+        setSettings(data);
+      }
+    });
+  }, []);
+  useEffect(() => {
+    const handeSettingUpdated = async (_settings: AppSettings) => {
+      savedSettingsRef.current = _settings;
+    };
+    eventBus.on(CORE_EVENTS.settingsUpdated, handeSettingUpdated);
+    return () => eventBus.off(CORE_EVENTS.settingsUpdated, handeSettingUpdated);
+  }, []);
+  // ===========================================================
 
   // Hiển thị số lần sai
   // ===========================================================
@@ -159,6 +189,12 @@ const BoardScreen = () => {
     } as SavedGame);
     setIsPlaying(false);
     navigation.goBack();
+  };
+
+  const handleGoToSettings = () => {
+    setIsPlaying(false);
+    setIsPaused(true);
+    navigation.navigate(SCREENS.SETTINGS);
   };
 
   const handlePause = async () => {
@@ -261,12 +297,14 @@ const BoardScreen = () => {
       newBoard[row][col] = num;
       setBoard(newBoard);
       saveHistory(newBoard);
-      if (num !== correctValue) {
+
+      if (settings.mistakeLimit && num !== correctValue) {
         incrementMistake();
-      } else {
-        handleCheckRowOrColResolved(row, col, newBoard);
-        handleCheckSolved(newBoard);
+        return;
       }
+
+      handleCheckRowOrColResolved(row, col, newBoard);
+      handleCheckSolved(newBoard);
     }
   };
 
@@ -379,6 +417,16 @@ const BoardScreen = () => {
     },
   );
 
+  useFocusEffect(
+    useCallback(() => {
+      setIsPlaying(true);
+      setIsPaused(false);
+      if (savedSettingsRef.current) {
+        setSettings(savedSettingsRef.current);
+      }
+    }, []),
+  );
+
   return (
     <SafeAreaView
       edges={['top']}
@@ -389,12 +437,14 @@ const BoardScreen = () => {
         showSettings={true}
         showTheme={true}
         onBack={handleBackPress}
+        onSettings={handleGoToSettings}
       />
       <InfoPanel
         level={savedLevel}
         mistakes={mistakes}
         time={seconds}
         isPaused={isPaused}
+        settings={settings}
         onPause={handlePause}
       />
       <Grid
@@ -403,6 +453,7 @@ const BoardScreen = () => {
         notes={notes}
         solvedBoard={solvedBoard}
         selectedCell={selectedCell}
+        settings={settings}
         onSelectedCell={setSelectedCell}
         animatedCells={animatedCells}
       />

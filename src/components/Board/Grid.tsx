@@ -8,7 +8,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import Svg, {Line} from 'react-native-svg';
 import {useTheme} from '../../context/ThemeContext';
-import {Cell, CellValue} from '../../types';
+import {AppSettings, Cell, CellValue} from '../../types';
 import {getAdjacentCellsInSameCage} from '../../utils/boardUtil';
 import {
   ANIMATION_CELL_KEY_SEPARATOR,
@@ -26,6 +26,7 @@ type GridProps = {
   solvedBoard: number[][];
   selectedCell: Cell | null;
   animatedCells: {[key: string]: number};
+  settings: AppSettings;
   onSelectedCell: (cell: Cell | null) => void;
 };
 
@@ -36,6 +37,7 @@ const Grid = ({
   solvedBoard,
   selectedCell,
   animatedCells,
+  settings,
   onSelectedCell,
 }: GridProps) => {
   const {theme} = useTheme();
@@ -410,7 +412,8 @@ const Grid = ({
                 style={[
                   styles.cellText,
                   {color: theme.text},
-                  isMistake && {color: theme.mistake},
+                  settings.autoCheckMistake &&
+                    isMistake && {color: theme.mistake},
                 ]}>
                 {cellValue}
               </Text>

@@ -43,7 +43,7 @@
 
   "continueGame": "Continue Game",
   "newGame": "New Game",
-  "deleteSavedGame": "Delete Saved Game",
+  "clearStorage": "Clear Storage",
 
   "levelStats": "Level Stats",
   "chartsStats": "Charts Stats",
@@ -66,13 +66,13 @@
   "setting.statisticsMsg": "Statistics Message",
   "setting.numberFirst": "Number-First Input",
   "setting.mistakeLimit": "Mistake Limit",
-  "setting.autoCheck": "Auto-Check for Mistakes",
+  "setting.autoCheckMistake": "Auto-Check for Mistakes",
   "setting.highlightDuplicates": "Highlight Duplicates",
 
   "desc.statisticsMsg": "Show messages about the number of people who were able to solve a level",
   "desc.numberFirst": "Lock a number by tapping and holding it, then use it for multiple cells",
   "desc.mistakeLimit": "Limit the number of possible mistakes to 3 per game",
-  "desc.autoCheck": "Mark numbers that don't match the final sudoku solution",
+  "desc.autoCheckMistake": "Mark numbers that don't match the final sudoku solution",
 
   "howToPlay.title": "How to Play",
   "howToPlay.slide1": "The field is divided into irregularly shaped areas. These areas are called cages.",

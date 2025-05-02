@@ -1,75 +1,70 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {ScrollView, Switch, Text, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Header from '../../components/commons/Header';
 import {useTheme} from '../../context/ThemeContext';
+import eventBus from '../../events/eventBus';
 import LanguageSwitcher from '../../i18n/LanguageSwitcher';
-
-const SETTINGS_KEY = 'APP_SETTINGS';
+import {SettingsService} from '../../services/SettingsService';
+import {CORE_EVENTS} from '../../types';
+import {DEFAULT_SETTINGS} from '../../utils/constants';
 
 export const SettingsScreen = () => {
   const {theme} = useTheme();
   const {t} = useTranslation();
-  const [settings, setSettings] = useState({
-    sounds: true,
-    autoLock: false,
-    timer: true,
-    score: true,
-    statisticsMsg: true,
-    numberFirst: false,
-    mistakeLimit: true,
-    autoCheck: false,
-    highlightDuplicates: true,
-  });
+  const [settings, setSettings] = useState(DEFAULT_SETTINGS);
 
   useEffect(() => {
-    AsyncStorage.getItem(SETTINGS_KEY).then(data => {
+    SettingsService.load().then(data => {
       if (data) {
-        setSettings(JSON.parse(data));
+        setSettings(data);
       }
     });
   }, []);
 
   useEffect(() => {
-    AsyncStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+    SettingsService.save(settings);
   }, [settings]);
 
-  const toggle = (key: string) => {
-    setSettings(prev => ({
-      ...prev,
-      [key]: !prev[key as keyof typeof settings],
-    }));
+  const toggle = (key: string, value: boolean) => {
+    setSettings(prev => {
+      const updated = SettingsService.normalizeSettings({
+        ...prev,
+        [key]: value,
+      });
+      eventBus.emit(CORE_EVENTS.settingsUpdated, updated);
+      return updated;
+    });
   };
 
   const labels = {
-    sounds: t('setting.sounds'),
-    autoLock: t('setting.autoLock'),
+    // sounds: t('setting.sounds'),
+    // autoLock: t('setting.autoLock'),
     timer: t('setting.timer'),
-    score: t('setting.score'),
-    statisticsMsg: t('setting.statisticsMsg'),
-    numberFirst: t('setting.numberFirst'),
+    // score: t('setting.score'),
+    // statisticsMsg: t('setting.statisticsMsg'),
+    // numberFirst: t('setting.numberFirst'),
     mistakeLimit: t('setting.mistakeLimit'),
-    autoCheck: t('setting.autoCheck'),
+    autoCheckMistake: t('setting.autoCheckMistake'),
     highlightDuplicates: t('setting.highlightDuplicates'),
   };
 
   const descriptions = {
-    statisticsMsg: t('desc.statisticsMsg'),
-    numberFirst: t('desc.numberFirst'),
+    // statisticsMsg: t('desc.statisticsMsg'),
+    // numberFirst: t('desc.numberFirst'),
     mistakeLimit: t('desc.mistakeLimit'),
-    autoCheck: t('desc.autoCheck'),
+    autoCheckMistake: t('desc.autoCheckMistake'),
   };
 
   return (
     <SafeAreaView
-      edges={['top']}
+      edges={['top', 'bottom']}
       style={[styles.container, {backgroundColor: theme.background}]}>
       <Header
         title={t('settings')}
         showBack={true}
-        showSettings={true}
+        showSettings={false}
         showTheme={true}
       />
       <LanguageSwitcher />
@@ -91,8 +86,8 @@ export const SettingsScreen = () => {
               )}
             </View>
             <Switch
-              value={settings[key as keyof typeof descriptions]}
-              onValueChange={() => toggle(key)}
+              value={settings[key as keyof typeof DEFAULT_SETTINGS]}
+              onValueChange={value => toggle(key, value)}
             />
           </View>
         ))}
