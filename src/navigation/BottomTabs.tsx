@@ -6,6 +6,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {useTheme} from '../context/ThemeContext';
 import MainScreen from '../screens/MainScreen';
 import StatisticsScreen from '../screens/StatisticsScreen';
+import {SCREENS} from '../utils/constants';
 
 const Tab = createBottomTabNavigator();
 
@@ -37,12 +38,12 @@ const BottomTabs = () => {
         tabBarInactiveTintColor: theme.text,
       })}>
       <Tab.Screen
-        name="Main"
+        name={SCREENS.MAIN}
         component={MainScreen}
         options={{tabBarLabel: t('main')}}
       />
       <Tab.Screen
-        name="Statistics"
+        name={SCREENS.STATISTICS}
         component={StatisticsScreen}
         options={{tabBarLabel: t('statistics')}}
       />

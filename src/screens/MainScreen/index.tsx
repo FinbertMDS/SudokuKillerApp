@@ -1,5 +1,6 @@
 // src/screens/MainScreen/index.tsx
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {generateKillerSudoku} from 'killer-sudoku-generator';
 import React, {useCallback, useState} from 'react';
 import {useTranslation} from 'react-i18next';
@@ -12,14 +13,15 @@ import {useTheme} from '../../context/ThemeContext';
 import LanguageSwitcher from '../../i18n/LanguageSwitcher';
 import {BoardService} from '../../services/BoardService';
 import {GameStatsManager} from '../../services/GameStatsManager';
-import {BoardScreenNavigationProp, InitGame, Level} from '../../types/index';
+import {InitGame, Level, RootStackParamList} from '../../types/index';
 import {sortAreasCells, stringToGrid} from '../../utils/boardUtil';
 import {LEVELS, SCREENS} from '../../utils/constants';
 
 const MainScreen = () => {
   const {theme} = useTheme();
   const {t} = useTranslation();
-  const navigation = useNavigation<BoardScreenNavigationProp>();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [menuVisible, setMenuVisible] = useState(false);
   const [hasSavedGame, setHasSavedGame] = useState(false);
 
@@ -78,9 +80,7 @@ const MainScreen = () => {
         showTheme={true}
       />
 
-      <View>
-        <LanguageSwitcher />
-      </View>
+      <LanguageSwitcher />
       <View style={[styles.content, {backgroundColor: theme.background}]}>
         {hasSavedGame && (
           <TouchableOpacity

@@ -79,5 +79,22 @@
   "howToPlay.slide2": "The sum of the numbers in the cells of a cage needs to match the value in the upper left corner.",
   "howToPlay.slide3": "The sum of all numbers in each block, row, or column always equals 45. Use subtraction to find the solution.",
   "howToPlay.slide4": "Can't solve a level? Try a hint! They can help if you get stuck on a tricky bit!",
-  "common.skip": "Skip"
+  "common.skip": "Skip",
+
+  "rateApp": "Rate this app",
+  "rateAppMsg": "If you enjoy playing Killer Sudoku, please take a moment to rate us. Your feedback helps us improve the game and reach more players!",
+  "rateAppTitle": "Rate Killer Sudoku",
+  "shareApp": "Share this app",
+  "shareAppTitle": "Check out this awesome Killer Sudoku game!",
+  "shareAppMsg": "Check out this awesome Killer Sudoku game! It's a fun and challenging puzzle game that will keep you entertained for hours. Download it now and start solving puzzles!",
+  "shareAppMsg2": "It's a fun and challenging puzzle game that will keep you entertained for hours. Download it now and start solving puzzles!",
+  "shareAppMsg3": "I hope you enjoy it as much as I do!",
+  "shareAppMsg4": "Happy puzzling!",
+  "shareAppMsg5": "I hope you enjoy it as much as I do! Happy puzzling! #{{appName}} #{{version}}",
+  "sendFeedback": "Send Feedback",
+  "sendFeedbackTitle": "We'd love to hear from you!",
+  "sendFeedbackMsg": "If you have any questions, suggestions, or feedback about the game, please don't hesitate to reach out. Your input is valuable to us and helps us make the game even better!",
+  "sendFeedbackMsg2": "Your input is valuable to us and helps us make the game even better! #{{appName}} #{{version}}",
+  "mailNotSupported": "Mail app is not supported",
+  "mailNotSupportedMsg": "Your device does not support the mail app. Please send your feedback to the developer's email address: {{email}}"
 }

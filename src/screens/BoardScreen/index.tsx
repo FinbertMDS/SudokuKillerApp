@@ -1,4 +1,5 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React, {useEffect, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Alert} from 'react-native';
@@ -16,12 +17,12 @@ import {useGameTimer} from '../../hooks/useGameTimer';
 import {useMistakeCounter} from '../../hooks/useMistakeCounter';
 import {BoardService} from '../../services/BoardService';
 import {
-  BoardScreenNavigationProp,
   BoardScreenRouteProp,
   Cell,
   CellValue,
   InitGame,
   Level,
+  RootStackParamList,
   SavedGame,
 } from '../../types';
 import {
@@ -45,7 +46,8 @@ const BoardScreen = () => {
   const {theme} = useTheme();
   const {t} = useTranslation();
   const route = useRoute<BoardScreenRouteProp>();
-  const navigation = useNavigation<BoardScreenNavigationProp>();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {
     initialBoard,
     solvedBoard,
