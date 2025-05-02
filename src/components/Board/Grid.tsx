@@ -351,16 +351,27 @@ const Grid = ({
   };
 
   const renderCell = (row: number, col: number, animatedStyle: any) => {
+    console.log('renderCell');
+
     const cellValue = board[row][col];
     const cellNotes = notes[row][col];
     const isSelected = selectedCell?.row === row && selectedCell?.col === col;
     const isRelated = isCellInSameRowOrColOrBox(row, col);
     const isSameValue =
-      settings.highlightDuplicates &&
-      selectedCell &&
-      selectedCell.value &&
-      cellValue === selectedCell.value &&
-      !isSelected;
+      settings.highlightIdenticalNumbers &&
+      !isSelected &&
+      cellValue &&
+      cellValue === selectedCell?.value;
+    // const isSameValueConflict =
+    //   settings.highlightDuplicates &&
+    //   !isSelected &&
+    //   cellValue &&
+    //   cellValue === selectedCell?.value &&
+    //   (row === selectedCell?.row ||
+    //     col === selectedCell?.col ||
+    //     (Math.floor(row / 3) === Math.floor(selectedCell!.row / 3) &&
+    //       Math.floor(col / 3) === Math.floor(selectedCell!.col / 3)));
+
     const cage = getCageForCell(row, col);
     const isCageFirst = cage?.cells[0][0] === row && cage?.cells[0][1] === col;
     const isMistake = cellValue !== 0 && cellValue !== solvedBoard[row][col];
@@ -389,6 +400,14 @@ const Grid = ({
             ]}
           />
         )}
+        {/* {isSameValueConflict && (
+          <View
+            style={[
+              styles.relatedOverlay,
+              {backgroundColor: theme.conflictOverlayColor},
+            ]}
+          />
+        )} */}
         <TouchableOpacity
           style={[
             styles.cell,

@@ -48,6 +48,10 @@ export const SettingsScreen = () => {
     mistakeLimit: t('setting.mistakeLimit'),
     autoCheckMistake: t('setting.autoCheckMistake'),
     highlightDuplicates: t('setting.highlightDuplicates'),
+    highlightAreas: t('setting.highlightAreas'),
+    highlightIdenticalNumbers: t('setting.highlightIdenticalNumbers'),
+    hideUsedNumbers: t('setting.hideUsedNumbers'),
+    autoRemoveNotes: t('setting.autoRemoveNotes'),
   };
 
   const descriptions = {
@@ -55,6 +59,11 @@ export const SettingsScreen = () => {
     // numberFirst: t('desc.numberFirst'),
     mistakeLimit: t('desc.mistakeLimit'),
     autoCheckMistake: t('desc.autoCheckMistake'),
+    highlightDuplicates: t('desc.highlightDuplicates'),
+    highlightAreas: t('desc.highlightAreas'),
+    highlightIdenticalNumbers: t('desc.highlightIdenticalNumbers'),
+    hideUsedNumbers: t('desc.hideUsedNumbers'),
+    autoRemoveNotes: t('desc.autoRemoveNotes'),
   };
 
   return (

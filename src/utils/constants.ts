@@ -46,8 +46,17 @@ export const LANGUAGES = [
 ];
 
 export const DEFAULT_SETTINGS: AppSettings = {
+  // sounds: true,
+  // autoLock: false,
   timer: true,
+  // score: true,
+  // statisticsMsg: true,
+  // numberFirst: false,
   mistakeLimit: true,
   autoCheckMistake: true,
   highlightDuplicates: true,
+  highlightAreas: true,
+  highlightIdenticalNumbers: true,
+  hideUsedNumbers: true,
+  autoRemoveNotes: true,
 };
