@@ -33,7 +33,7 @@
   "mistakeWarning": "ミス警告",
   "tooManyMistakes": "{{max}}回以上のミスがあります！",
   "timeWarning": "時間警告",
-  "playedLimit": "{{limit}}回以上プレイしました！",
+  "playedLimit": "{{limit}}以上プレイしました！",
   "ok": "OK",
   "solution": "解答",
   "allDone": "すべて完了",
@@ -76,7 +76,7 @@
 
   "desc.statisticsMsg": "レベルを解けた人数に関するメッセージを表示",
   "desc.numberFirst": "数字を長押しして固定し、複数セルに使用",
-  "desc.mistakeLimit": "1ゲームあたりのミス数を3に制限",
+  "desc.mistakeLimit": "1ゲームあたりのミス数を{{limit}}に制限",
   "desc.autoCheckMistake": "正解と一致しない数字をマークする",
   "desc.highlightDuplicates": "各行・列・ブロックで重複している数字をハイライトします",
   "desc.highlightAreas": "選択されたセルのブロック、列、行をハイライトします",

@@ -14,7 +14,7 @@ export const SCREENS = {
 
 export const BOARD_SIZE = 9;
 export const CELL_SIZE = 40;
-export const MAX_TIMEPLAYED = 2 * 60 * 60; // in seconds
+export const MAX_TIMEPLAYED = 3 * 60 * 60; // in seconds
 export const MAX_MISTAKES = 5;
 export const CAGE_PADDING = 3;
 export const CAGE_PADDING_FIRST_1 = 7;

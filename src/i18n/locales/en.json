@@ -33,7 +33,7 @@
   "mistakeWarning": "Mistake Warning",
   "tooManyMistakes": "You've made more than {{max}} mistakes!",
   "timeWarning": "Time Warning",
-  "playedLimit": "You've played more than {{limit}} times!",
+  "playedLimit": "You've played more than {{limit}}",
   "ok": "OK",
   "solution": "Solution",
   "allDone": "All Done",
@@ -76,7 +76,7 @@
 
   "desc.statisticsMsg": "Show messages about the number of people who were able to solve a level",
   "desc.numberFirst": "Lock a number by tapping and holding it, then use it for multiple cells",
-  "desc.mistakeLimit": "Limit the number of possible mistakes to 3 per game",
+  "desc.mistakeLimit": "Limit the number of possible mistakes to {{limit}} per game",
   "desc.autoCheckMistake": "Mark numbers that don't match the final sudoku solution",
   "desc.highlightDuplicates": "Highlight repeating numbers in each row, column, and block",
   "desc.highlightAreas": "Highlight the block, column, and row for a selected cell",

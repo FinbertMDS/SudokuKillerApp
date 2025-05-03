@@ -33,7 +33,7 @@
   "mistakeWarning": "Cảnh báo lỗi",
   "tooManyMistakes": "Bạn đã mắc quá {{max}} lỗi!",
   "timeWarning": "Cảnh báo thời gian",
-  "playedLimit": "Bạn đã chơi quá {{limit}} lần!",
+  "playedLimit": "Bạn đã chơi quá {{limit}}",
   "ok": "OK",
   "solution": "Giải pháp",
   "allDone": "Hoàn thành",
@@ -76,7 +76,7 @@
 
   "desc.statisticsMsg": "Hiển thị thông báo về số người đã giải được một cấp độ",
   "desc.numberFirst": "Giữ một số bằng cách nhấn giữ, sau đó sử dụng cho nhiều ô",
-  "desc.mistakeLimit": "Giới hạn số lỗi tối đa là 3 trong mỗi trò chơi",
+  "desc.mistakeLimit": "Giới hạn số lỗi tối đa là {{limit}} trong mỗi trò chơi",
   "desc.autoCheckMistake": "Đánh dấu những số không khớp với lời giải sudoku cuối cùng",
   "desc.highlightDuplicates": "Tô sáng các số bị lặp trong mỗi hàng, cột và khối",
   "desc.highlightAreas": "Tô sáng khối, cột và hàng của ô đang chọn",

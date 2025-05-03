@@ -19,7 +19,7 @@ import eventBus from '../../events/eventBus';
 import LanguageSwitcher from '../../i18n/LanguageSwitcher';
 import {SettingsService} from '../../services/SettingsService';
 import {RootStackParamList, SettingsScreenRouteProp} from '../../types';
-import {DEFAULT_SETTINGS} from '../../utils/constants';
+import {DEFAULT_SETTINGS, MAX_MISTAKES} from '../../utils/constants';
 
 export const SettingsScreen = () => {
   const {theme} = useTheme();
@@ -73,7 +73,7 @@ export const SettingsScreen = () => {
   const descriptions = {
     // statisticsMsg: t('desc.statisticsMsg'),
     // numberFirst: t('desc.numberFirst'),
-    mistakeLimit: t('desc.mistakeLimit'),
+    mistakeLimit: t('desc.mistakeLimit', {limit: MAX_MISTAKES}),
     autoCheckMistake: t('desc.autoCheckMistake'),
     highlightDuplicates: t('desc.highlightDuplicates'),
     highlightAreas: t('desc.highlightAreas'),
