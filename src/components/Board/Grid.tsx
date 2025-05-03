@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useCallback, useEffect, useRef} from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
 import Animated, {
   useAnimatedStyle,
@@ -350,99 +350,128 @@ export const Grid = React.memo(function Grid({
     return lines;
   };
 
-  const renderCell = (row: number, col: number, animatedStyle: any) => {
-    const cellValue = board[row][col];
-    const cellNotes = notes[row][col];
-    const isSelected = selectedCell?.row === row && selectedCell?.col === col;
-    const isRelated = isCellInSameRowOrColOrBox(row, col);
-    const isSameValue =
-      settings.highlightIdenticalNumbers &&
-      !isSelected &&
-      cellValue &&
-      cellValue === selectedCell?.value;
-    const isSameValueConflict =
-      settings.highlightDuplicates &&
-      isSameValue &&
-      (row === selectedCell?.row ||
-        col === selectedCell?.col ||
-        (Math.floor(row / 3) === Math.floor(selectedCell!.row / 3) &&
-          Math.floor(col / 3) === Math.floor(selectedCell!.col / 3)));
-    const cage = getCageForCell(row, col);
-    const isCageFirst = cage?.cells[0][0] === row && cage?.cells[0][1] === col;
-    const isMistake = cellValue !== 0 && cellValue !== solvedBoard[row][col];
+  const checkSameValueConflict = (
+    row: number,
+    col: number,
+    cellValue: CellValue,
+    _selectedCell: Cell | null,
+  ): boolean => {
+    if (!cellValue || !_selectedCell) {
+      return false;
+    }
 
-    return (
-      <View
-        key={`cell-${row}-${col}`}
-        style={[styles.cellWrapper, {backgroundColor: theme.background}]}>
-        {!isSelected && isRelated && (
-          <View
-            style={[
-              styles.relatedOverlay,
-              {
-                backgroundColor: theme.overlayColor,
-              },
-            ]}
-          />
-        )}
-        {(isSelected || isSameValue) && (
-          <View
-            style={[
-              styles.selectedOverlay,
-              {
-                backgroundColor: isSelected
-                  ? theme.selectedOverlayColor
-                  : isSameValueConflict
-                  ? theme.conflictOverlayColor
-                  : theme.sameValueOverlayColor,
-              },
-            ]}
-          />
-        )}
-        <TouchableOpacity
-          style={[
-            styles.cell,
-            // eslint-disable-next-line react-native/no-inline-styles
-            {
-              borderColor: theme.cellBorderColor,
-              borderTopWidth: row === 0 || row === 3 || row === 6 ? 1.2 : 0.2,
-              borderBottomWidth: row === 8 ? 1.2 : 0.2,
-              borderLeftWidth: col === 0 || col === 3 || col === 6 ? 1.2 : 0.2,
-              borderRightWidth: col === 8 ? 1.2 : 0.2,
-            },
-          ]}
-          onPress={() => {
-            onPress({row, col, value: cellValue});
-          }}>
-          {isCageFirst && (
-            <Text style={[styles.cageText, {color: theme.secondary}]}>
-              {cage?.sum}
-            </Text>
+    const sameValue = cellValue === _selectedCell.value;
+    const sameRow = row === _selectedCell.row;
+    const sameCol = col === _selectedCell.col;
+    const sameBox =
+      Math.floor(row / 3) === Math.floor(_selectedCell.row / 3) &&
+      Math.floor(col / 3) === Math.floor(_selectedCell.col / 3);
+
+    return sameValue && (sameRow || sameCol || sameBox);
+  };
+
+  const renderCell = useCallback(
+    (row: number, col: number, animatedStyle: any) => {
+      const cellValue = board[row][col];
+      const cellNotes = notes[row][col];
+      const cage = getCageForCell(row, col);
+      const isCageFirst =
+        cage?.cells[0][0] === row && cage?.cells[0][1] === col;
+
+      const isSelected = selectedCell?.row === row && selectedCell?.col === col;
+
+      const isRelated = isCellInSameRowOrColOrBox(row, col);
+
+      const isSameValue =
+        settings.highlightIdenticalNumbers &&
+        !isSelected &&
+        cellValue &&
+        cellValue === selectedCell?.value;
+
+      const isSameValueConflict =
+        settings.highlightDuplicates &&
+        checkSameValueConflict(row, col, cellValue, selectedCell);
+
+      const isMistake = cellValue !== 0 && cellValue !== solvedBoard[row][col];
+
+      const showRelatedOverlay = !isSelected && isRelated;
+      const showOverlay = isSelected || isSameValue;
+      const overlayColor = isSelected
+        ? theme.selectedOverlayColor
+        : isSameValueConflict
+        ? theme.conflictOverlayColor
+        : theme.sameValueOverlayColor;
+
+      const showValue = cellValue !== 0;
+      const showMistake = settings.autoCheckMistake && isMistake;
+
+      const borderStyle = {
+        borderColor: theme.cellBorderColor,
+        borderTopWidth: row % 3 === 0 ? 1.2 : 0.2,
+        borderBottomWidth: row === BOARD_SIZE - 1 ? 1.2 : 0.2,
+        borderLeftWidth: col % 3 === 0 ? 1.2 : 0.2,
+        borderRightWidth: col === BOARD_SIZE - 1 ? 1.2 : 0.2,
+      };
+
+      return (
+        <View
+          key={`cell-${row}-${col}`}
+          style={[styles.cellWrapper, {backgroundColor: theme.background}]}>
+          {showRelatedOverlay && (
+            <View
+              style={[
+                styles.relatedOverlay,
+                {backgroundColor: theme.overlayColor},
+              ]}
+            />
           )}
-          <View style={styles.notesContainerTop}>
-            {Array.from({length: BOARD_SIZE}, (_, i) => (
-              <Text key={i} style={[styles.noteText, {color: theme.text}]}>
-                {cellNotes.includes((i + 1).toString()) ? i + 1 : ' '}
-              </Text>
-            ))}
-          </View>
-          <Animated.View style={[styles.cell, animatedStyle]}>
-            {cellValue !== 0 && (
-              <Text
-                style={[
-                  styles.cellText,
-                  {color: theme.text},
-                  settings.autoCheckMistake &&
-                    isMistake && {color: theme.mistake},
-                ]}>
-                {cellValue}
+
+          {showOverlay && (
+            <View
+              style={[styles.selectedOverlay, {backgroundColor: overlayColor}]}
+            />
+          )}
+
+          <TouchableOpacity
+            style={[styles.cell, borderStyle]}
+            onPress={() => onPress({row, col, value: cellValue})}
+            activeOpacity={0.8}>
+            {isCageFirst && (
+              <Text style={[styles.cageText, {color: theme.secondary}]}>
+                {cage?.sum}
               </Text>
             )}
-          </Animated.View>
-        </TouchableOpacity>
-      </View>
-    );
-  };
+
+            <View style={styles.notesContainerTop}>
+              {Array.from({length: BOARD_SIZE}, (_, i) => {
+                const noteValue = (i + 1).toString();
+                return (
+                  <Text key={i} style={[styles.noteText, {color: theme.text}]}>
+                    {cellNotes.includes(noteValue) ? i + 1 : ' '}
+                  </Text>
+                );
+              })}
+            </View>
+
+            <Animated.View style={[styles.cell, animatedStyle]}>
+              {showValue && (
+                <Text
+                  style={[
+                    styles.cellText,
+                    {color: theme.text},
+                    showMistake && {color: theme.mistake},
+                  ]}>
+                  {cellValue}
+                </Text>
+              )}
+            </Animated.View>
+          </TouchableOpacity>
+        </View>
+      );
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [board, notes, selectedCell, settings, solvedBoard, theme, onPress],
+  );
 
   return (
     <>

@@ -301,6 +301,7 @@ const BoardScreen = () => {
       newBoard[row][col] = num;
       setBoard(newBoard);
       saveHistory(newBoard);
+      setSelectedCell({...selectedCell, value: num});
 
       if (settings.mistakeLimit && num !== correctValue) {
         incrementMistake();
