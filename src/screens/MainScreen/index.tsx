@@ -7,6 +7,7 @@ import {useTranslation} from 'react-i18next';
 import {Text, TouchableOpacity, View} from 'react-native';
 import {Menu} from 'react-native-paper';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import uuid from 'react-native-uuid';
 import {Difficulty} from 'sudoku-gen/dist/types/difficulty.type';
 import Header from '../../components/commons/Header';
 import {useTheme} from '../../context/ThemeContext';
@@ -42,6 +43,7 @@ const MainScreen = () => {
     setMenuVisible(false);
     const sudoku = generateKillerSudoku(level as Difficulty);
     const initGame = {
+      id: uuid.v4().toString(),
       initialBoard: stringToGrid(sudoku.puzzle),
       solvedBoard: stringToGrid(sudoku.solution),
       cages: sortAreasCells(sudoku.areas),

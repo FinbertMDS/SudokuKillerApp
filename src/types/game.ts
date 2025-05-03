@@ -14,6 +14,7 @@ export interface Cage {
 export type Level = 'easy' | 'medium' | 'hard' | 'expert';
 
 export type InitGame = {
+  id: string;
   initialBoard: CellValue[][];
   solvedBoard: number[][];
   cages: {cells: [number, number][]; sum: number}[];
@@ -21,6 +22,7 @@ export type InitGame = {
 };
 
 export type SavedGame = {
+  savedId: string;
   savedBoard: CellValue[][];
   savedMistake: number;
   savedTimePlayed: number;

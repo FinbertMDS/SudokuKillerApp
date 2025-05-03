@@ -47,6 +47,7 @@
 
   "levelStats": "Level Stats",
   "chartsStats": "Charts Stats",
+  "chartsStats.noticeUtc": "Stats follow UTC. In UTC{{utcOffset}}, new day updates after {{offset}}",
 
   "options": "Options",
   "settings": "Settings",

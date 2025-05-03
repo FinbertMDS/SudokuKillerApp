@@ -12,6 +12,8 @@ type HeaderProps = {
   showBack?: boolean;
   showSettings?: boolean;
   showTheme?: boolean;
+  showCustom?: boolean;
+  custom?: React.ReactNode;
   onBack?: () => void;
   onSettings?: () => void;
 };
@@ -21,6 +23,8 @@ const Header = ({
   showBack = false,
   showSettings = false,
   showTheme = true,
+  showCustom = false,
+  custom = undefined,
   onBack = undefined,
   onSettings = undefined,
 }: HeaderProps) => {
@@ -52,8 +56,10 @@ const Header = ({
             <Text style={[styles.title, {color: theme.text}]}>{title}</Text>
           </View>
         )}
+        {/* Right side */}
         {showTheme || showSettings ? (
           <View style={[styles.side, styles.right]}>
+            {showCustom && custom ? <>{custom}</> : null}
             {showTheme && (
               <TouchableOpacity onPress={toggleTheme} style={styles.iconButton}>
                 <Icon

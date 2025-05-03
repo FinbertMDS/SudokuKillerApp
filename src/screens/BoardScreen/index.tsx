@@ -58,6 +58,7 @@ const BoardScreen = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {
+    id,
     initialBoard,
     solvedBoard,
     cages,
@@ -184,6 +185,7 @@ const BoardScreen = () => {
 
   const handleBackPress = async () => {
     await BoardService.save({
+      savedId: id,
       savedBoard: board,
       savedMistake: mistakes,
       savedTimePlayed: seconds,
@@ -205,6 +207,7 @@ const BoardScreen = () => {
 
   const handlePause = async () => {
     await BoardService.save({
+      savedId: id,
       savedBoard: board,
       savedMistake: mistakes,
       savedTimePlayed: seconds,
@@ -393,10 +396,12 @@ const BoardScreen = () => {
             text: t('backToMain'),
             onPress: async () => {
               eventBus.emit(CORE_EVENTS.gameEnded, {
+                id: id,
                 level: level,
                 timePlayed: seconds,
                 mistakes: mistakes,
               });
+              await BoardService.clear();
               navigation.goBack();
             },
           },

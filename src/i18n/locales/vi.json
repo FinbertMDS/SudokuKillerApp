@@ -25,7 +25,7 @@
   "gamesCompleted": "Ván đã hoàn thành",
   "bestTime": "Thời gian tốt nhất",
   "averageTime": "Thời gian trung bình",
-  "timesPerDay": "Số lần mỗi ngày",
+  "timesPerDay": "Thời gian chơi mỗi ngày",
 
   "main": "Chính",
   "statistics": "Thống kê",
@@ -47,6 +47,7 @@
 
   "levelStats": "Thống kê mức độ",
   "chartsStats": "Biểu đồ thống kê",
+  "chartsStats.noticeUtc": "Thống kê theo giờ UTC. Ở UTC{{utcOffset}}, dữ liệu ngày mới có sau {{offset}}.",
 
   "options": "Tùy chọn",
   "settings": "Cài đặt",

@@ -20,6 +20,7 @@ export const lightTheme = {
   cellBorderBoldColor: '#000000',
   settingItemBackground: '#95a5a6',
   buttonBlue: '#60a5fa',
+  selectedItemBackground: '#d0d0d0',
 };
 
 export const darkTheme = {
@@ -44,4 +45,5 @@ export const darkTheme = {
   cellBorderBoldColor: '#ffffff',
   settingItemBackground: '#2c3e50',
   buttonBlue: '#3b82f6',
+  selectedItemBackground: '#333333',
 };

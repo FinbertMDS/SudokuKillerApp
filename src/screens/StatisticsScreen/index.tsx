@@ -5,12 +5,14 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Text, TouchableOpacity, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import Header from '../../components/commons/Header';
 import ChartsStats from '../../components/Statistics/ChartsStats';
 import LevelStats from '../../components/Statistics/LevelStats';
+import TimeFilterDropdown from '../../components/Statistics/TimeFilterDropdown';
 import {useTheme} from '../../context/ThemeContext';
 import {GameStatsManager} from '../../services/GameStatsManager';
-import {GameLogEntry, GameStats, Level} from '../../types';
+import {GameLogEntry, GameStats, Level, TimeFilter} from '../../types';
 
 export default function StatisticsScreen() {
   const {theme} = useTheme();
@@ -19,22 +21,30 @@ export default function StatisticsScreen() {
   const [logs, setLogs] = useState<GameLogEntry[]>([]);
   const [activeTab, setActiveTab] = useState<'level' | 'chart'>('level');
 
+  const [filter, setFilter] = useState<TimeFilter>('all');
+  const [showDropdown, setShowDropdown] = useState(false);
+
   // Sau khi navigation.goBack() sẽ gọi hàm này
   useFocusEffect(
     useCallback(() => {
       loadData();
-    }, []),
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [filter]),
   );
 
   useEffect(() => {
     loadData();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filter]);
 
   async function loadData() {
-    const loadedStats = await GameStatsManager.getStats();
-    setStats(loadedStats);
     const loadedLogs = await GameStatsManager.getLogs();
     setLogs(loadedLogs);
+    const loadedStats = await GameStatsManager.getStatsWithCache(
+      loadedLogs,
+      filter,
+    );
+    setStats(loadedStats);
   }
 
   return (
@@ -46,6 +56,14 @@ export default function StatisticsScreen() {
         showBack={false}
         showSettings={true}
         showTheme={true}
+        showCustom={true}
+        custom={
+          <TouchableOpacity
+            onPress={() => setShowDropdown(true)}
+            style={styles.iconButton}>
+            <Ionicons name="filter" size={24} color={theme.iconColor} />
+          </TouchableOpacity>
+        }
       />
       <View style={styles.container}>
         {/* Tab Chip Selector */}
@@ -84,6 +102,18 @@ export default function StatisticsScreen() {
           )}
         </View>
       </View>
+
+      {showDropdown && (
+        <TimeFilterDropdown
+          visible={showDropdown}
+          selected={filter}
+          onSelect={newFilter => {
+            setFilter(newFilter);
+            setShowDropdown(false);
+          }}
+          onClose={() => setShowDropdown(false)}
+        />
+      )}
     </SafeAreaView>
   );
 }
@@ -93,6 +123,9 @@ const styles = {
     flex: 1,
     alignItems: 'center' as const,
     paddingBottom: 20,
+  },
+  iconButton: {
+    marginLeft: 20,
   },
   tabRow: {
     flexDirection: 'row' as const,

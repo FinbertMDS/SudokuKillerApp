@@ -1,20 +1,21 @@
 // StatisticsScreen.tsx
 
 import React, {useMemo} from 'react';
+import {useTranslation} from 'react-i18next';
 import {ScrollView} from 'react-native';
 import {useTheme} from '../../context/ThemeContext';
 import {GameLogEntry} from '../../types';
 import {getChartConfig} from '../../utils/colorUtil';
 import {
-  convertLogsToStats,
   convertToPieData,
   convertToStackedData,
+  getDailyStatsFromLogs,
 } from '../../utils/statsUtil';
+import ChartsStatsNotice from './ChartsStatsNotice';
 import GameBarChart from './GameBarChart';
 import GamePieChart from './GamePieChart';
 import GameStackedBarChart from './GameStackedBarChart';
 import TimeLineChart from './TimeLineChart';
-import { useTranslation } from 'react-i18next';
 
 type ChartsStatsProps = {
   logs: GameLogEntry[];
@@ -23,7 +24,7 @@ type ChartsStatsProps = {
 const ChartsStats = ({logs}: ChartsStatsProps) => {
   const {mode, theme} = useTheme();
   const {t} = useTranslation();
-  const dailyStats = useMemo(() => convertLogsToStats(logs), [logs]);
+  const dailyStats = useMemo(() => getDailyStatsFromLogs(logs), [logs]);
   const levelCounts = useMemo(() => convertToPieData(logs, mode), [logs, mode]);
   const stackedData = useMemo(
     () => convertToStackedData(logs, mode, t),
@@ -40,6 +41,7 @@ const ChartsStats = ({logs}: ChartsStatsProps) => {
         stackedData={stackedData}
         chartConfig={chartConfig}
       />
+      <ChartsStatsNotice />
     </ScrollView>
   );
 };

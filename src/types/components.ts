@@ -22,3 +22,5 @@ export type OptionMenuItem = {
   screen?: keyof RootStackParamList;
   onPress?: () => void;
 };
+
+export type TimeFilter = 'all' | 'today' | 'week' | 'month' | 'year';

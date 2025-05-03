@@ -25,7 +25,7 @@
   "gamesCompleted": "完了したゲーム",
   "bestTime": "最速時間",
   "averageTime": "平均時間",
-  "timesPerDay": "1日の回数",
+  "timesPerDay": "1日の時間",
 
   "main": "メイン",
   "statistics": "統計",
@@ -47,6 +47,7 @@
 
   "levelStats": "レベル統計",
   "chartsStats": "チャート統計",
+  "chartsStats.noticeUtc": "統計はUTC基準。UTC{{utcOffset}}では{{offset}}以降に更新されます。",
 
   "options": "オプション",
   "settings": "設定",

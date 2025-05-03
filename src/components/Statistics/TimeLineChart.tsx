@@ -5,6 +5,7 @@ import {AbstractChartConfig} from 'react-native-chart-kit/dist/AbstractChart';
 import {useTheme} from '../../context/ThemeContext';
 import {DailyStats} from '../../types';
 import {CHART_WIDTH} from '../../utils/constants';
+import {formatShortChartDate} from '../../utils/dateUtil';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -28,7 +29,7 @@ const TimeLineChart = ({dailyStats, chartConfig}: TimeLineChartProps) => {
     );
   }
 
-  const labels = dailyStats.map(s => s.date.slice(5)); // mm-dd
+  const labels = dailyStats.map(s => formatShortChartDate(s.date));
   const timeData = dailyStats.map(s => Math.floor(s.totalTimeSeconds / 60)); // phút
   const chartWidth = Math.max(dailyStats.length * CHART_WIDTH, screenWidth);
 

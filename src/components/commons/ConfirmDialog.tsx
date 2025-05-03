@@ -64,7 +64,7 @@ const styles = {
     flex: 1,
     justifyContent: 'center' as const,
     alignItems: 'center' as const,
-    backgroundColor: 'rgba(0,0,0,0.6)',
+    backgroundColor: 'rgba(0,0,0,0.5)',
   },
   dialogWrapper: {
     width: 270,

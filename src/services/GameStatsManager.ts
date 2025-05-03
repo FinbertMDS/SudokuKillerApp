@@ -1,38 +1,129 @@
 // GameStatsManager.ts
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {DailyStats, GameLogEntry, GameStats, Level} from '../types';
+import uuid from 'react-native-uuid';
+import {GameEndedCoreEvent} from '../events/types';
+import {
+  GameLogEntry,
+  GameStats,
+  GameStatsCache,
+  InitGame,
+  Level,
+  TimeRange,
+} from '../types';
 import {
   STORAGE_KEY_GAME_LOGS,
-  STORAGE_KEY_GAME_STATS,
+  STORAGE_KEY_GAME_STATS_CACHE,
 } from '../utils/constants';
+import {isInTimeRange} from '../utils/dateUtil';
+import {getStatsFromLogs} from '../utils/statsUtil';
 
 export const GameStatsManager = {
-  async getStats(): Promise<Record<Level, GameStats>> {
+  async getStatsWithCache(
+    logs: GameLogEntry[],
+    filter: TimeRange,
+  ): Promise<Record<Level, GameStats>> {
     try {
-      const json = await AsyncStorage.getItem(STORAGE_KEY_GAME_STATS);
-      if (json) {
-        return JSON.parse(json);
-      }
-    } catch (error) {
-      console.error('Error loading stats:', error);
-    }
+      const cacheStr = await AsyncStorage.getItem(STORAGE_KEY_GAME_STATS_CACHE);
+      const cache: GameStatsCache = cacheStr ? JSON.parse(cacheStr) : {};
 
-    // Initialize default stats if none exist
-    return {
-      easy: this.createEmptyStats(),
-      medium: this.createEmptyStats(),
-      hard: this.createEmptyStats(),
-      expert: this.createEmptyStats(),
-    };
+      if (cache[filter]) {
+        return cache[filter]!;
+      }
+
+      const computedStats = getStatsFromLogs(logs, filter);
+      const updatedCache = {...cache, [filter]: computedStats};
+
+      await AsyncStorage.setItem(
+        STORAGE_KEY_GAME_STATS_CACHE,
+        JSON.stringify(updatedCache),
+      );
+
+      return computedStats;
+    } catch (error) {
+      console.warn('Failed to get stats with cache:', error);
+      return getStatsFromLogs(logs, filter); // fallback
+    }
   },
 
-  async saveStats(stats: Record<Level, GameStats>) {
+  async updateStatsWithCache(
+    logs: GameLogEntry[],
+    affectedRanges: TimeRange[],
+  ): Promise<void> {
     try {
-      await AsyncStorage.setItem(STORAGE_KEY_GAME_STATS, JSON.stringify(stats));
+      const cacheStr = await AsyncStorage.getItem(STORAGE_KEY_GAME_STATS_CACHE);
+      const cache: GameStatsCache = cacheStr ? JSON.parse(cacheStr) : {};
+
+      const updatedCache: GameStatsCache = {...cache};
+
+      for (const range of affectedRanges) {
+        const updatedStats = getStatsFromLogs(logs, range);
+        updatedCache[range] = updatedStats;
+      }
+
+      await AsyncStorage.setItem(
+        STORAGE_KEY_GAME_STATS_CACHE,
+        JSON.stringify(updatedCache),
+      );
     } catch (error) {
-      console.error('Error saving stats:', error);
+      console.warn('Failed to update stats cache:', error);
     }
+  },
+
+  async updateStatsWithCacheForUpdates(
+    logs: GameLogEntry[],
+    updatedLogs: GameLogEntry[],
+  ): Promise<void> {
+    try {
+      const cacheStr = await AsyncStorage.getItem(STORAGE_KEY_GAME_STATS_CACHE);
+      const cache: GameStatsCache = cacheStr ? JSON.parse(cacheStr) : {};
+
+      // Xác định các khoảng thời gian cần cập nhật lại
+      const rangesToUpdate = new Set<TimeRange>();
+
+      updatedLogs.forEach(log => {
+        if (isInTimeRange(log.date, 'today')) {
+          rangesToUpdate.add('today');
+        }
+        if (isInTimeRange(log.date, 'week')) {
+          rangesToUpdate.add('week');
+        }
+        if (isInTimeRange(log.date, 'month')) {
+          rangesToUpdate.add('month');
+        }
+        if (isInTimeRange(log.date, 'year')) {
+          rangesToUpdate.add('year');
+        }
+      });
+      rangesToUpdate.add('all'); // luôn luôn cập nhật all
+
+      const updatedCache = {...cache};
+
+      for (const range of rangesToUpdate) {
+        updatedCache[range] = getStatsFromLogs(logs, range);
+      }
+
+      await AsyncStorage.setItem(
+        STORAGE_KEY_GAME_STATS_CACHE,
+        JSON.stringify(updatedCache),
+      );
+    } catch (error) {
+      console.warn('Failed to update stats with cache:', error);
+    }
+  },
+
+  async getLog(id: string): Promise<GameLogEntry | null> {
+    try {
+      const logs = await this.getLogs();
+      console.log('Logs:', logs);
+      const log = logs.find(_log => _log.id === id);
+      if (log) {
+        return log;
+      }
+    } catch (error) {
+      console.error('Error loading logs:', error);
+    }
+    return null;
   },
 
   async getLogs(): Promise<GameLogEntry[]> {
@@ -47,121 +138,105 @@ export const GameStatsManager = {
     return [];
   },
 
-  async saveLog(log: GameLogEntry) {
+  /**
+   * Saves a log entry to AsyncStorage.
+   * If override is true, it will replace the existing log with the same ID.
+   * If override is false, it will append the new log to the existing logs.
+   */
+  async saveLog(log: GameLogEntry, override: boolean = true) {
     try {
-      const existing = await this.getLogs();
-      existing.push(log);
-      await AsyncStorage.setItem(
-        STORAGE_KEY_GAME_LOGS,
-        JSON.stringify(existing),
-      );
-    } catch (error) {
-      console.error('Error saving logs:', error);
-    }
-  },
-
-  async saveLogs(logs: GameLogEntry[]) {
-    try {
-      const existing = await this.getLogs();
-      const updated = [...existing, ...logs];
-      await AsyncStorage.setItem(
-        STORAGE_KEY_GAME_LOGS,
-        JSON.stringify(updated),
-      );
-    } catch (error) {
-      console.error('Error saving logs:', error);
-    }
-  },
-
-  createEmptyStats(): GameStats {
-    return {
-      gamesStarted: 0,
-      gamesCompleted: 0,
-      bestTimeSeconds: null,
-      averageTimeSeconds: null,
-      totalTimeSeconds: 0,
-    };
-  },
-
-  async recordGameStart(level: Level) {
-    const stats = await this.getStats();
-    stats[level].gamesStarted++;
-    await this.saveStats(stats);
-  },
-
-  async recordGameWin(level: Level, timeSeconds: number) {
-    const stats = await this.getStats();
-    const s = stats[level];
-
-    s.gamesCompleted++;
-    s.totalTimeSeconds += timeSeconds;
-
-    if (s.bestTimeSeconds === null || timeSeconds < s.bestTimeSeconds) {
-      s.bestTimeSeconds = timeSeconds;
-    }
-
-    if (s.gamesCompleted > 0) {
-      s.averageTimeSeconds = Math.floor(s.totalTimeSeconds / s.gamesCompleted);
-    }
-
-    await this.saveStats(stats);
-
-    // 👉 Record daily log
-    const now = new Date();
-    const today = now.toLocaleDateString('sv-SE'); // local time at 'YYYY-MM-DD'
-    const newEntry: GameLogEntry = {
-      level,
-      date: today,
-      durationSeconds: timeSeconds,
-    };
-
-    await this.saveLog(newEntry);
-  },
-
-  async resetStats() {
-    const defaultStats = {
-      easy: this.createEmptyStats(),
-      medium: this.createEmptyStats(),
-      hard: this.createEmptyStats(),
-      expert: this.createEmptyStats(),
-    };
-    await this.saveStats(defaultStats);
-  },
-
-  async getDailyStats(): Promise<DailyStats[]> {
-    const logs: GameLogEntry[] = await this.getLogs();
-
-    if (logs.length === 0) {
-      return [];
-    }
-    const map = new Map<string, {games: number; time: number}>();
-
-    for (const entry of logs) {
-      if (!map.has(entry.date)) {
-        map.set(entry.date, {games: 0, time: 0});
+      if (override) {
+        const existing = await this.getLogs();
+        const index = existing.findIndex(_log => _log.id === log.id);
+        if (index !== -1) {
+          existing[index] = log;
+          await AsyncStorage.setItem(
+            STORAGE_KEY_GAME_LOGS,
+            JSON.stringify(existing),
+          );
+        } else {
+          console.warn('Log not found for override:', log.id);
+        }
+      } else {
+        const existing = await this.getLogs();
+        existing.push(log);
+        await AsyncStorage.setItem(
+          STORAGE_KEY_GAME_LOGS,
+          JSON.stringify(existing),
+        );
       }
-      const stat = map.get(entry.date)!;
-      stat.games += 1;
-      stat.time += entry.durationSeconds;
+    } catch (error) {
+      console.error('Error saving logs:', error);
     }
+  },
 
-    const result: DailyStats[] = [];
-    for (const [date, data] of map.entries()) {
-      result.push({
-        date,
-        games: data.games,
-        totalTimeSeconds: data.time,
-      });
+  /**
+   * Saves multiple log entries to AsyncStorage.
+   * If append is true, it will append the new logs to the existing logs.
+   * If append is false, it will replace the existing logs with the new logs.
+   */
+  async saveLogs(logs: GameLogEntry[], append: boolean = true) {
+    try {
+      if (append) {
+        const existing = await this.getLogs();
+        const updated = [...existing, ...logs];
+        await AsyncStorage.setItem(
+          STORAGE_KEY_GAME_LOGS,
+          JSON.stringify(updated),
+        );
+      } else {
+        await AsyncStorage.setItem(STORAGE_KEY_GAME_LOGS, JSON.stringify(logs));
+      }
+    } catch (error) {
+      console.error('Error saving logs:', error);
     }
+  },
 
-    // Sắp xếp theo ngày gần nhất lên đầu
-    return result.sort((a, b) => b.date.localeCompare(a.date));
+  async recordGameStart(initGame: InitGame): Promise<GameLogEntry> {
+    const newEntry: GameLogEntry = {
+      id: initGame.id,
+      level: initGame.savedLevel,
+      date: new Date().toISOString(),
+      durationSeconds: 0,
+      completed: false,
+      mistakes: 0,
+    };
+
+    await this.saveLog(newEntry, false);
+    return newEntry;
+  },
+
+  async recordGameWin(payload: GameEndedCoreEvent) {
+    // 👉 Record daily log
+    const oldEntry = await this.getLog(payload.id);
+    let newEntry: GameLogEntry;
+    if (oldEntry) {
+      newEntry = {
+        ...oldEntry,
+        completed: true,
+        durationSeconds: payload.timePlayed,
+        endTime: new Date().toISOString(),
+        mistakes: payload.mistakes,
+      };
+    } else {
+      newEntry = {
+        id: uuid.v4().toString(),
+        level: payload.level,
+        date: new Date().toISOString(),
+        durationSeconds: payload.timePlayed,
+        completed: true,
+        endTime: new Date().toISOString(),
+        mistakes: payload.mistakes,
+      };
+    }
+    await this.saveLog(newEntry, true);
+    return newEntry;
   },
 
   async resetStatistics() {
     try {
-      await this.resetStats();
       await AsyncStorage.removeItem(STORAGE_KEY_GAME_LOGS);
+      await AsyncStorage.removeItem(STORAGE_KEY_GAME_STATS_CACHE);
     } catch (error) {
       console.error('Error clearing all data:', error);
     }

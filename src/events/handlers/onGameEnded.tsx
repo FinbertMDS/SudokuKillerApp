@@ -1,13 +1,9 @@
-import {BoardService} from '../../services/BoardService';
+import {CORE_EVENTS} from '..';
 import {GameStatsManager} from '../../services/GameStatsManager';
+import eventBus from '../eventBus';
 import {GameEndedCoreEvent} from '../types';
 
-export const handleGameEnded = async ({
-  level,
-  timePlayed,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  mistakes,
-}: GameEndedCoreEvent) => {
-  await BoardService.clear();
-  await GameStatsManager.recordGameWin(level, timePlayed);
+export const handleGameEnded = async (payload: GameEndedCoreEvent) => {
+  const newEntry = await GameStatsManager.recordGameWin(payload);
+  eventBus.emit(CORE_EVENTS.statisticsUpdated, [newEntry]);
 };
