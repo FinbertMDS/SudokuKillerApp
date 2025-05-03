@@ -11,7 +11,6 @@ import {useTheme} from '../../context/ThemeContext';
 import {CORE_EVENTS} from '../../events';
 import eventBus from '../../events/eventBus';
 import {GameStartedCoreEvent} from '../../events/types';
-import LanguageSwitcher from '../../i18n/LanguageSwitcher';
 import {BoardService} from '../../services/BoardService';
 import {Level, RootStackParamList} from '../../types/index';
 import {LEVELS, SCREENS} from '../../utils/constants';
@@ -79,7 +78,7 @@ const MainScreen = () => {
         showTheme={true}
       />
 
-      <LanguageSwitcher />
+      {/* <LanguageSwitcher /> */}
       <View style={[styles.content, {backgroundColor: theme.background}]}>
         {hasSavedGame && (
           <TouchableOpacity
@@ -127,7 +126,7 @@ const MainScreen = () => {
           ))}
         </Menu>
 
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={[
             styles.deleteButton,
             {
@@ -139,7 +138,7 @@ const MainScreen = () => {
           <Text style={[styles.buttonText, {color: theme.buttonText}]}>
             {t('clearStorage')}
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </SafeAreaView>
   );
