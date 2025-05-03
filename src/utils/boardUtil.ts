@@ -1,6 +1,7 @@
 // boardUtil.ts
 
-import {Cage, CellValue} from '../types';
+import {Difficulty} from 'sudoku-gen/dist/types/difficulty.type';
+import {Cage, CellValue, Level} from '../types';
 import {BOARD_SIZE} from './constants';
 
 /**
@@ -221,3 +222,13 @@ export function removeNoteFromPeers(
 
   return updatedNotes;
 }
+
+export const increaseDifficulty = (level: Level): Difficulty => {
+  const mapping: Record<Level, Difficulty> = {
+    easy: 'medium',
+    medium: 'hard',
+    hard: 'expert',
+    expert: 'expert',
+  };
+  return mapping[level];
+};
