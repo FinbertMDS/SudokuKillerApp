@@ -23,7 +23,7 @@ const NumberPad = ({board, settings, onSelectNumber}: NumberPadProps) => {
           style={[styles.button]}
           onPress={() => onSelectNumber(num)}
           disabled={counts[num] === BOARD_SIZE}>
-          <Text style={[styles.text]}>
+          <Text style={[styles.text, {color: theme.text}]}>
             {counts[num] === BOARD_SIZE ? ' ' : num}
           </Text>
         </TouchableOpacity>

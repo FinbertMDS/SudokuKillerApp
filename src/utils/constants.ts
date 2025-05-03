@@ -37,6 +37,7 @@ export const STORAGE_KEY_GAME_LOGS = 'gameLogs';
 export const STORAGE_KEY_LANG_KEY_DEFAULT = 'defaultLanguage';
 export const STORAGE_KEY_LANG_KEY_PREFERRED = 'preferredLanguage';
 export const STORAGE_KEY_SETTINGS = 'settings';
+export const STORAGE_KEY_BACKGROUNDS = 'backgrounds';
 
 export const CHART_WIDTH = 60;
 export const CHART2_WIDTH = 70;
@@ -64,3 +65,18 @@ export const DEFAULT_SETTINGS: AppSettings = {
 };
 
 export const DAILY_STATS_DATE_FORMAT = 'yyyy-MM-dd';
+
+// Unsplash
+export const UNSPLASH_KEYWORDS_LIGHT = [
+  'minimal pastel gradient',
+  'soft abstract light',
+  'white texture background',
+  'pastel background',
+];
+
+export const UNSPLASH_KEYWORDS_DARK = [
+  'dark gradient abstract',
+  'black minimal background',
+  'moody blurred background',
+  'dark blurry night',
+];

@@ -3,7 +3,13 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  ImageBackground,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {Menu} from 'react-native-paper';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Header from '../../components/commons/Header';
@@ -11,22 +17,26 @@ import {useTheme} from '../../context/ThemeContext';
 import {CORE_EVENTS} from '../../events';
 import eventBus from '../../events/eventBus';
 import {GameStartedCoreEvent} from '../../events/types';
+import {useDailyBackground} from '../../hooks/useDailyBackground';
 import {BoardService} from '../../services/BoardService';
 import {Level, RootStackParamList} from '../../types/index';
 import {LEVELS, SCREENS} from '../../utils/constants';
 
 const MainScreen = () => {
-  const {theme} = useTheme();
+  const {mode, theme} = useTheme();
   const {t} = useTranslation();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [menuVisible, setMenuVisible] = useState(false);
   const [hasSavedGame, setHasSavedGame] = useState(false);
+  const {backgroundUrl, loadBackgrounds} = useDailyBackground(mode);
 
   // Sau khi navigation.goBack() sẽ gọi hàm này
   useFocusEffect(
     useCallback(() => {
       checkSavedGame();
+      loadBackgrounds();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []),
   );
 
@@ -62,15 +72,22 @@ const MainScreen = () => {
     }
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleClearStorage = async () => {
     eventBus.emit(CORE_EVENTS.clearStorage);
     BoardService.clear().then(checkSavedGame);
   };
 
   return (
-    <SafeAreaView
-      edges={['top']}
-      style={[styles.container, {backgroundColor: theme.background}]}>
+    <SafeAreaView edges={['top']} style={[styles.container]}>
+      {backgroundUrl && (
+        <ImageBackground
+          source={{uri: backgroundUrl}}
+          style={StyleSheet.absoluteFillObject}
+          resizeMode="cover"
+          blurRadius={2}
+        />
+      )}
       <Header
         title={t('appName')}
         showBack={false}
@@ -79,7 +96,7 @@ const MainScreen = () => {
       />
 
       {/* <LanguageSwitcher /> */}
-      <View style={[styles.content, {backgroundColor: theme.background}]}>
+      <View style={[styles.content]}>
         {hasSavedGame && (
           <TouchableOpacity
             style={[
@@ -164,12 +181,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     borderRadius: 25,
   },
-  deleteButton: {
-    marginTop: 16,
-    padding: 12,
-    paddingHorizontal: 24,
-    borderRadius: 8,
-  },
+  // deleteButton: {
+  //   marginTop: 16,
+  //   padding: 12,
+  //   paddingHorizontal: 24,
+  //   borderRadius: 8,
+  // },
   buttonText: {
     fontWeight: 'bold' as const,
   },

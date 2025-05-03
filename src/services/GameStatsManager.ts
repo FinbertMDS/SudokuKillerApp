@@ -115,7 +115,6 @@ export const GameStatsManager = {
   async getLog(id: string): Promise<GameLogEntry | null> {
     try {
       const logs = await this.getLogs();
-      console.log('Logs:', logs);
       const log = logs.find(_log => _log.id === id);
       if (log) {
         return log;

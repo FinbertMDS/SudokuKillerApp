@@ -24,3 +24,9 @@ export type OptionMenuItem = {
 };
 
 export type TimeFilter = 'all' | 'today' | 'week' | 'month' | 'year';
+
+export type DailyBackgrounds = {
+  light: string | null;
+  dark: string | null;
+  date?: string;
+};
