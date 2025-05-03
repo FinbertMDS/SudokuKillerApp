@@ -393,7 +393,8 @@ export const Grid = React.memo(function Grid({
 
       const isSelected = selectedCell?.row === row && selectedCell?.col === col;
 
-      const isRelated = isCellInSameRowOrColOrBox(row, col);
+      const isRelated =
+        settings.highlightAreas && isCellInSameRowOrColOrBox(row, col);
 
       const isSameValue =
         settings.highlightIdenticalNumbers &&

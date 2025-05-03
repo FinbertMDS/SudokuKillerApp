@@ -484,7 +484,11 @@ const BoardScreen = () => {
         onErase={handleErase}
         onSolved={handleSolved}
       />
-      <NumberPad board={board} onSelectNumber={handleNumberPress} />
+      <NumberPad
+        board={board}
+        settings={settings}
+        onSelectNumber={handleNumberPress}
+      />
       <PauseModal
         visible={showPauseModal}
         level={level}

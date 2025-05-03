@@ -2,17 +2,18 @@ import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useTheme} from '../../context/ThemeContext';
 import {useNumberCounts} from '../../hooks/useNumberCounts';
-import {CellValue} from '../../types';
+import {AppSettings, CellValue} from '../../types';
 import {BOARD_SIZE} from '../../utils/constants';
 
 type NumberPadProps = {
   board: CellValue[][];
+  settings: AppSettings;
   onSelectNumber: (num: number) => void;
 };
 
-const NumberPad = ({board, onSelectNumber}: NumberPadProps) => {
+const NumberPad = ({board, settings, onSelectNumber}: NumberPadProps) => {
   const {theme} = useTheme();
-  const counts = useNumberCounts(board);
+  const counts = useNumberCounts(board, settings);
 
   return (
     <View style={[styles.container, {backgroundColor: theme.background}]}>

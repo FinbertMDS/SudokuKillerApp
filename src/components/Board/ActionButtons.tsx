@@ -36,6 +36,7 @@ const ActionButtons = ({
     onClear();
   }, [onClear]);
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleSolved = useCallback(() => {
     onSolved();
   }, [onSolved]);
@@ -50,13 +51,13 @@ const ActionButtons = ({
         iconChangeFlag: noteMode,
         onPress: () => handleNote(!noteMode),
       },
-      {
-        label: t('solvedBoard'),
-        icon: ['lightbulb-on-outline'],
-        onPress: handleSolved,
-      },
+      // {
+      //   label: t('solvedBoard'),
+      //   icon: ['lightbulb-on-outline'],
+      //   onPress: handleSolved,
+      // },
     ],
-    [t, noteMode, handleNote, handleUndo, handleErase, handleSolved],
+    [t, noteMode, handleNote, handleUndo, handleErase],
   );
 
   return (
