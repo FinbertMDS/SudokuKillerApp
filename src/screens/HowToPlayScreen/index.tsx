@@ -5,6 +5,7 @@ import {useTranslation} from 'react-i18next';
 import {
   FlatList,
   Image,
+  StyleSheet,
   Text,
   TouchableOpacity,
   useWindowDimensions,
@@ -138,7 +139,7 @@ export const HowToPlayScreen = () => {
   );
 };
 
-const styles = {
+const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
@@ -179,4 +180,4 @@ const styles = {
     justifyContent: 'center' as const,
     alignItems: 'center' as const,
   },
-};
+});

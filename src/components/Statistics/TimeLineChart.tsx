@@ -1,5 +1,5 @@
 import {useTranslation} from 'react-i18next';
-import {Dimensions, ScrollView, Text, View} from 'react-native';
+import {Dimensions, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {LineChart} from 'react-native-chart-kit';
 import {AbstractChartConfig} from 'react-native-chart-kit/dist/AbstractChart';
 import {useTheme} from '../../context/ThemeContext';
@@ -55,7 +55,7 @@ const TimeLineChart = ({dailyStats, chartConfig}: TimeLineChartProps) => {
   );
 };
 
-const styles = {
+const styles = StyleSheet.create({
   container: {
     padding: 24,
   },
@@ -66,6 +66,6 @@ const styles = {
   chart: {
     borderRadius: 12,
   },
-};
+});
 
 export default TimeLineChart;

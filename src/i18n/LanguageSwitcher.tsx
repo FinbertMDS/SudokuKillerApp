@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFocusEffect} from '@react-navigation/native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useTheme} from '../context/ThemeContext';
 import {LANGUAGES, STORAGE_KEY_LANG_KEY_PREFERRED} from '../utils/constants';
 import i18n, {autoDetectLanguage} from './i18n';
@@ -64,7 +64,7 @@ export default function LanguageSwitcher() {
   );
 }
 
-const styles = {
+const styles = StyleSheet.create({
   container: {
     marginTop: 20,
     paddingHorizontal: 20,
@@ -93,4 +93,4 @@ const styles = {
     fontSize: 14,
     fontWeight: 'bold',
   },
-};
+});

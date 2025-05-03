@@ -2,7 +2,14 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React, {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {ScrollView, Switch, Text, TouchableOpacity, View} from 'react-native';
+import {
+  ScrollView,
+  StyleSheet,
+  Switch,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import ConfirmDialog from '../../components/commons/ConfirmDialog';
 import Header from '../../components/commons/Header';
@@ -144,15 +151,10 @@ export const SettingsScreen = () => {
   );
 };
 
-const styles = {
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: 'bold' as const,
-    marginBottom: 16,
   },
   labelContainer: {
     flex: 1,
@@ -179,4 +181,4 @@ const styles = {
   buttonText: {
     fontWeight: 'bold' as const,
   },
-};
+});

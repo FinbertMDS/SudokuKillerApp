@@ -1,31 +1,33 @@
-import React, { useCallback, useMemo } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import React, {useCallback, useMemo} from 'react';
+import {useTranslation} from 'react-i18next';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useTheme } from '../../context/ThemeContext';
-import { useTranslation } from 'react-i18next';
+import {useTheme} from '../../context/ThemeContext';
 
 type ActionButtonsProps = {
-  noteMode: boolean,
-  onNote: (mode: boolean) => void,
-  onUndo: () => void,
-  onErase: () => void,
-  onSolved: () => void,
+  noteMode: boolean;
+  onNote: (mode: boolean) => void;
+  onUndo: () => void;
+  onErase: () => void;
+  onSolved: () => void;
 };
 
-const ActionButtons = (
-  {
-    noteMode,
-    onNote,
-    onUndo,
-    onErase: onClear,
-    onSolved,
-  }: ActionButtonsProps) => {
-  const { theme } = useTheme();
-  const { t } = useTranslation();
+const ActionButtons = ({
+  noteMode,
+  onNote,
+  onUndo,
+  onErase: onClear,
+  onSolved,
+}: ActionButtonsProps) => {
+  const {theme} = useTheme();
+  const {t} = useTranslation();
 
-  const handleNote = useCallback((mode: boolean) => {
-    onNote(mode);
-  }, [onNote]);
+  const handleNote = useCallback(
+    (mode: boolean) => {
+      onNote(mode);
+    },
+    [onNote],
+  );
   const handleUndo = useCallback(() => {
     onUndo();
   }, [onUndo]);
@@ -38,35 +40,58 @@ const ActionButtons = (
     onSolved();
   }, [onSolved]);
 
-
-  const buttons = useMemo(() => [
-    { label: t('undo'), icon: ['undo'], onPress: handleUndo },
-    { label: t('erase'), icon: ['eraser'], onPress: handleErase },
-    { label: t('notes'), icon: ['note-outline', 'note-edit-outline'], iconChangeFlag: noteMode, onPress: () => handleNote(!noteMode) },
-    { label: t('solvedBoard'), icon: ['lightbulb-on-outline'], onPress: handleSolved },
-  ], [t, noteMode, handleNote, handleUndo, handleErase, handleSolved]);
+  const buttons = useMemo(
+    () => [
+      {label: t('undo'), icon: ['undo'], onPress: handleUndo},
+      {label: t('erase'), icon: ['eraser'], onPress: handleErase},
+      {
+        label: t('notes'),
+        icon: ['note-outline', 'note-edit-outline'],
+        iconChangeFlag: noteMode,
+        onPress: () => handleNote(!noteMode),
+      },
+      {
+        label: t('solvedBoard'),
+        icon: ['lightbulb-on-outline'],
+        onPress: handleSolved,
+      },
+    ],
+    [t, noteMode, handleNote, handleUndo, handleErase, handleSolved],
+  );
 
   return (
-      <View style={[styles.container, { backgroundColor: theme.background }]}>
+    <View style={[styles.container, {backgroundColor: theme.background}]}>
       {buttons.map((btn, idx) => (
         <TouchableOpacity key={idx} style={styles.button} onPress={btn.onPress}>
           <Icon
-            name={(btn.icon.length > 0 && btn.iconChangeFlag) ? btn.icon[1] : btn.icon[0]}
+            name={
+              btn.icon.length > 0 && btn.iconChangeFlag
+                ? btn.icon[1]
+                : btn.icon[0]
+            }
             size={24}
-            color={(btn.icon.length > 0 && btn.iconChangeFlag) ? theme.primary : theme.secondary}
+            color={
+              btn.icon.length > 0 && btn.iconChangeFlag
+                ? theme.primary
+                : theme.secondary
+            }
           />
           <Text
             style={{
-              color: (btn.icon.length > 0 && btn.iconChangeFlag) ? theme.primary : theme.secondary,
-            }}
-          >{btn.label}</Text>
+              color:
+                btn.icon.length > 0 && btn.iconChangeFlag
+                  ? theme.primary
+                  : theme.secondary,
+            }}>
+            {btn.label}
+          </Text>
         </TouchableOpacity>
       ))}
     </View>
   );
 };
 
-const styles = {
+const styles = StyleSheet.create({
   container: {
     flexDirection: 'row' as const,
     justifyContent: 'space-around' as const,
@@ -77,11 +102,6 @@ const styles = {
     alignItems: 'center' as const,
     marginHorizontal: 10,
   },
-  text: {
-    marginTop: 4,
-    fontSize: 12,
-    color: '#555',
-  },
-};
+});
 
 export default ActionButtons;

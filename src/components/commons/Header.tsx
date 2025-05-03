@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React from 'react';
-import {Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {default as Icon} from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useTheme} from '../../context/ThemeContext';
 import {RootStackParamList} from '../../types';
@@ -83,7 +83,7 @@ const Header = ({
   );
 };
 
-const styles = {
+const styles = StyleSheet.create({
   header: {
     height: 56,
     flexDirection: 'row' as const,
@@ -110,6 +110,6 @@ const styles = {
   iconButton: {
     marginLeft: 20,
   },
-};
+});
 
 export default Header;

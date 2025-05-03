@@ -1,5 +1,12 @@
 import React from 'react';
-import {Modal, Pressable, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Modal,
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {useTheme} from '../../context/ThemeContext';
 
 type ConfirmDialogProps = {
@@ -59,7 +66,7 @@ const ConfirmDialog = ({
   );
 };
 
-const styles = {
+const styles = StyleSheet.create({
   overlay: {
     flex: 1,
     justifyContent: 'center' as const,
@@ -110,6 +117,6 @@ const styles = {
     fontSize: 17,
     fontWeight: '600' as const,
   },
-};
+});
 
 export default ConfirmDialog;

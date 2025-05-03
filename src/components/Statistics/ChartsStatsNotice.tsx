@@ -1,6 +1,6 @@
 import {useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Text} from 'react-native';
+import {StyleSheet, Text} from 'react-native';
 import {useTheme} from '../../context/ThemeContext';
 
 const ChartsStatsNotice = () => {
@@ -25,12 +25,12 @@ const ChartsStatsNotice = () => {
   );
 };
 
-const styles = {
+const styles = StyleSheet.create({
   text: {
     textAlign: 'center' as const,
     marginBottom: 8,
     opacity: 0.6,
   },
-};
+});
 
 export default ChartsStatsNotice;

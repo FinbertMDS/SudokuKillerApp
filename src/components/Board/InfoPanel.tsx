@@ -1,6 +1,6 @@
 import React from 'react';
 import {useTranslation} from 'react-i18next';
-import {Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useTheme} from '../../context/ThemeContext';
 import {AppSettings} from '../../types';
@@ -67,7 +67,7 @@ const InfoPanel = ({
   );
 };
 
-const styles = {
+const styles = StyleSheet.create({
   container: {
     width: '100%' as const,
     flexDirection: 'row' as const,
@@ -89,6 +89,6 @@ const styles = {
   timeValue: {
     minWidth: 50,
   },
-};
+});
 
 export default InfoPanel;

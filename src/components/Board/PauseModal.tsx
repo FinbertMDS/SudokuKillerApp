@@ -1,6 +1,6 @@
 import React from 'react';
 import {useTranslation} from 'react-i18next';
-import {Modal, Text, TouchableOpacity, View} from 'react-native';
+import {Modal, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useTheme} from '../../context/ThemeContext';
 import {Level} from '../../types';
 import {MAX_MISTAKES} from '../../utils/constants';
@@ -73,7 +73,7 @@ const PauseModal = ({
   );
 };
 
-const styles = {
+const styles = StyleSheet.create({
   overlay: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.5)',
@@ -127,6 +127,6 @@ const styles = {
     fontSize: 16,
     fontWeight: 'bold' as const,
   },
-};
+});
 
 export default React.memo(PauseModal);

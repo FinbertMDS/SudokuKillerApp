@@ -6,7 +6,7 @@ import {
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Alert} from 'react-native';
+import {Alert, StyleSheet} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import ActionButtons from '../../components/Board/ActionButtons';
 import {Grid} from '../../components/Board/Grid';
@@ -37,6 +37,7 @@ import {
   createEmptyGridNotes,
   deepCloneBoard,
   deepCloneNotes,
+  removeNoteFromPeers,
 } from '../../utils/boardUtil';
 import {
   ANIMATION_CELL_KEY_SEPARATOR,
@@ -291,6 +292,9 @@ const BoardScreen = () => {
       return;
     }
     const {row, col} = selectedCell;
+    if (initialBoard[row][col] != null) {
+      return;
+    }
 
     if (noteMode) {
       const newNotes = deepCloneNotes(notes);
@@ -308,6 +312,10 @@ const BoardScreen = () => {
       setBoard(newBoard);
       saveHistory(newBoard);
       setSelectedCell({...selectedCell, value: num});
+
+      if (settings.autoRemoveNotes) {
+        setNotes(prevNotes => removeNoteFromPeers(prevNotes, row, col, num));
+      }
 
       if (settings.mistakeLimit && num !== correctValue) {
         incrementMistake();
@@ -488,12 +496,11 @@ const BoardScreen = () => {
   );
 };
 
-const styles = {
+const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center' as const,
+    alignItems: 'center',
   },
-};
+});
 
 export default BoardScreen;

@@ -6,6 +6,7 @@ import {
   ActivityIndicator,
   Dimensions,
   ScrollView,
+  StyleSheet,
   Text,
   View,
 } from 'react-native';
@@ -90,12 +91,7 @@ const LevelStats = ({stats}: LevelStatsProps) => {
   );
 };
 
-const styles = {
-  container: {
-    flex: 1,
-    alignItems: 'center' as const,
-    paddingBottom: 20,
-  },
+const styles = StyleSheet.create({
   loadingContainer: {
     flex: 1,
     justifyContent: 'center' as const,
@@ -138,6 +134,6 @@ const styles = {
     fontSize: 16,
     fontWeight: 'bold' as const,
   },
-};
+});
 
 export default LevelStats;

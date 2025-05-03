@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useRef} from 'react';
-import {Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -16,6 +16,8 @@ import {
   ANIMATION_TYPE,
   BOARD_SIZE,
   CAGE_PADDING,
+  CAGE_PADDING_FIRST_1,
+  CAGE_PADDING_FIRST_2,
   CELL_SIZE,
 } from '../../utils/constants';
 
@@ -131,6 +133,12 @@ export const Grid = React.memo(function Grid({
           continue;
         } // bỏ qua ô không thuộc cage nào
 
+        const cage = getCageForCell(r, c);
+        const cagePaddingFirst =
+          cage && cage?.sum <= 10 ? CAGE_PADDING_FIRST_1 : CAGE_PADDING_FIRST_2;
+        const isCageFirst =
+          cage && cage?.cells[0][0] === r && cage?.cells[0][1] === c;
+
         const adjacentCells = getAdjacentCellsInSameCage(r, c, cages);
 
         // 1. Vẽ bên phải nếu neighbor khác cage
@@ -184,7 +192,11 @@ export const Grid = React.memo(function Grid({
             <Line
               key={`left-${r}-${c}`}
               x1={c * CELL_SIZE + CAGE_PADDING}
-              y1={r * CELL_SIZE + (adjacentCells.top ? 0 : CAGE_PADDING)}
+              y1={
+                r * CELL_SIZE +
+                (isCageFirst ? cagePaddingFirst : 0) +
+                (adjacentCells.top ? 0 : CAGE_PADDING)
+              }
               x2={c * CELL_SIZE + CAGE_PADDING}
               y2={
                 (r + 1) * CELL_SIZE - (adjacentCells.bottom ? 0 : CAGE_PADDING)
@@ -204,6 +216,7 @@ export const Grid = React.memo(function Grid({
               key={`top-${r}-${c}`}
               x1={
                 c * CELL_SIZE +
+                (isCageFirst ? cagePaddingFirst : 0) +
                 (adjacentCells.left
                   ? adjacentCells.right
                     ? -CAGE_PADDING
@@ -516,7 +529,7 @@ export const Grid = React.memo(function Grid({
   );
 });
 
-const styles = {
+const styles = StyleSheet.create({
   boardContainer: {
     paddingVertical: 10,
     alignItems: 'center' as const,
@@ -577,23 +590,23 @@ const styles = {
   },
   notesContainerTop: {
     position: 'absolute' as const,
-    top: 2,
-    left: 2,
-    right: 2,
+    left: 4,
+    right: 4,
     flexDirection: 'row' as const,
     flexWrap: 'wrap' as const,
     justifyContent: 'center' as const,
     alignItems: 'flex-start' as const,
   },
   noteText: {
+    top: 3,
+    left: 3,
     fontSize: 8,
     width: 10,
-    textAlign: 'center' as const,
   },
   cageText: {
     position: 'absolute' as const,
-    top: 2,
-    left: 4,
-    fontSize: 10,
+    top: 0,
+    left: 0,
+    fontSize: 9,
   },
-};
+});

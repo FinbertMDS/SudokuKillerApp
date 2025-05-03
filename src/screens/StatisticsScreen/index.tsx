@@ -3,7 +3,7 @@
 import {useFocusEffect} from '@react-navigation/native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Header from '../../components/commons/Header';
@@ -70,11 +70,19 @@ export default function StatisticsScreen() {
         <View style={styles.tabRow}>
           <TouchableOpacity
             onPress={() => setActiveTab('level')}
-            style={[styles.chip, activeTab === 'level' && styles.chipActive]}>
+            style={[
+              styles.chip,
+              {
+                backgroundColor:
+                  activeTab === 'level'
+                    ? theme.primary
+                    : theme.settingItemBackground,
+              },
+            ]}>
             <Text
               style={[
                 styles.chipText,
-                activeTab === 'level' && styles.chipTextActive,
+                {color: activeTab === 'level' ? theme.text : theme.secondary},
               ]}>
               {t('levelStats')}
             </Text>
@@ -82,11 +90,19 @@ export default function StatisticsScreen() {
 
           <TouchableOpacity
             onPress={() => setActiveTab('chart')}
-            style={[styles.chip, activeTab === 'chart' && styles.chipActive]}>
+            style={[
+              styles.chip,
+              {
+                backgroundColor:
+                  activeTab === 'chart'
+                    ? theme.primary
+                    : theme.settingItemBackground,
+              },
+            ]}>
             <Text
               style={[
                 styles.chipText,
-                activeTab === 'chart' && styles.chipTextActive,
+                {color: activeTab === 'chart' ? theme.text : theme.secondary},
               ]}>
               {t('chartsStats')}
             </Text>
@@ -118,7 +134,7 @@ export default function StatisticsScreen() {
   );
 }
 
-const styles = {
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center' as const,
@@ -139,17 +155,10 @@ const styles = {
     backgroundColor: '#1e293b',
     marginHorizontal: 6,
   },
-  chipActive: {
-    backgroundColor: '#3b82f6',
-  },
   chipText: {
-    color: '#94a3b8',
     fontWeight: '500',
-  },
-  chipTextActive: {
-    color: '#fff',
   },
   content: {
     flex: 1,
   },
-};
+});

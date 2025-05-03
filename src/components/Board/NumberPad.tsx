@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useTheme} from '../../context/ThemeContext';
 import {useNumberCounts} from '../../hooks/useNumberCounts';
 import {CellValue} from '../../types';
@@ -31,7 +31,7 @@ const NumberPad = ({board, onSelectNumber}: NumberPadProps) => {
   );
 };
 
-const styles = {
+const styles = StyleSheet.create({
   container: {
     flexDirection: 'row' as const,
     flexWrap: 'wrap' as const,
@@ -48,6 +48,6 @@ const styles = {
   text: {
     fontSize: 24,
   },
-};
+});
 
 export default NumberPad;

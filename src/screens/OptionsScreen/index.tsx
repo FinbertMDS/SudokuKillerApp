@@ -7,6 +7,7 @@ import {
   Linking,
   ScrollView,
   Share,
+  StyleSheet,
   Text,
   TouchableOpacity,
 } from 'react-native';
@@ -125,16 +126,10 @@ export const OptionsScreen = () => {
   );
 };
 
-const styles = {
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: 'bold' as const,
-    color: '#fff',
-    marginBottom: 16,
   },
   item: {
     flexDirection: 'row' as const,
@@ -149,4 +144,4 @@ const styles = {
   icon: {
     marginRight: 12,
   },
-};
+});

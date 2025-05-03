@@ -3,7 +3,7 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Menu} from 'react-native-paper';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Header from '../../components/commons/Header';
@@ -145,7 +145,7 @@ const MainScreen = () => {
   );
 };
 
-const styles = {
+const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
@@ -174,6 +174,6 @@ const styles = {
   buttonText: {
     fontWeight: 'bold' as const,
   },
-};
+});
 
 export default MainScreen;
