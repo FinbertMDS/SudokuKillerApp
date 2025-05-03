@@ -25,6 +25,12 @@ export const OptionsScreen = () => {
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {t} = useTranslation();
 
+  const handleGoToSettings = () => {
+    navigation.navigate(SCREENS.SETTINGS, {
+      showAdvancedSettings: true,
+    });
+  };
+
   const handleRateApp = () => {
     // Prefer in-app store review if available
     const isAvailable = InAppReview.isAvailable();
@@ -64,7 +70,7 @@ export const OptionsScreen = () => {
   };
 
   const menuItems: OptionMenuItem[] = [
-    {icon: 'cog', label: t('settings'), screen: SCREENS.SETTINGS},
+    {icon: 'cog', label: t('settings'), onPress: handleGoToSettings},
     {icon: 'school', label: t('howToPlay'), screen: SCREENS.HOW_TO_PLAY},
     {icon: 'star-outline', label: t('rateApp'), onPress: handleRateApp},
     {icon: 'share-variant', label: t('shareApp'), onPress: handleShareApp},

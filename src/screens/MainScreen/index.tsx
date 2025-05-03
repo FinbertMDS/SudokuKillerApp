@@ -10,10 +10,10 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {Difficulty} from 'sudoku-gen/dist/types/difficulty.type';
 import Header from '../../components/commons/Header';
 import {useTheme} from '../../context/ThemeContext';
+import {CORE_EVENTS} from '../../events';
+import eventBus from '../../events/eventBus';
 import LanguageSwitcher from '../../i18n/LanguageSwitcher';
 import {BoardService} from '../../services/BoardService';
-import {GameStatsManager} from '../../services/GameStatsManager';
-import {SettingsService} from '../../services/SettingsService';
 import {InitGame, Level, RootStackParamList} from '../../types/index';
 import {sortAreasCells, stringToGrid} from '../../utils/boardUtil';
 import {LEVELS, SCREENS} from '../../utils/constants';
@@ -47,8 +47,7 @@ const MainScreen = () => {
       cages: sortAreasCells(sudoku.areas),
       savedLevel: level,
     } as InitGame;
-    await BoardService.save(initGame);
-    await GameStatsManager.recordGameStart(level);
+    eventBus.emit(CORE_EVENTS.gameStarted, {initGame});
     navigation.navigate(SCREENS.BOARD, {
       ...initGame,
     });
@@ -66,9 +65,8 @@ const MainScreen = () => {
   };
 
   const handleClearStorage = async () => {
+    eventBus.emit(CORE_EVENTS.clearStorage);
     BoardService.clear().then(checkSavedGame);
-    GameStatsManager.resetStatistics();
-    SettingsService.clear();
   };
 
   return (

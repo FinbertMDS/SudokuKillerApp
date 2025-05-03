@@ -4,6 +4,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
 import {Provider as PaperProvider} from 'react-native-paper';
 import {ThemeProvider} from './context/ThemeContext';
+import {setupEventListeners} from './events';
 import './i18n/i18n';
 import BottomTabs from './navigation/BottomTabs';
 import BoardScreen from './screens/BoardScreen';
@@ -14,6 +15,7 @@ import {RootStackParamList} from './types/index';
 import {SCREENS} from './utils/constants';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
+setupEventListeners();
 
 const App = () => {
   return (

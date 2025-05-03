@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React, {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
@@ -7,19 +7,20 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import ConfirmDialog from '../../components/commons/ConfirmDialog';
 import Header from '../../components/commons/Header';
 import {useTheme} from '../../context/ThemeContext';
+import {CORE_EVENTS} from '../../events';
 import eventBus from '../../events/eventBus';
 import LanguageSwitcher from '../../i18n/LanguageSwitcher';
-import {BoardService} from '../../services/BoardService';
-import {GameStatsManager} from '../../services/GameStatsManager';
 import {SettingsService} from '../../services/SettingsService';
-import {CORE_EVENTS, RootStackParamList} from '../../types';
+import {RootStackParamList, SettingsScreenRouteProp} from '../../types';
 import {DEFAULT_SETTINGS} from '../../utils/constants';
 
 export const SettingsScreen = () => {
   const {theme} = useTheme();
   const {t} = useTranslation();
+  const route = useRoute<SettingsScreenRouteProp>();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const {showAdvancedSettings} = route.params;
   const [settings, setSettings] = useState(DEFAULT_SETTINGS);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
@@ -75,9 +76,7 @@ export const SettingsScreen = () => {
   };
 
   const handleClearStorage = async () => {
-    BoardService.clear();
-    GameStatsManager.resetStatistics();
-    SettingsService.clear();
+    eventBus.emit(CORE_EVENTS.clearStorage);
     navigation.goBack();
   };
 
@@ -125,19 +124,21 @@ export const SettingsScreen = () => {
           </View>
         ))}
 
-        <TouchableOpacity
-          style={[
-            styles.deleteButton,
-            {
-              backgroundColor: theme.danger,
-              borderColor: theme.buttonBorder,
-            },
-          ]}
-          onPress={() => setShowConfirmDialog(true)}>
-          <Text style={[styles.buttonText, {color: theme.buttonText}]}>
-            {t('clearStorage')}
-          </Text>
-        </TouchableOpacity>
+        {showAdvancedSettings && (
+          <TouchableOpacity
+            style={[
+              styles.deleteButton,
+              {
+                backgroundColor: theme.danger,
+                borderColor: theme.buttonBorder,
+              },
+            ]}
+            onPress={() => setShowConfirmDialog(true)}>
+            <Text style={[styles.buttonText, {color: theme.buttonText}]}>
+              {t('clearStorage')}
+            </Text>
+          </TouchableOpacity>
+        )}
       </ScrollView>
     </SafeAreaView>
   );

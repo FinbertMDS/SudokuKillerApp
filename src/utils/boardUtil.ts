@@ -21,6 +21,13 @@ export function stringToGrid(input: string, columns = 9): CellValue[][] {
   return grid;
 }
 
+// Tạo mảng 9x9 cho mỗi ô trong Sudoku
+export function createEmptyGrid<T>(): (T | null)[][] {
+  return Array.from({length: BOARD_SIZE}, () =>
+    Array.from({length: BOARD_SIZE}, () => null),
+  );
+}
+
 /**
  * Tạo mảng 9x9x9 cho mỗi note
  * @returns Mảng 9x9x9

@@ -15,9 +15,9 @@ import NumberPad from '../../components/Board/NumberPad';
 import PauseModal from '../../components/Board/PauseModal';
 import Header from '../../components/commons/Header';
 import {useTheme} from '../../context/ThemeContext';
+import {CORE_EVENTS} from '../../events';
 import eventBus from '../../events/eventBus';
 import {useAppPause} from '../../hooks/useAppPause';
-import {useGameStats} from '../../hooks/useGameStats';
 import {useGameTimer} from '../../hooks/useGameTimer';
 import {useMistakeCounter} from '../../hooks/useMistakeCounter';
 import {BoardService} from '../../services/BoardService';
@@ -27,7 +27,6 @@ import {
   BoardScreenRouteProp,
   Cell,
   CellValue,
-  CORE_EVENTS,
   InitGame,
   Level,
   RootStackParamList,
@@ -87,7 +86,6 @@ const BoardScreen = () => {
   const [notes, setNotes] = useState<string[][][]>(
     savedNotes !== undefined ? savedNotes : createEmptyGridNotes<string>(),
   );
-  const {completeGame} = useGameStats(level);
 
   // Lấy settings
   // ===========================================================
@@ -200,7 +198,9 @@ const BoardScreen = () => {
   const handleGoToSettings = () => {
     setIsPlaying(false);
     setIsPaused(true);
-    navigation.navigate(SCREENS.SETTINGS);
+    navigation.navigate(SCREENS.SETTINGS, {
+      showAdvancedSettings: false,
+    });
   };
 
   const handlePause = async () => {
@@ -392,19 +392,18 @@ const BoardScreen = () => {
           {
             text: t('backToMain'),
             onPress: async () => {
-              onWin();
-              navigation.goBack(); // quay lại MainScreen
+              eventBus.emit(CORE_EVENTS.gameEnded, {
+                level: level,
+                timePlayed: seconds,
+                mistakes: mistakes,
+              });
+              navigation.goBack();
             },
           },
         ],
         {cancelable: false},
       );
     }
-  };
-
-  const onWin = async () => {
-    await BoardService.clear();
-    completeGame(seconds);
   };
 
   useAppPause(

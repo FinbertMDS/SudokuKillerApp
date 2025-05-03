@@ -1,8 +1,5 @@
 import mitt from 'mitt';
-import {CoreEvents} from '../types';
-
-type DynamicEvents = Record<string, any>;
-type AppEvents = CoreEvents & DynamicEvents;
+import {AppEvents} from './types';
 
 const eventBus = mitt<AppEvents>();
 
