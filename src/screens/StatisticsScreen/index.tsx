@@ -98,7 +98,7 @@ export default function StatisticsScreen() {
           {activeTab === 'level' ? (
             <LevelStats stats={stats} />
           ) : (
-            <ChartsStats logs={logs} />
+            <ChartsStats logs={logs} filter={filter} />
           )}
         </View>
       </View>
