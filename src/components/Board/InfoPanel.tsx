@@ -31,7 +31,9 @@ const InfoPanel = ({
     <View style={[styles.container, {backgroundColor: theme.background}]}>
       <View style={styles.infoBlock}>
         <Text style={[styles.title, {color: theme.text}]}>{t('level')}</Text>
-        <Text style={[styles.value, {color: theme.text}]}>{level}</Text>
+        <Text style={[styles.value, {color: theme.text}]}>
+          {t(`level.${level}`)}
+        </Text>
       </View>
 
       {settings.mistakeLimit && (

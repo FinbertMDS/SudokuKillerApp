@@ -60,3 +60,5 @@ export const DEFAULT_SETTINGS: AppSettings = {
   hideUsedNumbers: true,
   autoRemoveNotes: true,
 };
+
+export const DAILY_STATS_DATE_FORMAT = 'yyyy-MM-dd';

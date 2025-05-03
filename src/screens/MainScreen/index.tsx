@@ -1,22 +1,19 @@
 // src/screens/MainScreen/index.tsx
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {generateKillerSudoku} from 'killer-sudoku-generator';
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Text, TouchableOpacity, View} from 'react-native';
 import {Menu} from 'react-native-paper';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import uuid from 'react-native-uuid';
-import {Difficulty} from 'sudoku-gen/dist/types/difficulty.type';
 import Header from '../../components/commons/Header';
 import {useTheme} from '../../context/ThemeContext';
 import {CORE_EVENTS} from '../../events';
 import eventBus from '../../events/eventBus';
+import {GameStartedCoreEvent} from '../../events/types';
 import LanguageSwitcher from '../../i18n/LanguageSwitcher';
 import {BoardService} from '../../services/BoardService';
-import {InitGame, Level, RootStackParamList} from '../../types/index';
-import {sortAreasCells, stringToGrid} from '../../utils/boardUtil';
+import {Level, RootStackParamList} from '../../types/index';
 import {LEVELS, SCREENS} from '../../utils/constants';
 
 const MainScreen = () => {
@@ -34,6 +31,17 @@ const MainScreen = () => {
     }, []),
   );
 
+  useEffect(() => {
+    const handeGameStarted = ({initGame}: GameStartedCoreEvent) => {
+      navigation.navigate(SCREENS.BOARD, {
+        ...initGame,
+      });
+    };
+    eventBus.on(CORE_EVENTS.gameStarted, handeGameStarted);
+    return () => eventBus.off(CORE_EVENTS.gameStarted, handeGameStarted);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const checkSavedGame = async () => {
     const saved = await BoardService.loadSaved();
     setHasSavedGame(!!saved);
@@ -41,18 +49,7 @@ const MainScreen = () => {
 
   const handleNewGame = async (level: Level) => {
     setMenuVisible(false);
-    const sudoku = generateKillerSudoku(level as Difficulty);
-    const initGame = {
-      id: uuid.v4().toString(),
-      initialBoard: stringToGrid(sudoku.puzzle),
-      solvedBoard: stringToGrid(sudoku.solution),
-      cages: sortAreasCells(sudoku.areas),
-      savedLevel: level,
-    } as InitGame;
-    eventBus.emit(CORE_EVENTS.gameStarted, {initGame});
-    navigation.navigate(SCREENS.BOARD, {
-      ...initGame,
-    });
+    eventBus.emit(CORE_EVENTS.initGame, {level});
   };
 
   const handleContinueGame = async () => {

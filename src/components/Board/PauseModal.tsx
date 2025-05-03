@@ -40,7 +40,7 @@ const PauseModal = ({
               <View style={styles.infoBlock}>
                 <Text style={styles.infoTitle}>{t('level')}</Text>
                 <Text style={[styles.infoValue, {color: theme.text}]}>
-                  {level}
+                  {t(`level.${level}`)}
                 </Text>
               </View>
               <View style={styles.infoBlock}>

@@ -3,8 +3,12 @@ import {AppSettings, GameLogEntry, InitGame, Level} from '../../types';
 export type DynamicEvents = Record<string, any>;
 export type AppEvents = CoreEvents & DynamicEvents;
 
+export type InitGameCoreEvent = {
+  level: Level;
+};
+
 export type GameStartedCoreEvent = {
-  initGame: InitGame | null;
+  initGame: InitGame;
 };
 
 export type GameEndedCoreEvent = {
@@ -15,6 +19,7 @@ export type GameEndedCoreEvent = {
 };
 
 export type CoreEvents = {
+  initGame: InitGameCoreEvent;
   gameStarted: GameStartedCoreEvent;
   gameEnded: GameEndedCoreEvent;
   statisticsUpdated: GameLogEntry[];

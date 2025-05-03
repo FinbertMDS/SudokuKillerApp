@@ -4,6 +4,12 @@
 -----
 - Tối ưu lại hiển thị của Grid.tsx renderCell để hàm này không bị gọi lại nhiều lần
 - Statisic chỉ hiển thị của 7 ngày gần nhất
+-----
+- xoá ghi chú khi điền số vào 1 ô: xoá trong ô đó, xoá các ghi chú bằng số đó cùng hàng và cột
+- cho hiển thị số của notes bé lại 1 chút
+- Hiển thị của notes và tổng cage bị trùng vào nhau khó nhìn
+- Expert vẫn dễ, ban đầu ko hiển thị số nào gợi ý
+- Nếu ở mode ghi chú thì cho hiển thị tất cả các numpad.
 
 const sampleGameLogs = [
   {
