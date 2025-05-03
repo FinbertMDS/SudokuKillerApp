@@ -4,7 +4,7 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {generateKillerSudoku} from 'killer-sudoku-generator';
 import React, {useCallback, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Text, TouchableOpacity, View} from 'react-native';
 import {Menu} from 'react-native-paper';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {Difficulty} from 'sudoku-gen/dist/types/difficulty.type';
@@ -134,7 +134,7 @@ const MainScreen = () => {
           style={[
             styles.deleteButton,
             {
-              backgroundColor: theme.mistake,
+              backgroundColor: theme.danger,
               borderColor: theme.buttonBorder,
             },
           ]}
@@ -148,14 +148,14 @@ const MainScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const styles = {
   container: {
     flex: 1,
   },
   content: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: 'center' as const,
+    alignItems: 'center' as const,
   },
   continueButton: {
     padding: 14,
@@ -175,8 +175,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   buttonText: {
-    fontWeight: 'bold',
+    fontWeight: 'bold' as const,
   },
-});
+};
 
 export default MainScreen;

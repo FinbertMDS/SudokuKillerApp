@@ -30,9 +30,9 @@
   "main": "Chính",
   "statistics": "Thống kê",
 
-  "mistakeWarning": "⏰ Cảnh báo lỗi",
+  "mistakeWarning": "Cảnh báo lỗi",
   "tooManyMistakes": "Bạn đã mắc quá {{max}} lỗi!",
-  "timeWarning": "⏰ Cảnh báo thời gian",
+  "timeWarning": "Cảnh báo thời gian",
   "playedLimit": "Bạn đã chơi quá {{limit}} lần!",
   "ok": "OK",
   "solution": "Giải pháp",
@@ -91,19 +91,16 @@
   "common.skip": "Bỏ qua",
 
   "rateApp": "Đánh giá ứng dụng",
-  "rateAppMsg": "Nếu bạn thích chơi Killer Sudoku, hãy dành chút thời gian để đánh giá chúng tôi. Phản hồi của bạn giúp cải thiện trò chơi và tiếp cận nhiều người chơi hơn!",
-  "rateAppTitle": "Đánh giá Killer Sudoku",
   "shareApp": "Chia sẻ ứng dụng này",
-  "shareAppTitle": "Hãy thử trò chơi Killer Sudoku tuyệt vời này!",
   "shareAppMsg": "Hãy thử trò chơi Killer Sudoku tuyệt vời này! Đây là một trò chơi giải đố thú vị và đầy thử thách, sẽ giúp bạn giải trí hàng giờ liền. Tải ngay và bắt đầu giải đố!",
-  "shareAppMsg2": "Đây là một trò chơi giải đố thú vị và đầy thử thách, sẽ giúp bạn giải trí hàng giờ liền. Tải ngay và bắt đầu giải đố!",
-  "shareAppMsg3": "Mình hy vọng bạn sẽ thích nó giống như mình!",
-  "shareAppMsg4": "Chúc bạn chơi vui vẻ!",
-  "shareAppMsg5": "Mình hy vọng bạn sẽ thích nó giống như mình! Chúc bạn chơi vui! #{{appName}} #{{version}}",
   "sendFeedback": "Gửi phản hồi",
   "sendFeedbackTitle": "Chúng tôi rất mong nhận được ý kiến từ bạn!",
   "sendFeedbackMsg": "Nếu bạn có bất kỳ câu hỏi, góp ý hoặc phản hồi nào về trò chơi, đừng ngần ngại liên hệ với chúng tôi. Ý kiến của bạn rất quan trọng và giúp chúng tôi cải thiện trò chơi tốt hơn!",
-  "sendFeedbackMsg2": "Ý kiến của bạn rất quan trọng và giúp chúng tôi cải thiện trò chơi tốt hơn! #{{appName}} #{{version}}",
   "mailNotSupported": "Không hỗ trợ ứng dụng Mail",
-  "mailNotSupportedMsg": "Thiết bị của bạn không hỗ trợ ứng dụng Mail. Vui lòng gửi phản hồi đến địa chỉ email của nhà phát triển: {{email}}"
+  "mailNotSupportedMsg": "Thiết bị của bạn không hỗ trợ ứng dụng Mail. Vui lòng gửi phản hồi đến địa chỉ email của nhà phát triển: {{email}}",
+
+  "clearDataTitle": "Xóa dữ liệu đã lưu?",
+  "clearDataMessage": "Tất cả dữ liệu đã lưu sẽ bị xóa. Không thể hoàn tác.",
+  "cancel": "Hủy",
+  "delete": "Xóa"
 }

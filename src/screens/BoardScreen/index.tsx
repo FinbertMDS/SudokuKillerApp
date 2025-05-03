@@ -118,13 +118,14 @@ const BoardScreen = () => {
       handleResetGame();
       // Bạn có thể show modal thua hoặc reset game
       Alert.alert(
-        t('main'),
+        t('mistakeWarning'),
         t('tooManyMistakes', {max: MAX_MISTAKES}),
         [
           {
             text: t('ok'),
             onPress: () => {
-              setIsPlaying(true);
+              // setIsPlaying(true);
+              navigation.goBack();
             },
           },
         ],
@@ -150,7 +151,8 @@ const BoardScreen = () => {
           {
             text: t('ok'),
             onPress: () => {
-              setIsPlaying(true);
+              // setIsPlaying(true);
+              navigation.goBack();
             },
           },
         ],

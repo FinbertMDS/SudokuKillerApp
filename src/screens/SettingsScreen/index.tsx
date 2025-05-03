@@ -1,19 +1,27 @@
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React, {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {ScrollView, Switch, Text, View} from 'react-native';
+import {ScrollView, Switch, Text, TouchableOpacity, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import ConfirmDialog from '../../components/commons/ConfirmDialog';
 import Header from '../../components/commons/Header';
 import {useTheme} from '../../context/ThemeContext';
 import eventBus from '../../events/eventBus';
 import LanguageSwitcher from '../../i18n/LanguageSwitcher';
+import {BoardService} from '../../services/BoardService';
+import {GameStatsManager} from '../../services/GameStatsManager';
 import {SettingsService} from '../../services/SettingsService';
-import {CORE_EVENTS} from '../../types';
+import {CORE_EVENTS, RootStackParamList} from '../../types';
 import {DEFAULT_SETTINGS} from '../../utils/constants';
 
 export const SettingsScreen = () => {
   const {theme} = useTheme();
   const {t} = useTranslation();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [settings, setSettings] = useState(DEFAULT_SETTINGS);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
   useEffect(() => {
     SettingsService.load().then(data => {
@@ -66,6 +74,13 @@ export const SettingsScreen = () => {
     autoRemoveNotes: t('desc.autoRemoveNotes'),
   };
 
+  const handleClearStorage = async () => {
+    BoardService.clear();
+    GameStatsManager.resetStatistics();
+    SettingsService.clear();
+    navigation.goBack();
+  };
+
   return (
     <SafeAreaView
       edges={['top', 'bottom']}
@@ -75,6 +90,15 @@ export const SettingsScreen = () => {
         showBack={true}
         showSettings={false}
         showTheme={true}
+      />
+      <ConfirmDialog
+        title={t('clearDataTitle')}
+        message={t('clearDataMessage')}
+        cancelText={t('cancel')}
+        confirmText={t('delete')}
+        visible={showConfirmDialog}
+        onCancel={() => setShowConfirmDialog(false)}
+        onConfirm={handleClearStorage}
       />
       <LanguageSwitcher />
       <ScrollView
@@ -100,6 +124,20 @@ export const SettingsScreen = () => {
             />
           </View>
         ))}
+
+        <TouchableOpacity
+          style={[
+            styles.deleteButton,
+            {
+              backgroundColor: theme.danger,
+              borderColor: theme.buttonBorder,
+            },
+          ]}
+          onPress={() => setShowConfirmDialog(true)}>
+          <Text style={[styles.buttonText, {color: theme.buttonText}]}>
+            {t('clearStorage')}
+          </Text>
+        </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );
@@ -131,5 +169,13 @@ const styles = {
   desc: {
     fontSize: 13,
     marginTop: 4,
+  },
+  deleteButton: {
+    padding: 12,
+    paddingHorizontal: 24,
+    borderRadius: 12,
+  },
+  buttonText: {
+    fontWeight: 'bold' as const,
   },
 };

@@ -30,9 +30,9 @@
   "main": "メイン",
   "statistics": "統計",
 
-  "mistakeWarning": "⏰ ミス警告",
+  "mistakeWarning": "ミス警告",
   "tooManyMistakes": "{{max}}回以上のミスがあります！",
-  "timeWarning": "⏰ 時間警告",
+  "timeWarning": "時間警告",
   "playedLimit": "{{limit}}回以上プレイしました！",
   "ok": "OK",
   "solution": "解答",
@@ -91,19 +91,16 @@
   "common.skip": "スキップ",
 
   "rateApp": "アプリを評価する",
-  "rateAppMsg": "キラー数独を楽しんでいただけたなら、ぜひアプリの評価をお願いします。ご意見はゲームの改善と、より多くのユーザーへの普及に役立ちます！",
-  "rateAppTitle": "キラー数独を評価する",
   "shareApp": "アプリを共有する",
-  "shareAppTitle": "この素晴らしい キラー数独ゲームをチェック！",
   "shareAppMsg": "この素晴らしい キラー数独ゲームをチェック！楽しくてやりごたえのあるパズルゲームで、何時間も楽しめます。今すぐダウンロードして挑戦してみてください！",
-  "shareAppMsg2": "楽しくてやりごたえのあるパズルゲームで、何時間も楽しめます。今すぐダウンロードして挑戦してみてください！",
-  "shareAppMsg3": "私と同じくらい楽しんでもらえたら嬉しいです！",
-  "shareAppMsg4": "楽しいパズルライフを！",
-  "shareAppMsg5": "私と同じくらい楽しんでもらえたら嬉しいです！楽しいパズルライフを！ #{{appName}} #{{version}}",
   "sendFeedback": "フィードバックを送る",
   "sendFeedbackTitle": "ご意見をお聞かせください！",
   "sendFeedbackMsg": "ゲームに関するご質問、ご提案、ご意見がありましたら、お気軽にご連絡ください。皆様のご意見は、ゲームの向上にとって非常に貴重です！",
-  "sendFeedbackMsg2": "皆様のご意見は、ゲームの向上にとって非常に貴重です！ #{{appName}} #{{version}}",
   "mailNotSupported": "メールアプリがサポートされていません",
-  "mailNotSupportedMsg": "お使いのデバイスではメールアプリがサポートされていません。開発者のメールアドレス（{{email}}）までご連絡ください。"
+  "mailNotSupportedMsg": "お使いのデバイスではメールアプリがサポートされていません。開発者のメールアドレス（{{email}}）までご連絡ください。",
+
+  "clearDataTitle": "保存データを削除しますか？",
+  "clearDataMessage": "保存されたすべてのデータが削除されます。この操作は元に戻せません。",
+  "cancel": "キャンセル",
+  "delete": "削除"
 }
