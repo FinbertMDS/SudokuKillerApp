@@ -43,11 +43,19 @@ i18n.use(initReactI18next).init({
 export const autoDetectLanguage = async () => {
   const systemLang = getBestLanguage();
   let oldLanguage = await AsyncStorage.getItem(STORAGE_KEY_LANG_KEY_DEFAULT);
+  let preferedLanguage = await AsyncStorage.getItem(
+    STORAGE_KEY_LANG_KEY_PREFERRED,
+  );
   if (systemLang !== oldLanguage) {
     i18n.changeLanguage(systemLang);
     await AsyncStorage.setItem(STORAGE_KEY_LANG_KEY_DEFAULT, systemLang);
     await AsyncStorage.setItem(STORAGE_KEY_LANG_KEY_PREFERRED, systemLang);
+    return systemLang;
   }
+  if (preferedLanguage) {
+    i18n.changeLanguage(preferedLanguage);
+  }
+  return preferedLanguage;
 };
 
 AppState.addEventListener('change', async state => {

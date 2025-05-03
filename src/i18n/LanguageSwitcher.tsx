@@ -16,12 +16,20 @@ export default function LanguageSwitcher() {
 
   useFocusEffect(
     useCallback(() => {
-      autoDetectLanguage();
+      autoDetectLanguage().then(lang => {
+        if (lang) {
+          setSelectedLang(lang);
+        }
+      });
     }, []),
   );
 
   useEffect(() => {
-    autoDetectLanguage();
+    autoDetectLanguage().then(lang => {
+      if (lang) {
+        setSelectedLang(lang);
+      }
+    });
   }, []);
 
   const changeLanguage = async (code: string) => {

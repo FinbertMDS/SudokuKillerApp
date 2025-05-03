@@ -15,7 +15,8 @@ export const lightTheme = {
   sameValueOverlayColor: '#d0e8ff',
   conflictOverlayColor: '#f5b7b1',
   overlayColor: '#f0f8ff',
-  cellBorderColor: '#ccc',
+  cellBorderColor: '#e0e0e0',
+  cellBorderBoldColor: '#000000',
   settingItemBackground: '#95a5a6',
   buttonBlue: '#60a5fa',
 };
@@ -38,6 +39,7 @@ export const darkTheme = {
   conflictOverlayColor: '#e57373',
   overlayColor: '#0a192f',
   cellBorderColor: '#555',
+  cellBorderBoldColor: '#ffffff',
   settingItemBackground: '#2c3e50',
   buttonBlue: '#3b82f6',
 };

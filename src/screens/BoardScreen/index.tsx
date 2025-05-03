@@ -271,6 +271,7 @@ const BoardScreen = () => {
     });
 
     const clonedSolved = deepCloneBoard(solvedBoard);
+    setSelectedCell(null);
     setBoard(clonedSolved);
     saveHistory(clonedSolved);
     // handleCheckSolved(solvedBoard);

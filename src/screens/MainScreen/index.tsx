@@ -65,7 +65,7 @@ const MainScreen = () => {
     }
   };
 
-  const handleDeleteSavedGame = async () => {
+  const handleClearStorage = async () => {
     BoardService.clear().then(checkSavedGame);
     GameStatsManager.resetStatistics();
     SettingsService.clear();
@@ -138,7 +138,7 @@ const MainScreen = () => {
               borderColor: theme.buttonBorder,
             },
           ]}
-          onPress={handleDeleteSavedGame}>
+          onPress={handleClearStorage}>
           <Text style={[styles.buttonText, {color: theme.buttonText}]}>
             {t('clearStorage')}
           </Text>
