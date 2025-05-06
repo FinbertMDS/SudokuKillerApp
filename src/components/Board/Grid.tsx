@@ -423,18 +423,7 @@ const Grid = ({
       const isLastBolBorder = (index: number) => index === BOARD_SIZE - 1;
 
       const borderStyle = {
-        borderTopColor: isBoldBorder(row)
-          ? theme.cellBorderBoldColor
-          : theme.cellBorderColor,
-        borderBottomColor: isLastBolBorder(row)
-          ? theme.cellBorderBoldColor
-          : theme.cellBorderColor,
-        borderLeftColor: isBoldBorder(col)
-          ? theme.cellBorderBoldColor
-          : theme.cellBorderColor,
-        borderRightColor: isLastBolBorder(col)
-          ? theme.cellBorderBoldColor
-          : theme.cellBorderColor,
+        borderColor: theme.cellBorderColor,
         borderTopWidth: isBoldBorder(row) ? 1.2 : 0.2,
         borderBottomWidth: isLastBolBorder(row) ? 1.2 : 0.2,
         borderLeftWidth: isBoldBorder(col) ? 1.2 : 0.2,
