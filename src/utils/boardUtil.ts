@@ -220,6 +220,9 @@ export function removeNoteFromPeers(
     updatedNotes[r][c] = updatedNotes[r][c].filter(n => n !== valueStr);
   }
 
+  // Remove notes from current cell
+  updatedNotes[row][col] = [];
+
   return updatedNotes;
 }
 

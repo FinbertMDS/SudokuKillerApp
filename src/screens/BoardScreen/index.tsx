@@ -113,9 +113,9 @@ const BoardScreen = () => {
   // ===========================================================
   const {mistakes, incrementMistake, resetMistakes} = useMistakeCounter({
     maxMistakes: MAX_MISTAKES,
-    onLimitReached: () => {
+    onLimitReached: async () => {
       // Gọi khi người chơi đã sai quá nhiều lần
-      handleResetGame();
+      await handleResetGame();
       // Bạn có thể show modal thua hoặc reset game
       Alert.alert(
         t('mistakeWarning'),
@@ -142,8 +142,8 @@ const BoardScreen = () => {
   const [isPlaying, setIsPlaying] = useState(true);
   const {seconds, resetTimer} = useGameTimer(isPlaying, {
     maxTimePlayed: MAX_TIMEPLAYED,
-    onLimitReached: () => {
-      handleResetGame();
+    onLimitReached: async () => {
+      await handleResetGame();
       Alert.alert(
         t('timeWarning'),
         t('playedLimit', {limit: formatTime(MAX_TIMEPLAYED)}),
@@ -165,7 +165,7 @@ const BoardScreen = () => {
   // ===========================================================
 
   const handleResetGame = async () => {
-    await BoardService.clearSavedTimePlayed();
+    await BoardService.clear();
     setIsPlaying(false);
     resetTimer();
     setIsPaused(false);
@@ -198,7 +198,16 @@ const BoardScreen = () => {
     navigation.goBack();
   };
 
-  const handleGoToSettings = () => {
+  const handleGoToSettings = async () => {
+    await BoardService.save({
+      savedId: id,
+      savedBoard: board,
+      savedMistake: mistakes,
+      savedTimePlayed: seconds,
+      savedHistory: history,
+      savedNotes: notes,
+      lastSaved: new Date(),
+    } as SavedGame);
     setIsPlaying(false);
     setIsPaused(true);
     navigation.navigate(SCREENS.SETTINGS, {
@@ -276,13 +285,12 @@ const BoardScreen = () => {
     if (initialBoard[row][col] != null) {
       return;
     }
-    if (board[row][col] != null) {
-      return;
-    }
+    const solvedNum = solvedBoard[row][col];
     const newBoard = deepCloneBoard(board);
-    newBoard[row][col] = solvedBoard[row][col];
+    newBoard[row][col] = solvedNum;
     setBoard(newBoard);
     saveHistory(newBoard);
+    setNotes(prevNotes => removeNoteFromPeers(prevNotes, row, col, solvedNum));
   };
 
   /**
@@ -297,6 +305,7 @@ const BoardScreen = () => {
     setSelectedCell(null);
     setBoard(clonedSolved);
     saveHistory(clonedSolved);
+    setNotes(createEmptyGridNotes<string>());
     // handleCheckSolved(solvedBoard);
   };
 

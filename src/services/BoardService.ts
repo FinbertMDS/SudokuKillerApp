@@ -105,19 +105,4 @@ export const BoardService = {
       console.error('Failed to clear saved game:', e);
     }
   },
-
-  async clearSavedTimePlayed() {
-    try {
-      const savedGame = await this.loadSaved();
-      if (savedGame) {
-        savedGame.savedTimePlayed = 0;
-        await AsyncStorage.setItem(
-          STORAGE_KEY_SAVED_GAME,
-          JSON.stringify(savedGame),
-        );
-      }
-    } catch (e) {
-      console.error('Failed to clear time played:', e);
-    }
-  },
 };
