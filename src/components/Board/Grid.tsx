@@ -487,7 +487,7 @@ export const Grid = React.memo(function Grid({
                   style={[
                     styles.cellText,
                     {color: theme.text},
-                    showMistake && {color: theme.mistake},
+                    showMistake && {color: theme.danger},
                   ]}>
                   {cellValue}
                 </Text>
