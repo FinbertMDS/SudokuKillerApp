@@ -10,9 +10,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {Menu} from 'react-native-paper';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Header from '../../components/commons/Header';
+import NewGameMenu from '../../components/Main/NewGameMenu';
 import {useTheme} from '../../context/ThemeContext';
 import {CORE_EVENTS} from '../../events';
 import eventBus from '../../events/eventBus';
@@ -20,7 +20,7 @@ import {GameStartedCoreEvent} from '../../events/types';
 import {useDailyBackground} from '../../hooks/useDailyBackground';
 import {BoardService} from '../../services/BoardService';
 import {Level, RootStackParamList} from '../../types/index';
-import {LEVELS, SCREENS} from '../../utils/constants';
+import {SCREENS} from '../../utils/constants';
 
 const MainScreen = () => {
   const {mode, theme} = useTheme();
@@ -72,7 +72,6 @@ const MainScreen = () => {
     }
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleClearStorage = async () => {
     eventBus.emit(CORE_EVENTS.clearStorage);
     BoardService.clear().then(checkSavedGame);
@@ -113,49 +112,28 @@ const MainScreen = () => {
           </TouchableOpacity>
         )}
 
-        <Menu
+        <NewGameMenu
           visible={menuVisible}
           onDismiss={() => setMenuVisible(false)}
-          style={{backgroundColor: theme.background}}
-          contentStyle={{backgroundColor: theme.background}}
-          anchor={
-            <TouchableOpacity
-              style={[
-                styles.newGameButton,
-                {
-                  backgroundColor: theme.secondary,
-                  borderColor: theme.buttonBorder,
-                },
-              ]}
-              onPress={() => setMenuVisible(true)}>
-              <Text style={[styles.buttonText, {color: theme.buttonText}]}>
-                {t('newGame')}
-              </Text>
-            </TouchableOpacity>
-          }>
-          {LEVELS.map(level => (
-            <Menu.Item
-              key={level}
-              onPress={() => handleNewGame(level)}
-              title={t(`level.${level}`)}
-              titleStyle={{color: theme.text}}
-            />
-          ))}
-        </Menu>
+          onOpen={() => setMenuVisible(true)}
+          handleNewGame={handleNewGame}
+        />
 
-        {/* <TouchableOpacity
-          style={[
-            styles.deleteButton,
-            {
-              backgroundColor: theme.danger,
-              borderColor: theme.buttonBorder,
-            },
-          ]}
-          onPress={handleClearStorage}>
-          <Text style={[styles.buttonText, {color: theme.buttonText}]}>
-            {t('clearStorage')}
-          </Text>
-        </TouchableOpacity> */}
+        {__DEV__ && (
+          <TouchableOpacity
+            style={[
+              styles.deleteButton,
+              {
+                backgroundColor: theme.danger,
+                borderColor: theme.buttonBorder,
+              },
+            ]}
+            onPress={handleClearStorage}>
+            <Text style={[styles.buttonText, {color: theme.buttonText}]}>
+              {t('clearStorage')}
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
     </SafeAreaView>
   );
@@ -167,8 +145,8 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    justifyContent: 'center' as const,
-    alignItems: 'center' as const,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   continueButton: {
     padding: 14,
@@ -176,19 +154,14 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     marginBottom: 15,
   },
-  newGameButton: {
-    padding: 14,
+  deleteButton: {
+    marginTop: 16,
+    padding: 12,
     paddingHorizontal: 24,
-    borderRadius: 25,
+    borderRadius: 8,
   },
-  // deleteButton: {
-  //   marginTop: 16,
-  //   padding: 12,
-  //   paddingHorizontal: 24,
-  //   borderRadius: 8,
-  // },
   buttonText: {
-    fontWeight: 'bold' as const,
+    fontWeight: 'bold',
   },
 });
 
