@@ -97,15 +97,16 @@ export const SettingsScreen = () => {
         showSettings={false}
         showTheme={true}
       />
-      <ConfirmDialog
-        title={t('clearDataTitle')}
-        message={t('clearDataMessage')}
-        cancelText={t('cancel')}
-        confirmText={t('delete')}
-        visible={showConfirmDialog}
-        onCancel={() => setShowConfirmDialog(false)}
-        onConfirm={handleClearStorage}
-      />
+      {showConfirmDialog && (
+        <ConfirmDialog
+          title={t('clearDataTitle')}
+          message={t('clearDataMessage')}
+          cancelText={t('cancel')}
+          confirmText={t('delete')}
+          onCancel={() => setShowConfirmDialog(false)}
+          onConfirm={handleClearStorage}
+        />
+      )}
       <LanguageSwitcher />
       <ScrollView
         style={[styles.container, {backgroundColor: theme.background}]}>

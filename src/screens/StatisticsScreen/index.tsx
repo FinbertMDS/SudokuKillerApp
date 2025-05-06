@@ -16,7 +16,7 @@ import {useEnsureStatsCache} from '../../hooks/useEnsureStatsCache';
 import {GameStatsManager} from '../../services/GameStatsManager';
 import {GameLogEntry, GameStats, Level, TimeFilter} from '../../types';
 
-export default function StatisticsScreen() {
+const StatisticsScreen = () => {
   const {theme} = useTheme();
   const {t} = useTranslation();
   const [stats, setStats] = useState<Record<Level, GameStats> | null>(null);
@@ -151,7 +151,7 @@ export default function StatisticsScreen() {
       )}
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -181,3 +181,5 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
+
+export default StatisticsScreen;

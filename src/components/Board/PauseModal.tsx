@@ -7,27 +7,20 @@ import {MAX_MISTAKES} from '../../utils/constants';
 import {formatTime} from '../../utils/dateUtil';
 
 type PauseModalProps = {
-  visible: boolean;
   level: Level;
   mistake: number;
   time: number;
   onResume: () => void;
 };
 
-const PauseModal = ({
-  visible,
-  level,
-  mistake,
-  time,
-  onResume,
-}: PauseModalProps) => {
+const PauseModal = ({level, mistake, time, onResume}: PauseModalProps) => {
   const {theme} = useTheme();
   const {t} = useTranslation();
 
   return (
     <>
       {/* Modal tạm dừng */}
-      <Modal visible={visible} transparent animationType="fade">
+      <Modal transparent animationType="fade">
         <View style={styles.overlay}>
           <View style={[styles.modalBox, {backgroundColor: theme.background}]}>
             {/* Header */}

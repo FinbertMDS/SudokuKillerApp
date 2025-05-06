@@ -32,7 +32,7 @@ type GridProps = {
   onPress: (cell: Cell | null) => void;
 };
 
-const Grid = React.memo(function Grid({
+const Grid = ({
   board,
   cages,
   notes,
@@ -41,7 +41,7 @@ const Grid = React.memo(function Grid({
   animatedCells,
   settings,
   onPress,
-}: GridProps) {
+}: GridProps) => {
   const {theme} = useTheme();
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -528,7 +528,7 @@ const Grid = React.memo(function Grid({
       </View>
     </>
   );
-});
+};
 
 const styles = StyleSheet.create({
   boardContainer: {
@@ -612,4 +612,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Grid;
+export default React.memo(Grid);

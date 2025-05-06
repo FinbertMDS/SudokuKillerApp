@@ -91,4 +91,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default InfoPanel;
+export default React.memo(InfoPanel);

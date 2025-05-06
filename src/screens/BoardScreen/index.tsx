@@ -507,13 +507,14 @@ const BoardScreen = () => {
         settings={settings}
         onSelectNumber={handleNumberPress}
       />
-      <PauseModal
-        visible={showPauseModal}
-        level={level}
-        mistake={mistakes}
-        time={seconds}
-        onResume={handleResume}
-      />
+      {showPauseModal && (
+        <PauseModal
+          level={level}
+          mistake={mistakes}
+          time={seconds}
+          onResume={handleResume}
+        />
+      )}
     </SafeAreaView>
   );
 };

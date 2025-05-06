@@ -10,7 +10,6 @@ import {
 import {useTheme} from '../../context/ThemeContext';
 
 type ConfirmDialogProps = {
-  visible: boolean;
   title: string;
   message: string;
   cancelText: string;
@@ -20,7 +19,6 @@ type ConfirmDialogProps = {
 };
 
 const ConfirmDialog = ({
-  visible,
   title,
   message,
   cancelText,
@@ -31,11 +29,7 @@ const ConfirmDialog = ({
   const {theme} = useTheme();
 
   return (
-    <Modal
-      transparent
-      visible={visible}
-      animationType="fade"
-      onRequestClose={onCancel}>
+    <Modal transparent animationType="fade" onRequestClose={onCancel}>
       <Pressable style={styles.overlay} onPress={onCancel}>
         <View
           style={[styles.dialogWrapper, {backgroundColor: theme.background}]}>
