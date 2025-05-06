@@ -18,11 +18,15 @@ export type GameEndedCoreEvent = {
   mistakes: number;
 };
 
+export type StatisticsUpdatedCoreEvent = {
+  logs: GameLogEntry[];
+};
+
 export type CoreEvents = {
   initGame: InitGameCoreEvent;
   gameStarted: GameStartedCoreEvent;
   gameEnded: GameEndedCoreEvent;
-  statisticsUpdated: GameLogEntry[];
+  statisticsUpdated: StatisticsUpdatedCoreEvent;
   settingsUpdated: AppSettings;
   clearStorage: void;
 };

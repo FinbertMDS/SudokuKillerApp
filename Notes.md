@@ -10,6 +10,18 @@
 - Hiển thị của notes và tổng cage bị trùng vào nhau khó nhìn
 - Expert vẫn dễ, ban đầu ko hiển thị số nào gợi ý
 - Nếu ở mode ghi chú thì cho hiển thị tất cả các numpad.
+-----
+- Thêm tính năng gợi ý: điền luôn đáp án ở ô đó vào
+- Cập nhật lại các màu trong theme dark/light cho đẹp hơn
+- Kiểm tra lại tất cả màn hình xem có màn hình nào bị render nhiều lần không!!!
+- Vào main Main thì gửi event tạo sẵn board, để khi click vào New game thì lấy board ra để đi tiếp
+- Chuyển từ lưu trong AsyncStorage sang lưu ở SQLite
+- thêm hiển thị thông tin app trong màn options
+- tạo link bymecofffe để nhận donate
+- Build app và tối ưu size của app
+- Publish app
+- Xem có thể public app trên unsplash để tăng request lên không
+- 
 
 const sampleGameLogs = [
   {

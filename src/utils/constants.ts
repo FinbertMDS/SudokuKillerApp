@@ -33,6 +33,7 @@ export const ANIMATION_TYPE = {
 export const STORAGE_KEY_INIT_GAME = 'initGame';
 export const STORAGE_KEY_SAVED_GAME = 'savedGame';
 export const STORAGE_KEY_GAME_STATS_CACHE = 'gameStatsCache';
+export const STORAGE_KEY_LAST_STATS_CACHE_UPDATE = 'lastStatsCacheUpdate';
 export const STORAGE_KEY_GAME_LOGS = 'gameLogs';
 export const STORAGE_KEY_LANG_KEY_DEFAULT = 'defaultLanguage';
 export const STORAGE_KEY_LANG_KEY_PREFERRED = 'preferredLanguage';

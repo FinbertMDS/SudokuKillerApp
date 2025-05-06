@@ -14,11 +14,22 @@ import {
 import {
   STORAGE_KEY_GAME_LOGS,
   STORAGE_KEY_GAME_STATS_CACHE,
+  STORAGE_KEY_LAST_STATS_CACHE_UPDATE,
 } from '../utils/constants';
-import {isInTimeRange} from '../utils/dateUtil';
+import {getTodayDateString, isInTimeRange} from '../utils/dateUtil';
 import {getStatsFromLogs} from '../utils/statsUtil';
 
 export const GameStatsManager = {
+  async shouldUpdateStatsCache(): Promise<boolean> {
+    const lastUpdateStr = await AsyncStorage.getItem(
+      STORAGE_KEY_LAST_STATS_CACHE_UPDATE,
+    );
+
+    const today = getTodayDateString(); // e.g., '2025-04-30'
+    const isUpdatedToday = lastUpdateStr === today;
+    return !isUpdatedToday;
+  },
+
   async getStatsWithCache(
     logs: GameLogEntry[],
     filter: TimeRange,
@@ -46,7 +57,7 @@ export const GameStatsManager = {
     }
   },
 
-  async updateStatsWithCache(
+  async updateStatsWithAllCache(
     logs: GameLogEntry[],
     affectedRanges: TimeRange[],
   ): Promise<void> {
@@ -70,7 +81,7 @@ export const GameStatsManager = {
     }
   },
 
-  async updateStatsWithCacheForUpdates(
+  async updateStatsWithCache(
     logs: GameLogEntry[],
     updatedLogs: GameLogEntry[],
   ): Promise<void> {

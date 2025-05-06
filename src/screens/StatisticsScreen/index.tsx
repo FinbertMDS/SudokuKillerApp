@@ -11,6 +11,8 @@ import ChartsStats from '../../components/Statistics/ChartsStats';
 import LevelStats from '../../components/Statistics/LevelStats';
 import TimeFilterDropdown from '../../components/Statistics/TimeFilterDropdown';
 import {useTheme} from '../../context/ThemeContext';
+import {useAppPause} from '../../hooks/useAppPause';
+import {useEnsureStatsCache} from '../../hooks/useEnsureStatsCache';
 import {GameStatsManager} from '../../services/GameStatsManager';
 import {GameLogEntry, GameStats, Level, TimeFilter} from '../../types';
 
@@ -24,12 +26,29 @@ export default function StatisticsScreen() {
   const [filter, setFilter] = useState<TimeFilter>('all');
   const [showDropdown, setShowDropdown] = useState(false);
 
+  const {updateStatsCache} = useEnsureStatsCache();
+
   // Sau khi navigation.goBack() sẽ gọi hàm này
   useFocusEffect(
     useCallback(() => {
-      loadData();
+      updateStatsCache().then(updated => {
+        if (updated) {
+          loadData();
+        }
+      });
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [filter]),
+    }, []),
+  );
+
+  useAppPause(
+    () => {},
+    () => {
+      updateStatsCache().then(updated => {
+        if (updated) {
+          loadData();
+        }
+      });
+    },
   );
 
   useEffect(() => {

@@ -8,6 +8,8 @@ export const handleGameStarted = async ({initGame}: GameStartedCoreEvent) => {
   if (initGame) {
     await BoardService.save(initGame);
     const updatedLog = await GameStatsManager.recordGameStart(initGame!);
-    eventBus.emit(CORE_EVENTS.statisticsUpdated, [updatedLog]);
+    eventBus.emit(CORE_EVENTS.statisticsUpdated, {
+      logs: [updatedLog],
+    });
   }
 };

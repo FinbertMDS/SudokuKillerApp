@@ -36,13 +36,12 @@ const ActionButtons = ({
     onClear();
   }, [onClear]);
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleSolved = useCallback(() => {
     onSolved();
   }, [onSolved]);
 
-  const buttons = useMemo(
-    () => [
+  const buttons = useMemo(() => {
+    let allButtons = [
       {label: t('undo'), icon: ['undo'], onPress: handleUndo},
       {label: t('erase'), icon: ['eraser'], onPress: handleErase},
       {
@@ -51,14 +50,16 @@ const ActionButtons = ({
         iconChangeFlag: noteMode,
         onPress: () => handleNote(!noteMode),
       },
-      // {
-      //   label: t('solvedBoard'),
-      //   icon: ['lightbulb-on-outline'],
-      //   onPress: handleSolved,
-      // },
-    ],
-    [t, noteMode, handleNote, handleUndo, handleErase],
-  );
+    ];
+    if (__DEV__) {
+      allButtons.push({
+        label: t('solvedBoard'),
+        icon: ['lightbulb-on-outline'],
+        onPress: handleSolved,
+      });
+    }
+    return allButtons;
+  }, [t, noteMode, handleNote, handleUndo, handleErase, handleSolved]);
 
   return (
     <View style={[styles.container, {backgroundColor: theme.background}]}>

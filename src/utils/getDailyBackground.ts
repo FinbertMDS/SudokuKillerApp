@@ -11,7 +11,7 @@ export const getDailyBackgrounds = async (): Promise<DailyBackgrounds> => {
   const cached = await BackgroundService.load();
   if (cached) {
     const {date, light, dark} = cached;
-    if (date === today && light && dark) {
+    if ((__DEV__ || date === today) && light && dark) {
       return {light, dark};
     }
   }
