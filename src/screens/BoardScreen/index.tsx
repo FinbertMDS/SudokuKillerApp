@@ -268,10 +268,27 @@ const BoardScreen = () => {
     saveHistory(newBoard);
   };
 
+  const handleHint = () => {
+    if (!selectedCell) {
+      return;
+    }
+    const {row, col} = selectedCell;
+    if (initialBoard[row][col] != null) {
+      return;
+    }
+    if (board[row][col] != null) {
+      return;
+    }
+    const newBoard = deepCloneBoard(board);
+    newBoard[row][col] = solvedBoard[row][col];
+    setBoard(newBoard);
+    saveHistory(newBoard);
+  };
+
   /**
    * Kiểm tra board đã được giải quyết chưa
    */
-  const handleSolved = () => {
+  const handleSolve = () => {
     Alert.alert(t('solution'), t('allDone'), [{text: t('ok')}], {
       cancelable: false,
     });
@@ -482,7 +499,8 @@ const BoardScreen = () => {
         onNote={setNoteMode}
         onUndo={handleUndo}
         onErase={handleErase}
-        onSolved={handleSolved}
+        onHint={handleHint}
+        onSolve={handleSolve}
       />
       <NumberPad
         board={board}

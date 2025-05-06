@@ -9,15 +9,17 @@ type ActionButtonsProps = {
   onNote: (mode: boolean) => void;
   onUndo: () => void;
   onErase: () => void;
-  onSolved: () => void;
+  onHint: () => void;
+  onSolve: () => void;
 };
 
 const ActionButtons = ({
   noteMode,
   onNote,
   onUndo,
-  onErase: onClear,
-  onSolved,
+  onErase,
+  onHint,
+  onSolve,
 }: ActionButtonsProps) => {
   const {theme} = useTheme();
   const {t} = useTranslation();
@@ -33,12 +35,16 @@ const ActionButtons = ({
   }, [onUndo]);
 
   const handleErase = useCallback(() => {
-    onClear();
-  }, [onClear]);
+    onErase();
+  }, [onErase]);
 
-  const handleSolved = useCallback(() => {
-    onSolved();
-  }, [onSolved]);
+  const handleHint = useCallback(() => {
+    onHint();
+  }, [onHint]);
+
+  const handleSolve = useCallback(() => {
+    onSolve();
+  }, [onSolve]);
 
   const buttons = useMemo(() => {
     let allButtons = [
@@ -50,16 +56,25 @@ const ActionButtons = ({
         iconChangeFlag: noteMode,
         onPress: () => handleNote(!noteMode),
       },
+      {label: t('hint'), icon: ['lightbulb-outline'], onPress: handleHint},
     ];
     if (__DEV__) {
       allButtons.push({
-        label: t('solvedBoard'),
+        label: t('solve'),
         icon: ['lightbulb-on-outline'],
-        onPress: handleSolved,
+        onPress: handleSolve,
       });
     }
     return allButtons;
-  }, [t, noteMode, handleNote, handleUndo, handleErase, handleSolved]);
+  }, [
+    t,
+    noteMode,
+    handleNote,
+    handleUndo,
+    handleErase,
+    handleHint,
+    handleSolve,
+  ]);
 
   return (
     <View style={[styles.container, {backgroundColor: theme.background}]}>

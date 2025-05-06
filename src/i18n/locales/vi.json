@@ -9,7 +9,8 @@
   "undo": "Hoàn tác",
   "erase": "Xóa",
   "notes": "Ghi chú",
-  "solvedBoard": "Bảng đã giải",
+  "hint": "Gợi ý",
+  "solve": "Giải",
 
   "level": "Mức độ",
   "mistakes": "Lỗi",
