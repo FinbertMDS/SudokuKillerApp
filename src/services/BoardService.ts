@@ -37,21 +37,6 @@ export const BoardService = {
     }
   },
 
-  async saveTimePlayed(seconds: number) {
-    try {
-      const savedGame = await this.loadSaved();
-      if (savedGame) {
-        savedGame.savedTimePlayed = seconds;
-        await AsyncStorage.setItem(
-          STORAGE_KEY_SAVED_GAME,
-          JSON.stringify(savedGame),
-        );
-      }
-    } catch (e) {
-      console.error('Failed to save time played:', e);
-    }
-  },
-
   async loadInit(): Promise<InitGame | null> {
     try {
       const data = await AsyncStorage.getItem(STORAGE_KEY_INIT_GAME);

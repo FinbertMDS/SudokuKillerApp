@@ -1,8 +1,10 @@
 // boardUtil.ts
 
+import {generateKillerSudoku} from 'killer-sudoku-generator';
+import uuid from 'react-native-uuid';
 import {Difficulty} from 'sudoku-gen/dist/types/difficulty.type';
-import {Cage, CellValue, Level} from '../types';
-import {BOARD_SIZE} from './constants';
+import {Cage, CellValue, InitGame, Level} from '../types';
+import {BOARD_SIZE, LEVELS} from './constants';
 
 /**
  * Chuyển string thành mảng 2 chiều theo số cột nhất định (thường là 9 với Sudoku).
@@ -234,4 +236,24 @@ export const increaseDifficulty = (level: Level): Difficulty => {
     expert: 'expert',
   };
   return mapping[level];
+};
+
+export const generateBoard = (level: Level) => {
+  const adjustedDifficulty = increaseDifficulty(level as Level);
+
+  const sudoku = generateKillerSudoku(adjustedDifficulty);
+
+  // if level is expert
+  const shouldHideAllCells = level === LEVELS[LEVELS.length - 1];
+  const puzzleString = shouldHideAllCells ? '-'.repeat(81) : sudoku.puzzle;
+
+  const initGame = {
+    id: uuid.v4().toString(),
+    initialBoard: stringToGrid(puzzleString),
+    solvedBoard: stringToGrid(sudoku.solution),
+    cages: sortAreasCells(sudoku.areas),
+    savedLevel: level,
+  } as InitGame;
+
+  return initGame;
 };

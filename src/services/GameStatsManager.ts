@@ -155,26 +155,23 @@ export const GameStatsManager = {
    */
   async saveLog(log: GameLogEntry, override: boolean = true) {
     try {
+      const existing = await this.getLogs();
       if (override) {
-        const existing = await this.getLogs();
         const index = existing.findIndex(_log => _log.id === log.id);
         if (index !== -1) {
           existing[index] = log;
-          await AsyncStorage.setItem(
-            STORAGE_KEY_GAME_LOGS,
-            JSON.stringify(existing),
-          );
         } else {
           console.warn('Log not found for override:', log.id);
+          return;
         }
       } else {
-        const existing = await this.getLogs();
-        existing.push(log);
-        await AsyncStorage.setItem(
-          STORAGE_KEY_GAME_LOGS,
-          JSON.stringify(existing),
-        );
+        existing.unshift(log);
       }
+
+      await AsyncStorage.setItem(
+        STORAGE_KEY_GAME_LOGS,
+        JSON.stringify(existing),
+      );
     } catch (error) {
       console.error('Error saving logs:', error);
     }
@@ -187,16 +184,19 @@ export const GameStatsManager = {
    */
   async saveLogs(logs: GameLogEntry[], append: boolean = true) {
     try {
+      let updated: GameLogEntry[] = logs;
       if (append) {
         const existing = await this.getLogs();
-        const updated = [...existing, ...logs];
-        await AsyncStorage.setItem(
-          STORAGE_KEY_GAME_LOGS,
-          JSON.stringify(updated),
+        const sortedLogs = logs.sort(
+          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
         );
-      } else {
-        await AsyncStorage.setItem(STORAGE_KEY_GAME_LOGS, JSON.stringify(logs));
+        updated = [...sortedLogs, ...existing];
       }
+
+      await AsyncStorage.setItem(
+        STORAGE_KEY_GAME_LOGS,
+        JSON.stringify(updated),
+      );
     } catch (error) {
       console.error('Error saving logs:', error);
     }
