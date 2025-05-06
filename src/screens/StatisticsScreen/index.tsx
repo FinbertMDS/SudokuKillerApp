@@ -31,10 +31,8 @@ const StatisticsScreen = () => {
   // Sau khi navigation.goBack() sẽ gọi hàm này
   useFocusEffect(
     useCallback(() => {
-      updateStatsCache().then(updated => {
-        if (updated) {
-          loadData();
-        }
+      updateStatsCache().then(_ => {
+        loadData();
       });
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []),
@@ -43,10 +41,8 @@ const StatisticsScreen = () => {
   useAppPause(
     () => {},
     () => {
-      updateStatsCache().then(updated => {
-        if (updated) {
-          loadData();
-        }
+      updateStatsCache().then(_ => {
+        loadData();
       });
     },
   );
