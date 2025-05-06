@@ -1,8 +1,8 @@
 // GameStatsManager.ts
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import uuid from 'react-native-uuid';
 import {GameEndedCoreEvent} from '../events/types';
+import {statsStorage} from '../storage';
 import {
   GameLogEntry,
   GameStats,
@@ -11,19 +11,12 @@ import {
   Level,
   TimeRange,
 } from '../types';
-import {
-  STORAGE_KEY_GAME_LOGS,
-  STORAGE_KEY_GAME_STATS_CACHE,
-  STORAGE_KEY_LAST_STATS_CACHE_UPDATE,
-} from '../utils/constants';
 import {getTodayDateString, isInTimeRange} from '../utils/dateUtil';
 import {getStatsFromLogs} from '../utils/statsUtil';
 
 export const GameStatsManager = {
   async shouldUpdateStatsCache(): Promise<boolean> {
-    const lastUpdateStr = await AsyncStorage.getItem(
-      STORAGE_KEY_LAST_STATS_CACHE_UPDATE,
-    );
+    const lastUpdateStr = statsStorage.getLastStatsCacheUpdate();
 
     const today = getTodayDateString(); // e.g., '2025-04-30'
     const isUpdatedToday = lastUpdateStr === today;
@@ -35,8 +28,7 @@ export const GameStatsManager = {
     filter: TimeRange,
   ): Promise<Record<Level, GameStats>> {
     try {
-      const cacheStr = await AsyncStorage.getItem(STORAGE_KEY_GAME_STATS_CACHE);
-      const cache: GameStatsCache = cacheStr ? JSON.parse(cacheStr) : {};
+      const cache: GameStatsCache = statsStorage.getStatsCache();
 
       if (cache[filter]) {
         return cache[filter]!;
@@ -45,10 +37,7 @@ export const GameStatsManager = {
       const computedStats = getStatsFromLogs(logs, filter);
       const updatedCache = {...cache, [filter]: computedStats};
 
-      await AsyncStorage.setItem(
-        STORAGE_KEY_GAME_STATS_CACHE,
-        JSON.stringify(updatedCache),
-      );
+      statsStorage.saveStatsCache(updatedCache);
 
       return computedStats;
     } catch (error) {
@@ -62,8 +51,7 @@ export const GameStatsManager = {
     affectedRanges: TimeRange[],
   ): Promise<void> {
     try {
-      const cacheStr = await AsyncStorage.getItem(STORAGE_KEY_GAME_STATS_CACHE);
-      const cache: GameStatsCache = cacheStr ? JSON.parse(cacheStr) : {};
+      const cache: GameStatsCache = statsStorage.getStatsCache();
 
       const updatedCache: GameStatsCache = {...cache};
 
@@ -72,10 +60,7 @@ export const GameStatsManager = {
         updatedCache[range] = updatedStats;
       }
 
-      await AsyncStorage.setItem(
-        STORAGE_KEY_GAME_STATS_CACHE,
-        JSON.stringify(updatedCache),
-      );
+      statsStorage.saveStatsCache(updatedCache);
     } catch (error) {
       console.warn('Failed to update stats cache:', error);
     }
@@ -86,8 +71,7 @@ export const GameStatsManager = {
     updatedLogs: GameLogEntry[],
   ): Promise<void> {
     try {
-      const cacheStr = await AsyncStorage.getItem(STORAGE_KEY_GAME_STATS_CACHE);
-      const cache: GameStatsCache = cacheStr ? JSON.parse(cacheStr) : {};
+      const cache: GameStatsCache = statsStorage.getStatsCache();
 
       // Xác định các khoảng thời gian cần cập nhật lại
       const rangesToUpdate = new Set<TimeRange>();
@@ -114,10 +98,7 @@ export const GameStatsManager = {
         updatedCache[range] = getStatsFromLogs(logs, range);
       }
 
-      await AsyncStorage.setItem(
-        STORAGE_KEY_GAME_STATS_CACHE,
-        JSON.stringify(updatedCache),
-      );
+      statsStorage.saveStatsCache(updatedCache);
     } catch (error) {
       console.warn('Failed to update stats with cache:', error);
     }
@@ -138,10 +119,7 @@ export const GameStatsManager = {
 
   async getLogs(): Promise<GameLogEntry[]> {
     try {
-      const json = await AsyncStorage.getItem(STORAGE_KEY_GAME_LOGS);
-      if (json) {
-        return JSON.parse(json);
-      }
+      return statsStorage.getGameLogs();
     } catch (error) {
       console.error('Error loading logs:', error);
     }
@@ -168,10 +146,7 @@ export const GameStatsManager = {
         existing.unshift(log);
       }
 
-      await AsyncStorage.setItem(
-        STORAGE_KEY_GAME_LOGS,
-        JSON.stringify(existing),
-      );
+      statsStorage.saveGameLogs(existing);
     } catch (error) {
       console.error('Error saving logs:', error);
     }
@@ -193,10 +168,7 @@ export const GameStatsManager = {
         updated = [...sortedLogs, ...existing];
       }
 
-      await AsyncStorage.setItem(
-        STORAGE_KEY_GAME_LOGS,
-        JSON.stringify(updated),
-      );
+      statsStorage.saveGameLogs(updated);
     } catch (error) {
       console.error('Error saving logs:', error);
     }
@@ -245,8 +217,7 @@ export const GameStatsManager = {
 
   async resetStatistics() {
     try {
-      await AsyncStorage.removeItem(STORAGE_KEY_GAME_LOGS);
-      await AsyncStorage.removeItem(STORAGE_KEY_GAME_STATS_CACHE);
+      statsStorage.clearStatsData();
     } catch (error) {
       console.error('Error clearing all data:', error);
     }

@@ -1,36 +1,19 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {gameStorage} from '../storage';
 import {InitGame, SavedGame} from '../types';
-import {
-  STORAGE_KEY_INIT_GAME,
-  STORAGE_KEY_SAVED_GAME,
-} from '../utils/constants';
 
 export const BoardService = {
   async save(state: SavedGame | InitGame) {
     try {
       if ('initialBoard' in state) {
-        await AsyncStorage.setItem(
-          STORAGE_KEY_INIT_GAME,
-          JSON.stringify(state),
-        );
+        gameStorage.saveInitGame(state);
       } else if ('savedBoard' in state) {
         const savedGame = await this.loadSaved();
-        if (savedGame) {
-          let updatedSavedGame: SavedGame = {
-            ...savedGame,
-            ...state,
-            lastSaved: new Date(),
-          };
-          await AsyncStorage.setItem(
-            STORAGE_KEY_SAVED_GAME,
-            JSON.stringify(updatedSavedGame),
-          );
-        } else {
-          await AsyncStorage.setItem(
-            STORAGE_KEY_SAVED_GAME,
-            JSON.stringify(state),
-          );
-        }
+        const updatedSavedGame: SavedGame = {
+          ...(savedGame ?? {}),
+          ...state,
+          lastSaved: new Date(),
+        };
+        gameStorage.saveSavedGame(updatedSavedGame);
       }
     } catch (e) {
       console.error('Failed to save game:', e);
@@ -39,8 +22,7 @@ export const BoardService = {
 
   async loadInit(): Promise<InitGame | null> {
     try {
-      const data = await AsyncStorage.getItem(STORAGE_KEY_INIT_GAME);
-      return data ? JSON.parse(data) : null;
+      return gameStorage.getInitGame();
     } catch (e) {
       console.error('Failed to load game:', e);
       return null;
@@ -49,8 +31,7 @@ export const BoardService = {
 
   async loadSaved(): Promise<SavedGame | null> {
     try {
-      const data = await AsyncStorage.getItem(STORAGE_KEY_SAVED_GAME);
-      return data ? JSON.parse(data) : null;
+      return gameStorage.getSavedGame();
     } catch (e) {
       console.error('Failed to load game:', e);
       return null;
@@ -84,8 +65,7 @@ export const BoardService = {
 
   async clear() {
     try {
-      await AsyncStorage.removeItem(STORAGE_KEY_INIT_GAME);
-      await AsyncStorage.removeItem(STORAGE_KEY_SAVED_GAME);
+      gameStorage.clearGameData();
     } catch (e) {
       console.error('Failed to clear saved game:', e);
     }
