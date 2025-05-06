@@ -82,7 +82,7 @@ const ActionButtons = ({
             size={24}
             color={
               btn.icon.length > 0 && btn.iconChangeFlag
-                ? theme.primary
+                ? theme.buttonBlue
                 : theme.secondary
             }
           />
@@ -90,7 +90,7 @@ const ActionButtons = ({
             style={{
               color:
                 btn.icon.length > 0 && btn.iconChangeFlag
-                  ? theme.primary
+                  ? theme.buttonBlue
                   : theme.secondary,
             }}>
             {btn.label}

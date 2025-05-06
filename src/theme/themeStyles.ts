@@ -26,6 +26,7 @@ export const lightTheme = {
   settingItemBackground: '#DADADA',
   buttonBlue: '#60a5fa',
   selectedItemBackground: '#D0D0D0',
+  itemBorderColor: '#E0E0E0',
 };
 
 export const darkTheme = {
@@ -56,4 +57,5 @@ export const darkTheme = {
   settingItemBackground: '#2C2C2C',
   buttonBlue: '#90CAF9',
   selectedItemBackground: '#333333',
+  itemBorderColor: '#2E2E2E',
 };

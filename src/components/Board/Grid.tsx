@@ -588,7 +588,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start' as const,
   },
   noteText: {
-    top: 3,
+    top: 2,
     left: 3,
     fontSize: 8,
     width: 10,

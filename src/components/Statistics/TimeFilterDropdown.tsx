@@ -55,7 +55,7 @@ const TimeFilterDropdown: React.FC<Props> = ({
                     selected === option.value && {
                       backgroundColor: theme.selectedItemBackground,
                     },
-                    {borderBottomColor: theme.cellBorderColor},
+                    {borderBottomColor: theme.itemBorderColor},
                   ]}
                   onPress={() => {
                     onSelect(option.value);
