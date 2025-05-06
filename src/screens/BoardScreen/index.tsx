@@ -9,7 +9,7 @@ import {useTranslation} from 'react-i18next';
 import {Alert, StyleSheet} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import ActionButtons from '../../components/Board/ActionButtons';
-import {Grid} from '../../components/Board/Grid';
+import Grid from '../../components/Board/Grid';
 import InfoPanel from '../../components/Board/InfoPanel';
 import NumberPad from '../../components/Board/NumberPad';
 import PauseModal from '../../components/Board/PauseModal';
@@ -207,6 +207,9 @@ const BoardScreen = () => {
   };
 
   const handlePause = async () => {
+    setIsPlaying(false);
+    setIsPaused(true);
+    setShowPauseModal(true);
     await BoardService.save({
       savedId: id,
       savedBoard: board,
@@ -216,9 +219,6 @@ const BoardScreen = () => {
       savedNotes: notes,
       lastSaved: new Date(),
     } as SavedGame);
-    setIsPlaying(false);
-    setIsPaused(true);
-    setShowPauseModal(true);
   };
 
   const handleResume = () => {

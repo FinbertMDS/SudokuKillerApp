@@ -32,7 +32,7 @@ type GridProps = {
   onPress: (cell: Cell | null) => void;
 };
 
-export const Grid = React.memo(function Grid({
+const Grid = React.memo(function Grid({
   board,
   cages,
   notes,
@@ -611,3 +611,5 @@ const styles = StyleSheet.create({
     fontSize: 9,
   },
 });
+
+export default Grid;

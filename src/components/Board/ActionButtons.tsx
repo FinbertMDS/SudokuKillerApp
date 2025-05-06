@@ -66,15 +66,8 @@ const ActionButtons = ({
       });
     }
     return allButtons;
-  }, [
-    t,
-    noteMode,
-    handleNote,
-    handleUndo,
-    handleErase,
-    handleHint,
-    handleSolve,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [noteMode, handleNote, handleUndo, handleErase, handleHint, handleSolve]);
 
   return (
     <View style={[styles.container, {backgroundColor: theme.background}]}>
