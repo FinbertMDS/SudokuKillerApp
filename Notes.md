@@ -21,7 +21,12 @@
 - Build app và tối ưu size của app
 - Publish app
 - Xem có thể public app trên unsplash để tăng request lên không
-- 
+
+-----
+- theme background
+  - dark: #131418
+  - light: #E9EEF4
+
 
 const sampleGameLogs = [
   {
