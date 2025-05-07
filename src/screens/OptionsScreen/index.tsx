@@ -80,6 +80,7 @@ export const OptionsScreen = () => {
       label: t('sendFeedback'),
       onPress: handleSendFeedback,
     },
+    {icon: 'information', label: t('aboutGame'), screen: SCREENS.ABOUT_GAME},
     // {icon: 'shield-account', label: t('privacyRights')},
     // {icon: 'account-check', label: t('privacyPreferences')},
     // {icon: 'ad-off', label: t('removeAds')},

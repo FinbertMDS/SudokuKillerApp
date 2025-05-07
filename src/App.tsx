@@ -3,10 +3,12 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
 import {Provider as PaperProvider} from 'react-native-paper';
+import Licenses from './components/Options/Licenses';
 import {ThemeProvider} from './context/ThemeContext';
 import {setupEventListeners} from './events';
 import './i18n/i18n';
 import BottomTabs from './navigation/BottomTabs';
+import AboutGame from './screens/AboutGame';
 import BoardScreen from './screens/BoardScreen';
 import {HowToPlayScreen} from './screens/HowToPlayScreen';
 import {OptionsScreen} from './screens/OptionsScreen';
@@ -46,6 +48,16 @@ const App = () => {
             <Stack.Screen
               name={SCREENS.HOW_TO_PLAY}
               component={HowToPlayScreen}
+              options={{headerShown: false}}
+            />
+            <Stack.Screen
+              name="AboutGame"
+              component={AboutGame}
+              options={{headerShown: false}}
+            />
+            <Stack.Screen
+              name="Licenses"
+              component={Licenses}
               options={{headerShown: false}}
             />
           </Stack.Navigator>

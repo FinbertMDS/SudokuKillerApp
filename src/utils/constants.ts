@@ -10,6 +10,7 @@ export const SCREENS = {
   OPTIONS: 'Options',
   SETTINGS: 'Settings',
   HOW_TO_PLAY: 'HowToPlay',
+  ABOUT_GAME: 'AboutGame',
 } as const;
 
 export const BOARD_SIZE = 9;

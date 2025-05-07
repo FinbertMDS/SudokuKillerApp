@@ -40,7 +40,7 @@ Charts Stats | ![ChartsStats_Light](screenshots/ChartsStats_Light.png) | ![Chart
 - **React Native** (bare workflow)
 - **TypeScript**
 - **React Native SVG + react-native-svg** (for cages rendering)
-- **AsyncStorage** (for persistent statistics and saves)
+- **MMKV** (for persistent statistics and saves)
 
 ---
 
