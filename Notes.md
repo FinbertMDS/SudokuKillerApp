@@ -15,7 +15,7 @@
 - Cập nhật lại các màu trong theme dark/light cho đẹp hơn
 - Kiểm tra lại tất cả màn hình xem có màn hình nào bị render nhiều lần không!!!
 - Vào main Main thì gửi event tạo sẵn board, để khi click vào New game thì lấy board ra để đi tiếp
-- Chuyển từ lưu trong AsyncStorage sang lưu ở SQLite
+- Chuyển từ lưu trong AsyncStorage sang lưu ở MMKV
 - thêm hiển thị thông tin app trong màn options
 - tạo link bymecofffe để nhận donate
 - Build app và tối ưu size của app

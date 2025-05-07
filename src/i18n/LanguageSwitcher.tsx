@@ -1,12 +1,12 @@
 // LanguageSwitcher.tsx
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFocusEffect} from '@react-navigation/native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useTheme} from '../context/ThemeContext';
-import {LANGUAGES, STORAGE_KEY_LANG_KEY_PREFERRED} from '../utils/constants';
+import {appStorage} from '../storage';
+import {LANGUAGES} from '../utils/constants';
 import i18n, {autoDetectLanguage} from './i18n';
 
 export default function LanguageSwitcher() {
@@ -34,7 +34,7 @@ export default function LanguageSwitcher() {
 
   const changeLanguage = async (code: string) => {
     await i18n.changeLanguage(code);
-    await AsyncStorage.setItem(STORAGE_KEY_LANG_KEY_PREFERRED, code);
+    appStorage.saveLangKeyPreferred(code);
     setSelectedLang(code);
   };
 

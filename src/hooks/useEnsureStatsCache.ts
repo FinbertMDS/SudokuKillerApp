@@ -1,11 +1,9 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useEffect} from 'react';
 
 // Giả định bạn có sẵn hàm này để lấy tất cả logs
 import {GameStatsManager} from '../services/GameStatsManager';
+import {statsStorage} from '../storage';
 import {TimeRange} from '../types';
-import {STORAGE_KEY_LAST_STATS_CACHE_UPDATE} from '../utils/constants';
-import {getTodayDateString} from '../utils/dateUtil';
 
 export function useEnsureStatsCache() {
   const updateStatsCache = async (): Promise<boolean> => {
@@ -24,10 +22,7 @@ export function useEnsureStatsCache() {
         const allLogs = await GameStatsManager.getLogs();
         await GameStatsManager.updateStatsWithAllCache(allLogs, affectedRanges);
 
-        await AsyncStorage.setItem(
-          STORAGE_KEY_LAST_STATS_CACHE_UPDATE,
-          getTodayDateString(),
-        );
+        statsStorage.setLastStatsCacheUpdate();
       }
       return needsUpdate;
     } catch (err) {

@@ -35,7 +35,7 @@ const StatisticsScreen = () => {
         loadData();
       });
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []),
+    }, [filter]),
   );
 
   useAppPause(
@@ -134,17 +134,15 @@ const StatisticsScreen = () => {
         </View>
       </View>
 
-      {showDropdown && (
-        <TimeFilterDropdown
-          visible={showDropdown}
-          selected={filter}
-          onSelect={newFilter => {
-            setFilter(newFilter);
-            setShowDropdown(false);
-          }}
-          onClose={() => setShowDropdown(false)}
-        />
-      )}
+      <TimeFilterDropdown
+        visible={showDropdown}
+        selected={filter}
+        onSelect={newFilter => {
+          setFilter(newFilter);
+          setShowDropdown(false);
+        }}
+        onClose={() => setShowDropdown(false)}
+      />
     </SafeAreaView>
   );
 };

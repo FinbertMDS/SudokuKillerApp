@@ -1,7 +1,7 @@
 // SettingsService.ts
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {appStorage} from '../storage';
 import {AppSettings} from '../types';
-import {DEFAULT_SETTINGS, STORAGE_KEY_SETTINGS} from '../utils/constants';
+import {DEFAULT_SETTINGS} from '../utils/constants';
 
 export const SettingsService = {
   normalizeSettings(settings: AppSettings): AppSettings {
@@ -17,10 +17,7 @@ export const SettingsService = {
 
   async save(settings: AppSettings): Promise<void> {
     try {
-      await AsyncStorage.setItem(
-        STORAGE_KEY_SETTINGS,
-        JSON.stringify(settings),
-      );
+      appStorage.setSettings(settings);
     } catch (err) {
       console.error('Failed to save settings', err);
     }
@@ -28,9 +25,9 @@ export const SettingsService = {
 
   async load(): Promise<AppSettings> {
     try {
-      const json = await AsyncStorage.getItem(STORAGE_KEY_SETTINGS);
-      if (json) {
-        return JSON.parse(json) as AppSettings;
+      const settings = appStorage.getSettings();
+      if (settings) {
+        return settings;
       }
     } catch (err) {
       console.error('Failed to load settings', err);
@@ -46,7 +43,7 @@ export const SettingsService = {
 
   async clear(): Promise<void> {
     try {
-      await AsyncStorage.removeItem(STORAGE_KEY_SETTINGS);
+      appStorage.clearSettings();
     } catch (err) {
       console.error('Failed to clear settings', err);
     }
