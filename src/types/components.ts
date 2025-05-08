@@ -7,6 +7,8 @@ export type RootStackParamList = {
   Options: undefined;
   Settings: SettingsParamProps;
   HowToPlay: undefined;
+  AboutGame: undefined;
+  Licenses: undefined;
 };
 
 export type BoardScreenRouteProp = RouteProp<RootStackParamList, 'Board'>;

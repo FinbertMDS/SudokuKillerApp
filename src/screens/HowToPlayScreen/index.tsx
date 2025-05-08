@@ -75,7 +75,11 @@ export const HowToPlayScreen = () => {
         showSettings={false}
         showTheme={false}
       />
-      <View style={[styles.container, {backgroundColor: theme.background}]}>
+      <View
+        style={[
+          styles.container,
+          {backgroundColor: theme.backgroundSecondary},
+        ]}>
         <FlatList
           ref={flatListRef}
           data={slides}

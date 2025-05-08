@@ -39,7 +39,8 @@ export default function LanguageSwitcher() {
   };
 
   return (
-    <View style={[styles.container, {backgroundColor: theme.background}]}>
+    <View
+      style={[styles.container, {backgroundColor: theme.backgroundSecondary}]}>
       <Text style={[styles.label, {color: theme.text}]}>{t('language')}</Text>
       <View style={styles.buttons}>
         {LANGUAGES.map(lang => (
@@ -66,8 +67,8 @@ export default function LanguageSwitcher() {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 20,
-    paddingHorizontal: 20,
+    paddingTop: 16,
+    paddingHorizontal: 16,
   },
   label: {
     fontSize: 16,

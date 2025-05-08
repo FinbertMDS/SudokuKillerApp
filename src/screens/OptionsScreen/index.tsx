@@ -80,6 +80,7 @@ export const OptionsScreen = () => {
       label: t('sendFeedback'),
       onPress: handleSendFeedback,
     },
+    {icon: 'information', label: t('aboutGame'), screen: SCREENS.ABOUT_GAME},
     // {icon: 'shield-account', label: t('privacyRights')},
     // {icon: 'account-check', label: t('privacyPreferences')},
     // {icon: 'ad-off', label: t('removeAds')},
@@ -97,7 +98,10 @@ export const OptionsScreen = () => {
         showTheme={true}
       />
       <ScrollView
-        style={[styles.container, {backgroundColor: theme.background}]}>
+        style={[
+          styles.contentContainer,
+          {backgroundColor: theme.backgroundSecondary},
+        ]}>
         {menuItems.map(({icon, label, screen, onPress}) => (
           <TouchableOpacity
             key={label}
@@ -128,6 +132,9 @@ export const OptionsScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+  contentContainer: {
     flex: 1,
     padding: 16,
   },

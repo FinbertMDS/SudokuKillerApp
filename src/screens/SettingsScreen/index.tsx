@@ -109,7 +109,10 @@ export const SettingsScreen = () => {
       )}
       <LanguageSwitcher />
       <ScrollView
-        style={[styles.container, {backgroundColor: theme.background}]}>
+        style={[
+          styles.contentContainer,
+          {backgroundColor: theme.backgroundSecondary},
+        ]}>
         {Object.entries(labels).map(([key, label]) => (
           <View
             key={key}
@@ -154,6 +157,9 @@ export const SettingsScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+  contentContainer: {
     flex: 1,
     padding: 16,
   },
