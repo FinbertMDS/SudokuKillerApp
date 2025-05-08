@@ -57,6 +57,7 @@ const MainScreen = () => {
   };
 
   const handleNewGame = async (level: Level) => {
+    await BoardService.clear();
     setMenuVisible(false);
     eventBus.emit(CORE_EVENTS.initGame, {level});
   };
