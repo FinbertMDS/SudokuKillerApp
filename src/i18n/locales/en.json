@@ -104,5 +104,14 @@
   "clearDataTitle": "Clear Saved Data?",
   "clearDataMessage": "All saved data will be deleted. This action cannot be undone.",
   "cancel": "Cancel",
-  "delete": "Delete"
+  "delete": "Delete",
+
+  "appNameWithAuthor": "{{appName}} by FinbertNgo",
+  "version": "Version {{version}}",
+  "copyright": "© {{year}} All rights reserved.",
+  "licenses": "Licenses",
+  "termsOfService": "Terms of Service",
+  "privacyPolicy": "Privacy Policy",
+  "visitWebsite": "Visit finbertngo.wordpress.com",
+  "moreGames": "More Games by FinbertNgo"
 }

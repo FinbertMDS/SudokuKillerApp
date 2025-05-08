@@ -104,5 +104,14 @@
   "clearDataTitle": "保存データを削除しますか？",
   "clearDataMessage": "保存されたすべてのデータが削除されます。この操作は元に戻せません。",
   "cancel": "キャンセル",
-  "delete": "削除"
+  "delete": "削除",
+
+  "appNameWithAuthor": "FinbertNgo の{{appName}}",
+  "version": "バージョン {{version}}",
+  "copyright": "© {{year}} 全著作権所有。",
+  "licenses": "ライセンス",
+  "termsOfService": "利用規約",
+  "privacyPolicy": "プライバシーポリシー",
+  "visitWebsite": "finbertngo.wordpress.com を訪問",
+  "moreGames": "FinbertNgo の他のゲーム"
 }

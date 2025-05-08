@@ -11,6 +11,7 @@ export const SCREENS = {
   SETTINGS: 'Settings',
   HOW_TO_PLAY: 'HowToPlay',
   ABOUT_GAME: 'AboutGame',
+  LICENSES: 'Licenses',
 } as const;
 
 export const BOARD_SIZE = 9;

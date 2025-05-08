@@ -3,8 +3,8 @@ import {useTranslation} from 'react-i18next';
 import {StyleSheet} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {WebView} from 'react-native-webview';
+import Header from '../../components/commons/Header';
 import {useTheme} from '../../context/ThemeContext';
-import Header from '../commons/Header';
 
 export default function Licenses() {
   const {theme} = useTheme();
@@ -14,7 +14,7 @@ export default function Licenses() {
       edges={['top', 'bottom']}
       style={[styles.container, {backgroundColor: theme.background}]}>
       <Header
-        title={t('options')}
+        title={t('licenses')}
         showBack={true}
         showSettings={false}
         showTheme={false}

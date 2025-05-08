@@ -104,5 +104,14 @@
   "clearDataTitle": "Xóa dữ liệu đã lưu?",
   "clearDataMessage": "Tất cả dữ liệu đã lưu sẽ bị xóa. Không thể hoàn tác.",
   "cancel": "Hủy",
-  "delete": "Xóa"
+  "delete": "Xóa",
+
+  "appNameWithAuthor": "{{appName}} bởi FinbertNgo",
+  "version": "Phiên bản {{version}}",
+  "copyright": "© {{year}} Bản quyền đã được bảo hộ.",
+  "licenses": "Giấy phép",
+  "termsOfService": "Điều khoản dịch vụ",
+  "privacyPolicy": "Chính sách bảo mật",
+  "visitWebsite": "Truy cập finbertngo.wordpress.com",
+  "moreGames": "Trò chơi khác của FinbertNgo"
 }
