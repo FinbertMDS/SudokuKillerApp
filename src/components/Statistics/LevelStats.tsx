@@ -96,6 +96,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center' as const,
     alignItems: 'center' as const,
+    marginTop: 16,
   },
   title: {
     fontSize: 28,
@@ -106,6 +107,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center' as const,
     alignItems: 'center' as const,
+    marginTop: 16,
   },
   card: {
     width: SCREEN_WIDTH - 100,

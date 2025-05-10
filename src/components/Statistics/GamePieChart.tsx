@@ -57,6 +57,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
+    marginTop: 16,
     marginBottom: 6,
   },
   chart: {

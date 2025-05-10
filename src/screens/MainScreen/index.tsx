@@ -47,14 +47,14 @@ const MainScreen = () => {
 
   const handleNewGame = async (level: Level) => {
     await BoardService.clear();
-    setMenuVisible(false);
     const id = uuid.v4().toString();
+    eventBus.emit(CORE_EVENTS.initGame, {level, id});
+    setMenuVisible(false);
     navigation.navigate(SCREENS.BOARD, {
       id,
       level,
       type: 'init',
     });
-    eventBus.emit(CORE_EVENTS.initGame, {level, id});
   };
 
   const handleContinueGame = async () => {

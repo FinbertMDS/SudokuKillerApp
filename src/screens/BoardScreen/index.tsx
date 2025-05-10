@@ -39,7 +39,6 @@ import {
   createEmptyGridNumber,
   deepCloneBoard,
   deepCloneNotes,
-  generateBoard,
   removeNoteFromPeers,
 } from '../../utils/boardUtil';
 import {
@@ -61,6 +60,7 @@ const BoardScreen = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {id, level, type} = route.params as BoardParamProps;
+  const [isPlaying, setIsPlaying] = useState(false);
 
   const [initialBoard, setInitialBoard] = useState<CellValue[][]>(
     createEmptyGrid<CellValue>(),
@@ -93,34 +93,43 @@ const BoardScreen = () => {
 
   // Lấy initGame and savedGame
   // ===========================================================
-  useEffect(() => {
-    const handeGameStarted = async () => {
-      if (type === 'init') {
-        let initGame = await BoardService.loadInit();
-        if (!initGame) {
-          initGame = generateBoard(level, id);
-        }
-        setInitialBoard(deepCloneBoard(initGame.initialBoard));
-        setBoard(deepCloneBoard(initGame.initialBoard));
-        setHistory([deepCloneBoard(initGame.initialBoard)]);
-        setNotes(createEmptyGridNotes<string>());
+  const handeGameStarted = async () => {
+    if (type === 'init') {
+      let initGame = await BoardService.loadInit();
+      if (!initGame) {
+        return;
+      }
+      setInitialBoard(deepCloneBoard(initGame.initialBoard));
+      setBoard(deepCloneBoard(initGame.initialBoard));
+      setHistory([deepCloneBoard(initGame.initialBoard)]);
+      setNotes(createEmptyGridNotes<string>());
+      setCages(initGame.cages);
+      setSolvedBoard(initGame.solvedBoard);
+      setIsPlaying(true);
+    } else {
+      const initGame = await BoardService.loadInit();
+      const savedGame = await BoardService.loadSaved();
+
+      if (initGame && savedGame) {
+        setInitialBoard(deepCloneBoard(savedGame.savedBoard));
+        setBoard(deepCloneBoard(savedGame.savedBoard));
+        setHistory(savedGame.savedHistory);
+        setNotes(savedGame.savedNotes);
         setCages(initGame.cages);
         setSolvedBoard(initGame.solvedBoard);
-      } else {
-        const initGame = await BoardService.loadInit();
-        const savedGame = await BoardService.loadSaved();
-        if (initGame && savedGame) {
-          setInitialBoard(deepCloneBoard(savedGame.savedBoard));
-          setBoard(deepCloneBoard(savedGame.savedBoard));
-          setHistory(savedGame.savedHistory);
-          setNotes(savedGame.savedNotes);
-          setCages(initGame.cages);
-          setSolvedBoard(initGame.solvedBoard);
-        }
+        setIsPlaying(true);
       }
-    };
+    }
+  };
+  useEffect(() => {
     handeGameStarted();
-  }, [type, id, level]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  useEffect(() => {
+    eventBus.on(CORE_EVENTS.gameStarted, handeGameStarted);
+    return () => eventBus.off(CORE_EVENTS.gameStarted, handeGameStarted);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   // ===========================================================
 
   // Lấy settings
@@ -173,7 +182,6 @@ const BoardScreen = () => {
 
   // Hiển thị thời gian đã chơi
   // ===========================================================
-  const [isPlaying, setIsPlaying] = useState(true);
   const {seconds, resetTimer} = useGameTimer(isPlaying, {
     maxTimePlayed: MAX_TIMEPLAYED,
     onLimitReached: async () => {
@@ -307,6 +315,7 @@ const BoardScreen = () => {
     newNotes[row][col] = [];
     setNotes(newNotes);
     saveHistory(newBoard);
+    setSelectedCell({...selectedCell, value: null});
   };
 
   const handleHint = () => {
