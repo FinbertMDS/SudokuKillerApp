@@ -18,7 +18,11 @@ import {CORE_EVENTS} from '../../events';
 import eventBus from '../../events/eventBus';
 import LanguageSwitcher from '../../i18n/LanguageSwitcher';
 import {SettingsService} from '../../services/SettingsService';
-import {RootStackParamList, SettingsScreenRouteProp} from '../../types';
+import {
+  RootStackParamList,
+  SettingsParamProps,
+  SettingsScreenRouteProp,
+} from '../../types';
 import {DEFAULT_SETTINGS, MAX_MISTAKES} from '../../utils/constants';
 
 export const SettingsScreen = () => {
@@ -27,7 +31,7 @@ export const SettingsScreen = () => {
   const route = useRoute<SettingsScreenRouteProp>();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const {showAdvancedSettings} = route.params;
+  const {showAdvancedSettings} = route.params as SettingsParamProps;
   const [settings, setSettings] = useState(DEFAULT_SETTINGS);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 

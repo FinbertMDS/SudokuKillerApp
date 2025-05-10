@@ -14,10 +14,11 @@
 - Thêm tính năng gợi ý: điền luôn đáp án ở ô đó vào
 - Cập nhật lại các màu trong theme dark/light cho đẹp hơn
 - Kiểm tra lại tất cả màn hình xem có màn hình nào bị render nhiều lần không!!!
-- Vào main Main thì gửi event tạo sẵn board, để khi click vào New game thì lấy board ra để đi tiếp
 - Chuyển từ lưu trong AsyncStorage sang lưu ở MMKV
 - thêm hiển thị thông tin app trong màn options
 - tạo link bymecofffe để nhận donate
+-----
+- Vào main Main thì gửi event tạo sẵn board, để khi click vào New game thì lấy board ra để đi tiếp
 - Build app và tối ưu size của app
 - Publish app
 - Xem có thể public app trên unsplash để tăng request lên không

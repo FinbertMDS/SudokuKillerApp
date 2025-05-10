@@ -70,4 +70,12 @@ export const BoardService = {
       console.error('Failed to clear saved game:', e);
     }
   },
+
+  async clearSaved() {
+    try {
+      gameStorage.clearSavedGameData();
+    } catch (e) {
+      console.error('Failed to clear saved game:', e);
+    }
+  },
 };

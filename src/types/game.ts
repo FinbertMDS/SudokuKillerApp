@@ -16,7 +16,7 @@ export type GameInfo = {
   id: string;
   initialBoard: CellValue[][];
   solvedBoard: number[][];
-  cages: {cells: [number, number][]; sum: number}[];
+  cages: Cage[];
 };
 
 export type InitGame = GameInfo & {
@@ -25,6 +25,7 @@ export type InitGame = GameInfo & {
 
 export type SavedGame = {
   savedId: string;
+  savedLevel: Level;
   savedBoard: CellValue[][];
   savedMistake: number;
   savedTimePlayed: number;

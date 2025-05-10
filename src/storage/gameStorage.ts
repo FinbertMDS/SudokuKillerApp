@@ -26,10 +26,15 @@ const clearGameData = () => {
   storage.delete(STORAGE_KEY_SAVED_GAME);
 };
 
+const clearSavedGameData = () => {
+  storage.delete(STORAGE_KEY_SAVED_GAME);
+};
+
 export const gameStorage = {
   saveInitGame,
   getInitGame,
   saveSavedGame,
   getSavedGame,
   clearGameData,
+  clearSavedGameData,
 };

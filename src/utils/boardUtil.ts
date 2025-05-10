@@ -1,7 +1,6 @@
 // boardUtil.ts
 
 import {generateKillerSudoku} from 'killer-sudoku-generator';
-import uuid from 'react-native-uuid';
 import {Difficulty} from 'sudoku-gen/dist/types/difficulty.type';
 import {Cage, CellValue, InitGame, Level} from '../types';
 import {BOARD_SIZE, LEVELS} from './constants';
@@ -28,6 +27,12 @@ export function stringToGrid(input: string, columns = 9): CellValue[][] {
 export function createEmptyGrid<T>(): (T | null)[][] {
   return Array.from({length: BOARD_SIZE}, () =>
     Array.from({length: BOARD_SIZE}, () => null),
+  );
+}
+
+export function createEmptyGridNumber(): number[][] {
+  return Array.from({length: BOARD_SIZE}, () =>
+    Array.from({length: BOARD_SIZE}, () => 0),
   );
 }
 
@@ -238,7 +243,7 @@ export const increaseDifficulty = (level: Level): Difficulty => {
   return mapping[level];
 };
 
-export const generateBoard = (level: Level) => {
+export const generateBoard = (level: Level, id: string) => {
   const adjustedDifficulty = increaseDifficulty(level as Level);
 
   const sudoku = generateKillerSudoku(adjustedDifficulty);
@@ -248,7 +253,7 @@ export const generateBoard = (level: Level) => {
   const puzzleString = shouldHideAllCells ? '-'.repeat(81) : sudoku.puzzle;
 
   const initGame = {
-    id: uuid.v4().toString(),
+    id,
     initialBoard: stringToGrid(puzzleString),
     solvedBoard: stringToGrid(sudoku.solution),
     cages: sortAreasCells(sudoku.areas),

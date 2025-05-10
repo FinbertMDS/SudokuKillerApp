@@ -1,9 +1,9 @@
 import {RouteProp} from '@react-navigation/native';
-import {InitGame, SavedGame} from '.';
+import {Level} from '.';
 
 export type RootStackParamList = {
   HomeTabs: undefined;
-  Board: InitGame | SavedGame;
+  Board: BoardParamProps;
   Options: undefined;
   Settings: SettingsParamProps;
   HowToPlay: undefined;
@@ -14,7 +14,13 @@ export type RootStackParamList = {
 export type BoardScreenRouteProp = RouteProp<RootStackParamList, 'Board'>;
 export type SettingsScreenRouteProp = RouteProp<RootStackParamList, 'Settings'>;
 
-type SettingsParamProps = {
+export type BoardParamProps = {
+  id: string;
+  level: Level;
+  type: 'init' | 'saved';
+};
+
+export type SettingsParamProps = {
   showAdvancedSettings?: boolean;
 };
 

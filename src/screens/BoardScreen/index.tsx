@@ -24,19 +24,22 @@ import {BoardService} from '../../services/BoardService';
 import {SettingsService} from '../../services/SettingsService';
 import {
   AppSettings,
+  BoardParamProps,
   BoardScreenRouteProp,
+  Cage,
   Cell,
   CellValue,
-  InitGame,
-  Level,
   RootStackParamList,
   SavedGame,
 } from '../../types';
 import {
   checkBoardIsSolved,
+  createEmptyGrid,
   createEmptyGridNotes,
+  createEmptyGridNumber,
   deepCloneBoard,
   deepCloneNotes,
+  generateBoard,
   removeNoteFromPeers,
 } from '../../utils/boardUtil';
 import {
@@ -45,7 +48,6 @@ import {
   ANIMATION_TYPE,
   BOARD_SIZE,
   DEFAULT_SETTINGS,
-  LEVELS,
   MAX_MISTAKES,
   MAX_TIMEPLAYED,
   SCREENS,
@@ -58,36 +60,68 @@ const BoardScreen = () => {
   const route = useRoute<BoardScreenRouteProp>();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const {
-    id,
-    initialBoard,
-    solvedBoard,
-    cages,
-    savedLevel,
-    savedBoard,
-    savedHistory,
-    savedNotes,
-  } = route.params as InitGame & SavedGame;
+  const {id, level, type} = route.params as BoardParamProps;
 
-  const [board, setBoard] = useState<CellValue[][]>(
-    savedBoard ? deepCloneBoard(savedBoard) : deepCloneBoard(initialBoard),
+  const [initialBoard, setInitialBoard] = useState<CellValue[][]>(
+    createEmptyGrid<CellValue>(),
   );
-  const [selectedCell, setSelectedCell] = useState<Cell | null>(null);
-  const handleCellPress = useCallback((cell: Cell | null) => {
-    setSelectedCell(cell);
-  }, []);
-
-  const [level] = useState<Level>(savedLevel ? savedLevel : LEVELS[0]);
-
-  const [history, setHistory] = useState(() =>
-    savedHistory !== undefined ? savedHistory : [deepCloneBoard(initialBoard)],
+  const [cages, setCages] = useState<Cage[]>([]);
+  const [solvedBoard, setSolvedBoard] = useState<number[][]>(
+    createEmptyGridNumber(),
   );
   const [isPaused, setIsPaused] = useState<boolean>(false);
   const [showPauseModal, setShowPauseModal] = useState<boolean>(false);
   const [noteMode, setNoteMode] = useState<boolean>(false);
-  const [notes, setNotes] = useState<string[][][]>(
-    savedNotes !== undefined ? savedNotes : createEmptyGridNotes<string>(),
+  const [selectedCell, setSelectedCell] = useState<Cell | null>(null);
+  const handleCellPress = useCallback((cell: Cell | null) => {
+    setSelectedCell(cell);
+  }, []);
+  // Xử lý animation khi nhập xong 1 hàng/cột
+  const [animatedCells, setAnimatedCells] = useState<{[key: string]: number}>(
+    {},
   );
+
+  const [board, setBoard] = useState<CellValue[][]>(
+    createEmptyGrid<CellValue>(),
+  );
+  const [history, setHistory] = useState<CellValue[][][]>([
+    createEmptyGrid<CellValue>(),
+  ]);
+  const [notes, setNotes] = useState<string[][][]>(
+    createEmptyGridNotes<string>(),
+  );
+
+  // Lấy initGame and savedGame
+  // ===========================================================
+  useEffect(() => {
+    const handeGameStarted = async () => {
+      if (type === 'init') {
+        let initGame = await BoardService.loadInit();
+        if (!initGame) {
+          initGame = generateBoard(level, id);
+        }
+        setInitialBoard(deepCloneBoard(initGame.initialBoard));
+        setBoard(deepCloneBoard(initGame.initialBoard));
+        setHistory([deepCloneBoard(initGame.initialBoard)]);
+        setNotes(createEmptyGridNotes<string>());
+        setCages(initGame.cages);
+        setSolvedBoard(initGame.solvedBoard);
+      } else {
+        const initGame = await BoardService.loadInit();
+        const savedGame = await BoardService.loadSaved();
+        if (initGame && savedGame) {
+          setInitialBoard(deepCloneBoard(savedGame.savedBoard));
+          setBoard(deepCloneBoard(savedGame.savedBoard));
+          setHistory(savedGame.savedHistory);
+          setNotes(savedGame.savedNotes);
+          setCages(initGame.cages);
+          setSolvedBoard(initGame.solvedBoard);
+        }
+      }
+    };
+    handeGameStarted();
+  }, [type, id, level]);
+  // ===========================================================
 
   // Lấy settings
   // ===========================================================
@@ -179,14 +213,10 @@ const BoardScreen = () => {
   };
   // ===========================================================
 
-  // Xử lý animation khi nhập xong 1 hàng/cột
-  const [animatedCells, setAnimatedCells] = useState<{[key: string]: number}>(
-    {},
-  );
-
   const handleBackPress = async () => {
     await BoardService.save({
       savedId: id,
+      savedLevel: level,
       savedBoard: board,
       savedMistake: mistakes,
       savedTimePlayed: seconds,
@@ -201,6 +231,7 @@ const BoardScreen = () => {
   const handleGoToSettings = async () => {
     await BoardService.save({
       savedId: id,
+      savedLevel: level,
       savedBoard: board,
       savedMistake: mistakes,
       savedTimePlayed: seconds,
@@ -221,6 +252,7 @@ const BoardScreen = () => {
     setShowPauseModal(true);
     await BoardService.save({
       savedId: id,
+      savedLevel: level,
       savedBoard: board,
       savedMistake: mistakes,
       savedTimePlayed: seconds,
@@ -486,7 +518,7 @@ const BoardScreen = () => {
         onSettings={handleGoToSettings}
       />
       <InfoPanel
-        level={savedLevel}
+        level={level}
         mistakes={mistakes}
         time={seconds}
         isPaused={isPaused}

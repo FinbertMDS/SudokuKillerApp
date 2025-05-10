@@ -1,7 +1,7 @@
 // src/screens/MainScreen/index.tsx
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ImageBackground,
@@ -11,12 +11,12 @@ import {
   View,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import uuid from 'react-native-uuid';
 import Header from '../../components/commons/Header';
 import NewGameMenu from '../../components/Main/NewGameMenu';
 import {useTheme} from '../../context/ThemeContext';
 import {CORE_EVENTS} from '../../events';
 import eventBus from '../../events/eventBus';
-import {GameStartedCoreEvent} from '../../events/types';
 import {useDailyBackground} from '../../hooks/useDailyBackground';
 import {BoardService} from '../../services/BoardService';
 import {Level, RootStackParamList} from '../../types/index';
@@ -40,17 +40,6 @@ const MainScreen = () => {
     }, []),
   );
 
-  useEffect(() => {
-    const handeGameStarted = ({initGame}: GameStartedCoreEvent) => {
-      navigation.navigate(SCREENS.BOARD, {
-        ...initGame,
-      });
-    };
-    eventBus.on(CORE_EVENTS.gameStarted, handeGameStarted);
-    return () => eventBus.off(CORE_EVENTS.gameStarted, handeGameStarted);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const checkSavedGame = async () => {
     const saved = await BoardService.loadSaved();
     setHasSavedGame(!!saved);
@@ -59,16 +48,22 @@ const MainScreen = () => {
   const handleNewGame = async (level: Level) => {
     await BoardService.clear();
     setMenuVisible(false);
-    eventBus.emit(CORE_EVENTS.initGame, {level});
+    const id = uuid.v4().toString();
+    navigation.navigate(SCREENS.BOARD, {
+      id,
+      level,
+      type: 'init',
+    });
+    eventBus.emit(CORE_EVENTS.initGame, {level, id});
   };
 
   const handleContinueGame = async () => {
-    const initGame = await BoardService.loadInit();
     const savedGame = await BoardService.loadSaved();
     if (savedGame) {
       navigation.navigate(SCREENS.BOARD, {
-        ...initGame,
-        ...savedGame,
+        id: savedGame.savedId,
+        level: savedGame.savedLevel,
+        type: 'saved',
       });
     }
   };
