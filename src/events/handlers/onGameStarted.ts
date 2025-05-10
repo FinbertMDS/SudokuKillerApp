@@ -7,8 +7,11 @@ export const handleGameStarted = async () => {
   const initGame = await BoardService.loadInit();
   if (initGame) {
     const updatedLog = await GameStatsManager.recordGameStart(initGame!);
-    eventBus.emit(CORE_EVENTS.statisticsUpdated, {
-      logs: [updatedLog],
+    // Emit gameStarted in next tick
+    requestAnimationFrame(() => {
+      eventBus.emit(CORE_EVENTS.statisticsUpdated, {
+        logs: [updatedLog],
+      });
     });
   }
 };

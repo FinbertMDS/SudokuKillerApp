@@ -30,8 +30,8 @@ const ChartsStats = ({logs, filter}: ChartsStatsProps) => {
     [logs, filter],
   );
   const levelCounts = useMemo(
-    () => convertToPieData(logs, mode, filter),
-    [logs, mode, filter],
+    () => convertToPieData(logs, mode, t, filter),
+    [logs, mode, t, filter],
   );
   const stackedData = useMemo(
     () => convertToStackedData(logs, mode, t, filter),

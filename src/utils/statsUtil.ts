@@ -98,6 +98,7 @@ export function getDailyStatsFromLogs(
 export function convertToPieData(
   logs: GameLogEntry[],
   scheme: ColorSchemeName = 'light',
+  t: TFunction,
   filter: TimeRange,
 ) {
   if (logs.length === 0) {
@@ -120,7 +121,7 @@ export function convertToPieData(
 
   return Object.entries(levelMap)
     .map(([level, count]) => ({
-      name: level.charAt(0).toUpperCase() + level.slice(1),
+      name: t(`level.${level}`),
       count,
       color: getLevelColor(level as Level, scheme),
       legendFontColor: scheme === 'dark' ? '#fff' : '#333',

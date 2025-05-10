@@ -332,6 +332,7 @@ const BoardScreen = () => {
     setBoard(newBoard);
     saveHistory(newBoard);
     setNotes(prevNotes => removeNoteFromPeers(prevNotes, row, col, solvedNum));
+    handleCheckSolved(newBoard);
   };
 
   /**
