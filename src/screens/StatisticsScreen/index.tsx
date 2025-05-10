@@ -80,69 +80,69 @@ const StatisticsScreen = () => {
           </TouchableOpacity>
         }
       />
-      <View style={styles.container}>
-        {/* Tab Chip Selector */}
-        <View style={styles.tabRow}>
-          <TouchableOpacity
-            onPress={() => setActiveTab('level')}
+      {/* Tab Chip Selector */}
+      <View style={styles.tabRow}>
+        <TouchableOpacity
+          onPress={() => setActiveTab('level')}
+          style={[
+            styles.chip,
+            {
+              backgroundColor:
+                activeTab === 'level'
+                  ? theme.primary
+                  : theme.settingItemBackground,
+            },
+          ]}>
+          <Text
             style={[
-              styles.chip,
-              {
-                backgroundColor:
-                  activeTab === 'level'
-                    ? theme.primary
-                    : theme.settingItemBackground,
-              },
+              styles.chipText,
+              {color: activeTab === 'level' ? theme.text : theme.secondary},
             ]}>
-            <Text
-              style={[
-                styles.chipText,
-                {color: activeTab === 'level' ? theme.text : theme.secondary},
-              ]}>
-              {t('levelStats')}
-            </Text>
-          </TouchableOpacity>
+            {t('levelStats')}
+          </Text>
+        </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => setActiveTab('chart')}
+        <TouchableOpacity
+          onPress={() => setActiveTab('chart')}
+          style={[
+            styles.chip,
+            {
+              backgroundColor:
+                activeTab === 'chart'
+                  ? theme.primary
+                  : theme.settingItemBackground,
+            },
+          ]}>
+          <Text
             style={[
-              styles.chip,
-              {
-                backgroundColor:
-                  activeTab === 'chart'
-                    ? theme.primary
-                    : theme.settingItemBackground,
-              },
+              styles.chipText,
+              {color: activeTab === 'chart' ? theme.text : theme.secondary},
             ]}>
-            <Text
-              style={[
-                styles.chipText,
-                {color: activeTab === 'chart' ? theme.text : theme.secondary},
-              ]}>
-              {t('chartsStats')}
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Content */}
-        <View style={styles.content}>
-          {activeTab === 'level' ? (
-            <LevelStats stats={stats} />
-          ) : (
-            <ChartsStats logs={logs} filter={filter} />
-          )}
-        </View>
+            {t('chartsStats')}
+          </Text>
+        </TouchableOpacity>
       </View>
 
-      <TimeFilterDropdown
-        visible={showDropdown}
-        selected={filter}
-        onSelect={newFilter => {
-          setFilter(newFilter);
-          setShowDropdown(false);
-        }}
-        onClose={() => setShowDropdown(false)}
-      />
+      {/* Content */}
+      <View style={styles.content}>
+        {activeTab === 'level' ? (
+          <LevelStats stats={stats} />
+        ) : (
+          <ChartsStats logs={logs} filter={filter} />
+        )}
+      </View>
+
+      {showDropdown && (
+        <TimeFilterDropdown
+          visible={showDropdown}
+          selected={filter}
+          onSelect={newFilter => {
+            setFilter(newFilter);
+            setShowDropdown(false);
+          }}
+          onClose={() => setShowDropdown(false)}
+        />
+      )}
     </SafeAreaView>
   );
 };
@@ -150,8 +150,6 @@ const StatisticsScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center' as const,
-    paddingBottom: 20,
   },
   iconButton: {
     marginLeft: 20,
@@ -159,7 +157,6 @@ const styles = StyleSheet.create({
   tabRow: {
     flexDirection: 'row' as const,
     justifyContent: 'center' as const,
-    marginBottom: 16,
   },
   chip: {
     paddingVertical: 8,
@@ -173,6 +170,7 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
+    marginTop: 16,
   },
 });
 

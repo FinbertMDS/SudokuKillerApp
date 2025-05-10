@@ -57,10 +57,11 @@ const TimeLineChart = ({dailyStats, chartConfig}: TimeLineChartProps) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 24,
+    paddingLeft: 12,
+    paddingRight: 12,
   },
   title: {
-    fontSize: 18,
+    fontSize: 16,
     marginBottom: 6,
   },
   chart: {

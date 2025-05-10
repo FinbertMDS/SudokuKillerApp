@@ -103,6 +103,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   cardsContainer: {
+    flex: 1,
     justifyContent: 'center' as const,
     alignItems: 'center' as const,
   },

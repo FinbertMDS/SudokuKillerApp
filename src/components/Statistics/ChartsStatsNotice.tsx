@@ -29,6 +29,7 @@ const styles = StyleSheet.create({
   text: {
     textAlign: 'center' as const,
     marginBottom: 8,
+    marginTop: 8,
     opacity: 0.6,
   },
 });
