@@ -108,7 +108,7 @@
 
   "appNameWithAuthor": "{{appName}} by FinbertNgo",
   "version": "Version {{version}}",
-  "copyright": "© {{year}} All rights reserved.",
+  "copyright": "© {{year}} {{appName}}. All rights reserved.",
   "licenses": "Licenses",
   "termsOfService": "Terms of Service",
   "privacyPolicy": "Privacy Policy",

@@ -108,7 +108,7 @@
 
   "appNameWithAuthor": "{{appName}} bởi FinbertNgo",
   "version": "Phiên bản {{version}}",
-  "copyright": "© {{year}} Bản quyền đã được bảo hộ.",
+  "copyright": "© {{year}} {{appName}}. Bản quyền đã được bảo hộ.",
   "licenses": "Giấy phép",
   "termsOfService": "Điều khoản dịch vụ",
   "privacyPolicy": "Chính sách bảo mật",

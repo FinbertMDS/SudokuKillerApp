@@ -108,7 +108,7 @@
 
   "appNameWithAuthor": "FinbertNgo の{{appName}}",
   "version": "バージョン {{version}}",
-  "copyright": "© {{year}} 全著作権所有。",
+  "copyright": "© {{year}} {{appName}}. 全著作権所有。",
   "licenses": "ライセンス",
   "termsOfService": "利用規約",
   "privacyPolicy": "プライバシーポリシー",

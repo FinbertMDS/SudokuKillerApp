@@ -54,7 +54,7 @@ export default function AboutGame() {
             {t('version', {version: appConfig.version})}
           </Text>
           <Text style={[styles.copyright, {color: theme.secondary}]}>
-            {t('copyright', {year: copyrightYear})}
+            {t('copyright', {year: copyrightYear, appName: t('appName')})}
           </Text>
         </View>
 
