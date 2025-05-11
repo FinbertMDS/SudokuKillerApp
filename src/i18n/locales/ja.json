@@ -1,5 +1,6 @@
 {
   "appName": "キラー数独",
+  "author": "FinbertNgo",
   "language": "言語",
   "level.easy": "簡単",
   "level.medium": "普通",
@@ -106,14 +107,14 @@
   "cancel": "キャンセル",
   "delete": "削除",
 
-  "appNameWithAuthor": "FinbertNgo の{{appName}}",
+  "appNameWithAuthor": "{{author}} の {{appName}}",
   "version": "バージョン {{version}}",
   "copyright": "© {{year}} {{appName}}. 全著作権所有。",
   "licenses": "ライセンス",
   "termsOfService": "利用規約",
   "privacyPolicy": "プライバシーポリシー",
   "visitWebsite": "finbertngo.wordpress.com を訪問",
-  "moreGames": "FinbertNgo の他のゲーム",
+  "moreGames": "{{author}} の他のゲーム",
 
   "support": "サポート"
 }

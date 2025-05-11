@@ -1,5 +1,6 @@
 {
   "appName": "Killer Sudoku",
+  "author": "FinbertNgo",
   "language": "Ngôn ngữ",
   "level.easy": "Dễ",
   "level.medium": "Trung bình",
@@ -106,14 +107,14 @@
   "cancel": "Hủy",
   "delete": "Xóa",
 
-  "appNameWithAuthor": "{{appName}} bởi FinbertNgo",
+  "appNameWithAuthor": "{{appName}} bởi {{author}}",
   "version": "Phiên bản {{version}}",
   "copyright": "© {{year}} {{appName}}. Bản quyền đã được bảo hộ.",
   "licenses": "Giấy phép",
   "termsOfService": "Điều khoản dịch vụ",
   "privacyPolicy": "Chính sách bảo mật",
   "visitWebsite": "Truy cập finbertngo.wordpress.com",
-  "moreGames": "Trò chơi khác của FinbertNgo",
+  "moreGames": "Trò chơi khác của {{author}}",
 
   "support": "Hỗ trợ"
 }

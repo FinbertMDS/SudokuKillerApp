@@ -1,5 +1,6 @@
 {
   "appName": "Killer Sudoku",
+  "author": "FinbertNgo",
   "language": "Language",
   "level.easy": "Easy",
   "level.medium": "Medium",
@@ -106,14 +107,14 @@
   "cancel": "Cancel",
   "delete": "Delete",
 
-  "appNameWithAuthor": "{{appName}} by FinbertNgo",
+  "appNameWithAuthor": "{{appName}} by {{author}}",
   "version": "Version {{version}}",
   "copyright": "© {{year}} {{appName}}. All rights reserved.",
   "licenses": "Licenses",
   "termsOfService": "Terms of Service",
   "privacyPolicy": "Privacy Policy",
   "visitWebsite": "Visit finbertngo.wordpress.com",
-  "moreGames": "More Games by FinbertNgo",
+  "moreGames": "More Games by {{author}}",
 
   "support": "Support"
 }

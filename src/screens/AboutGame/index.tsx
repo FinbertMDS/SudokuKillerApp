@@ -48,7 +48,10 @@ export default function AboutGame() {
         ]}>
         <View style={[styles.card, {backgroundColor: theme.background}]}>
           <Text style={[styles.title, {color: theme.text}]}>
-            {t('appNameWithAuthor', {appName: t('appName')})}
+            {t('appNameWithAuthor', {
+              appName: t('appName'),
+              author: t('author'),
+            })}
           </Text>
           <Text style={[styles.version, {color: theme.secondary}]}>
             {t('version', {version: appConfig.version})}
