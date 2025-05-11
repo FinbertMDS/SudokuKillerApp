@@ -70,6 +70,10 @@ export const OptionsScreen = () => {
     }
   };
 
+  const openURL = (url: string) => {
+    Linking.openURL(url).catch(err => console.error('Error opening URL', err));
+  };
+
   const menuItems: OptionMenuItem[] = [
     {icon: 'cog', label: t('settings'), onPress: handleGoToSettings},
     {icon: 'school', label: t('howToPlay'), screen: SCREENS.HOW_TO_PLAY},
@@ -81,6 +85,11 @@ export const OptionsScreen = () => {
       onPress: handleSendFeedback,
     },
     {icon: 'information', label: t('aboutGame'), screen: SCREENS.ABOUT_GAME},
+    {
+      icon: 'coffee',
+      label: t('support'),
+      onPress: () => openURL(appConfig.supportUrl),
+    },
     // {icon: 'shield-account', label: t('privacyRights')},
     // {icon: 'account-check', label: t('privacyPreferences')},
     // {icon: 'ad-off', label: t('removeAds')},
