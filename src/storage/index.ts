@@ -1,3 +1,4 @@
-export * as gameStorage from './gameStorage';
+export * from './appStorage';
+export * from './gameStorage';
 export * from './mmkv';
-export * as statsStorage from './statsStorage';
+export * from './statsStorage';

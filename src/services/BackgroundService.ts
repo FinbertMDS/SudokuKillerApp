@@ -1,27 +1,18 @@
 // SettingsService.ts
 import {UNSPLASH_ACCESS_KEY} from '@env';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import {appStorage} from '../storage';
 import {DailyBackgrounds} from '../types';
-import {STORAGE_KEY_BACKGROUNDS} from '../utils/constants';
 
 export const BackgroundService = {
   async load(): Promise<DailyBackgrounds | null> {
-    const cached = await AsyncStorage.getItem(STORAGE_KEY_BACKGROUNDS);
-    if (cached) {
-      try {
-        const {date, light, dark} = JSON.parse(cached);
-        return {date, light, dark};
-      } catch (error) {
-        console.error('Failed to load background', error);
-      }
-    }
-    return null;
+    const cached = appStorage.getBackgrounds();
+    return cached;
   },
 
   async save(data: DailyBackgrounds) {
     try {
-      await AsyncStorage.setItem(STORAGE_KEY_BACKGROUNDS, JSON.stringify(data));
+      appStorage.setBackgrounds(data);
     } catch (err) {
       console.error('Failed to save background', err);
     }
@@ -29,7 +20,7 @@ export const BackgroundService = {
 
   async clear(): Promise<void> {
     try {
-      await AsyncStorage.removeItem(STORAGE_KEY_BACKGROUNDS);
+      appStorage.clearBackgrounds();
     } catch (err) {
       console.error('Failed to clear background', err);
     }

@@ -26,7 +26,7 @@ const GameStackedBarChart = ({
         <Text style={[styles.title, {color: theme.text}]}>
           {t('gamesDistributionByLevel')}
         </Text>
-        <Text style={[{color: theme.text}]}>No data available</Text>
+        <Text style={[{color: theme.text}]}>{t('noDataAvailable')}</Text>
       </View>
     );
   }

@@ -1,16 +1,12 @@
 // i18n.ts
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import i18n from 'i18next';
 import {initReactI18next} from 'react-i18next';
 import {AppState} from 'react-native';
 import * as RNLocalize from 'react-native-localize';
-import {
-  LANGUAGES,
-  STORAGE_KEY_LANG_KEY_DEFAULT,
-  STORAGE_KEY_LANG_KEY_PREFERRED,
-} from '../utils/constants';
+import {LANGUAGES} from '../utils/constants';
 
+import {appStorage} from '../storage';
 import en from './locales/en.json';
 import ja from './locales/ja.json';
 import vi from './locales/vi.json';
@@ -42,16 +38,14 @@ i18n.use(initReactI18next).init({
  */
 export const autoDetectLanguage = async () => {
   const systemLang = getBestLanguage();
-  let oldLanguage = await AsyncStorage.getItem(STORAGE_KEY_LANG_KEY_DEFAULT);
-  let preferedLanguage = await AsyncStorage.getItem(
-    STORAGE_KEY_LANG_KEY_PREFERRED,
-  );
+  let oldLanguage = appStorage.getLangKeyDefault();
   if (systemLang !== oldLanguage) {
     i18n.changeLanguage(systemLang);
-    await AsyncStorage.setItem(STORAGE_KEY_LANG_KEY_DEFAULT, systemLang);
-    await AsyncStorage.setItem(STORAGE_KEY_LANG_KEY_PREFERRED, systemLang);
+    appStorage.saveLangKeyDefault(systemLang);
+    appStorage.saveLangKeyPreferred(systemLang);
     return systemLang;
   }
+  let preferedLanguage = appStorage.getLangKeyPreferred();
   if (preferedLanguage) {
     i18n.changeLanguage(preferedLanguage);
   }
