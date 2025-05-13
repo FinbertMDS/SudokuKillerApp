@@ -49,9 +49,8 @@ const TimeLineChart = ({dailyStats, chartConfig}: TimeLineChartProps) => {
           fromZero
           chartConfig={{
             ...chartConfig,
-            propsForLabels: {x: -10},
           }}
-          xLabelsOffset={-10}
+          yLabelsOffset={32}
           style={styles.chart}
           bezier
         />
