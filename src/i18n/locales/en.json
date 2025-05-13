@@ -116,5 +116,11 @@
   "visitWebsite": "Visit finbertngo.wordpress.com",
   "moreGames": "More Games by {{author}}",
 
-  "support": "Support"
+  "support": "Support",
+
+  "filter.allTime": "All Time",
+  "filter.today": "Today",
+  "filter.thisWeek": "This Week",
+  "filter.thisMonth": "This Month",
+  "filter.thisYear": "This Year"
 }

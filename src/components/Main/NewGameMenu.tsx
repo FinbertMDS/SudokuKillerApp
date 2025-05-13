@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
   modalContainer: {
     borderRadius: 16,
     marginHorizontal: 16,
-    marginBottom: 32,
+    marginBottom: 30,
   },
   firstOption: {
     borderTopLeftRadius: 16,

@@ -116,5 +116,11 @@
   "visitWebsite": "Truy cập finbertngo.wordpress.com",
   "moreGames": "Trò chơi khác của {{author}}",
 
-  "support": "Hỗ trợ"
+  "support": "Hỗ trợ",
+
+  "filter.allTime": "Tất cả",
+  "filter.today": "Hôm nay",
+  "filter.thisWeek": "Tuần này",
+  "filter.thisMonth": "Tháng này",
+  "filter.thisYear": "Năm này"
 }

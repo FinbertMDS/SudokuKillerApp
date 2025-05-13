@@ -116,5 +116,11 @@
   "visitWebsite": "finbertngo.wordpress.com を訪問",
   "moreGames": "{{author}} の他のゲーム",
 
-  "support": "サポート"
+  "support": "サポート",
+
+  "filter.allTime": "全期間",
+  "filter.today": "今日",
+  "filter.thisWeek": "今週",
+  "filter.thisMonth": "今月",
+  "filter.thisYear": "今年"
 }

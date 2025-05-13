@@ -1,4 +1,5 @@
 import React from 'react';
+import {useTranslation} from 'react-i18next';
 import {
   Modal,
   StyleSheet,
@@ -17,16 +18,17 @@ interface Props {
   onSelect: (filter: TimeFilter) => void;
 }
 
-const options: {label: string; value: TimeFilter}[] = [
-  {label: 'All Time', value: 'all'},
-  {label: 'Today', value: 'today'},
-  {label: 'This Week', value: 'week'},
-  {label: 'This Month', value: 'month'},
-  {label: 'This Year', value: 'year'},
-];
-
 const TimeFilterDropdown: React.FC<Props> = ({selected, onSelect, onClose}) => {
   const {theme} = useTheme();
+  const {t} = useTranslation();
+
+  const options: {label: string; value: TimeFilter}[] = [
+    {label: t('filter.allTime'), value: 'all'},
+    {label: t('filter.today'), value: 'today'},
+    {label: t('filter.thisWeek'), value: 'week'},
+    {label: t('filter.thisMonth'), value: 'month'},
+    {label: t('filter.thisYear'), value: 'year'},
+  ];
 
   return (
     <SafeAreaView edges={['bottom']}>
@@ -77,7 +79,7 @@ const styles = StyleSheet.create({
   },
   container: {
     marginHorizontal: 16,
-    marginBottom: 32,
+    marginBottom: 30,
     borderRadius: 16,
   },
   firstOption: {
