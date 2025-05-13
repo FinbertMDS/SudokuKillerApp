@@ -27,7 +27,6 @@ const MainScreen = () => {
   const {t} = useTranslation();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const [menuVisible, setMenuVisible] = useState(false);
   const [hasSavedGame, setHasSavedGame] = useState(false);
   const {backgroundUrl, loadBackgrounds} = useDailyBackground(mode);
 
@@ -49,7 +48,6 @@ const MainScreen = () => {
     await BoardService.clear();
     const id = uuid.v4().toString();
     eventBus.emit(CORE_EVENTS.initGame, {level, id});
-    setMenuVisible(false);
     navigation.navigate(SCREENS.BOARD, {
       id,
       level,
@@ -95,7 +93,7 @@ const MainScreen = () => {
         {hasSavedGame && (
           <TouchableOpacity
             style={[
-              styles.continueButton,
+              styles.button,
               {
                 backgroundColor: theme.primary,
                 borderColor: theme.buttonBorder,
@@ -108,17 +106,12 @@ const MainScreen = () => {
           </TouchableOpacity>
         )}
 
-        <NewGameMenu
-          visible={menuVisible}
-          onDismiss={() => setMenuVisible(false)}
-          onOpen={() => setMenuVisible(true)}
-          handleNewGame={handleNewGame}
-        />
+        <NewGameMenu handleNewGame={handleNewGame} />
 
         {__DEV__ && (
           <TouchableOpacity
             style={[
-              styles.deleteButton,
+              styles.button,
               {
                 backgroundColor: theme.danger,
                 borderColor: theme.buttonBorder,
@@ -144,17 +137,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  continueButton: {
+  button: {
     padding: 14,
     paddingHorizontal: 24,
     borderRadius: 25,
     marginBottom: 15,
-  },
-  deleteButton: {
-    marginTop: 16,
-    padding: 12,
-    paddingHorizontal: 24,
-    borderRadius: 8,
   },
   buttonText: {
     fontWeight: 'bold',

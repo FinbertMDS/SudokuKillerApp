@@ -12,7 +12,6 @@ import {useTheme} from '../../context/ThemeContext';
 import {TimeFilter} from '../../types';
 
 interface Props {
-  visible: boolean;
   selected: TimeFilter;
   onClose: () => void;
   onSelect: (filter: TimeFilter) => void;
@@ -26,28 +25,17 @@ const options: {label: string; value: TimeFilter}[] = [
   {label: 'This Year', value: 'year'},
 ];
 
-const TimeFilterDropdown: React.FC<Props> = ({
-  visible,
-  selected,
-  onSelect,
-  onClose,
-}) => {
+const TimeFilterDropdown: React.FC<Props> = ({selected, onSelect, onClose}) => {
   const {theme} = useTheme();
 
   return (
-    <SafeAreaView
-      edges={['bottom']}
-      style={[styles.container, {backgroundColor: theme.background}]}>
-      <Modal
-        visible={visible}
-        animationType="slide"
-        transparent
-        onRequestClose={onClose}>
+    <SafeAreaView edges={['bottom']}>
+      <Modal transparent onRequestClose={onClose}>
         <TouchableWithoutFeedback onPress={onClose}>
           <View style={styles.overlay}>
             <View
               style={[styles.container, {backgroundColor: theme.background}]}>
-              {options.map(option => (
+              {options.map((option, index) => (
                 <TouchableOpacity
                   key={option.value}
                   style={[
@@ -55,7 +43,14 @@ const TimeFilterDropdown: React.FC<Props> = ({
                     selected === option.value && {
                       backgroundColor: theme.selectedItemBackground,
                     },
-                    {borderBottomColor: theme.itemBorderColor},
+                    // eslint-disable-next-line react-native/no-inline-styles
+                    {
+                      borderBottomColor:
+                        index === options.length - 1
+                          ? 'transparent'
+                          : theme.itemBorderColor,
+                    },
+                    index === 0 && styles.firstOption,
                   ]}
                   onPress={() => {
                     onSelect(option.value);
@@ -81,7 +76,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.5)',
   },
   container: {
-    paddingBottom: 30,
+    marginHorizontal: 16,
+    marginBottom: 32,
+    borderRadius: 16,
+  },
+  firstOption: {
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
   },
@@ -91,6 +90,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
+    textAlign: 'center',
   },
 });
 
