@@ -6,7 +6,7 @@ import {
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Alert, StyleSheet} from 'react-native';
+import {ActivityIndicator, Alert, StyleSheet} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import ActionButtons from '../../components/Board/ActionButtons';
 import Grid from '../../components/Board/Grid';
@@ -60,6 +60,7 @@ const BoardScreen = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {id, level, type} = route.params as BoardParamProps;
+  const [isLoading, setIsLoading] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
 
   const [initialBoard, setInitialBoard] = useState<CellValue[][]>(
@@ -99,6 +100,7 @@ const BoardScreen = () => {
       if (!initGame) {
         return;
       }
+      setIsLoading(false);
       setInitialBoard(deepCloneBoard(initGame.initialBoard));
       setBoard(deepCloneBoard(initGame.initialBoard));
       setHistory([deepCloneBoard(initGame.initialBoard)]);
@@ -109,6 +111,7 @@ const BoardScreen = () => {
     } else {
       const initGame = await BoardService.loadInit();
       const savedGame = await BoardService.loadSaved();
+      setIsLoading(false);
 
       if (initGame && savedGame) {
         setInitialBoard(deepCloneBoard(savedGame.savedBoard));
@@ -515,6 +518,16 @@ const BoardScreen = () => {
     }, []),
   );
 
+  if (isLoading) {
+    return (
+      <SafeAreaView
+        edges={['top']}
+        style={[styles.loadingContainer, {backgroundColor: theme.background}]}>
+        <ActivityIndicator size="large" color={theme.primary} />
+      </SafeAreaView>
+    );
+  }
+
   return (
     <SafeAreaView
       edges={['top']}
@@ -573,6 +586,11 @@ const BoardScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignItems: 'center',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
   },
 });

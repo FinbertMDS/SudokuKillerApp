@@ -65,7 +65,7 @@ const Header = ({
                 <Icon
                   name={mode === 'light' ? 'weather-night' : 'weather-sunny'}
                   size={24}
-                  color={theme.iconColor}
+                  color={theme.primary}
                 />
               </TouchableOpacity>
             )}
@@ -73,7 +73,7 @@ const Header = ({
               <TouchableOpacity
                 onPress={onSettings ? onSettings : defaultOnSettings}
                 style={styles.iconButton}>
-                <Icon name="cog-outline" size={24} color={theme.iconColor} />
+                <Icon name="cog-outline" size={24} color={theme.primary} />
               </TouchableOpacity>
             )}
           </View>

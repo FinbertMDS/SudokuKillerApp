@@ -76,7 +76,7 @@ const StatisticsScreen = () => {
           <TouchableOpacity
             onPress={() => setShowDropdown(true)}
             style={styles.iconButton}>
-            <Ionicons name="filter" size={24} color={theme.iconColor} />
+            <Ionicons name="filter" size={24} color={theme.primary} />
           </TouchableOpacity>
         }
       />
