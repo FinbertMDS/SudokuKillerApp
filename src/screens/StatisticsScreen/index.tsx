@@ -134,7 +134,6 @@ const StatisticsScreen = () => {
 
       {showDropdown && (
         <TimeFilterDropdown
-          visible={showDropdown}
           selected={filter}
           onSelect={newFilter => {
             setFilter(newFilter);
