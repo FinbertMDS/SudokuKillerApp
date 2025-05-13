@@ -23,6 +23,14 @@
 - Publish app
 - Xem có thể public app trên unsplash để tăng request lên không
 
+| Nền tảng | Tối thiểu | Khuyến nghị |
+| -------- | --------- | ----------- |
+| iOS      | 12.0      | 13.0+       |
+| Android  | API 24    | API 26+     |
+
+Các icon đang dùng 
+
+
 -----
 - theme background
   - dark: #131418
