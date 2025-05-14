@@ -93,7 +93,7 @@ export const SettingsScreen = () => {
 
   return (
     <SafeAreaView
-      edges={['top']}
+      edges={['top', 'bottom']}
       style={[styles.container, {backgroundColor: theme.background}]}>
       <Header
         title={t('settings')}
