@@ -28,8 +28,17 @@
 | iOS      | 12.0      | 13.0+       |
 | Android  | API 24    | API 26+     |
 
-Các icon đang dùng 
+-----
+Release bug
+*Android*
+- trang licenses không hiển thị được do lỗi: ERR_CLEARTEXT_NOT_PERMITTED
+- trang setting bị chèn ở bottom, không hiển thị hết clear storage
+- timefilter không bo tròn ở last item
+- thống kê: phân bổ ván theo mức độ: stackedbar nếu ko có data thì cũng hiển thị no data
+- thống kê: khi scroll xuống dưới thì 2 chip bên trên vẫn phải có padding
 
+
+--------------
 
 Tôi sẽ giúp bạn review toàn bộ code và đưa ra các gợi ý để tối ưu dung lượng ứng dụng. Đầu tiên, hãy xem cấu trúc thư mục của dự án:
 

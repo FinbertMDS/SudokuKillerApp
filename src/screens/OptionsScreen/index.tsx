@@ -35,6 +35,7 @@ export const OptionsScreen = () => {
   const handleRateApp = () => {
     // Prefer in-app store review if available
     const isAvailable = InAppReview.isAvailable();
+
     if (isAvailable) {
       InAppReview.RequestInAppReview();
     } else {
@@ -98,8 +99,8 @@ export const OptionsScreen = () => {
 
   return (
     <SafeAreaView
-      edges={['top']}
-      style={[styles.container, {backgroundColor: theme.background}]}>
+      edges={['top', 'bottom']}
+      style={[styles.container, {backgroundColor: theme.backgroundSecondary}]}>
       <Header
         title={t('options')}
         showBack={true}
@@ -145,7 +146,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    padding: 16,
+    paddingHorizontal: 16,
   },
   item: {
     flexDirection: 'row' as const,

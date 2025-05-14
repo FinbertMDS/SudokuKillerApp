@@ -20,7 +20,7 @@ const GameStackedBarChart = ({
   const {theme} = useTheme();
   const {t} = useTranslation();
 
-  if (!stackedData) {
+  if (!stackedData || stackedData.data.length === 0) {
     return (
       <View style={[styles.container, {backgroundColor: theme.background}]}>
         <Text style={[styles.title, {color: theme.text}]}>

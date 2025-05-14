@@ -8,7 +8,6 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import {useTheme} from '../../context/ThemeContext';
 import {TimeFilter} from '../../types';
 
@@ -31,43 +30,40 @@ const TimeFilterDropdown: React.FC<Props> = ({selected, onSelect, onClose}) => {
   ];
 
   return (
-    <SafeAreaView edges={['bottom']}>
-      <Modal transparent onRequestClose={onClose}>
-        <TouchableWithoutFeedback onPress={onClose}>
-          <View style={styles.overlay}>
-            <View
-              style={[styles.container, {backgroundColor: theme.background}]}>
-              {options.map((option, index) => (
-                <TouchableOpacity
-                  key={option.value}
-                  style={[
-                    styles.option,
-                    selected === option.value && {
-                      backgroundColor: theme.selectedItemBackground,
-                    },
-                    // eslint-disable-next-line react-native/no-inline-styles
-                    {
-                      borderBottomColor:
-                        index === options.length - 1
-                          ? 'transparent'
-                          : theme.itemBorderColor,
-                    },
-                    index === 0 && styles.firstOption,
-                  ]}
-                  onPress={() => {
-                    onSelect(option.value);
-                    onClose();
-                  }}>
-                  <Text style={[styles.label, {color: theme.text}]}>
-                    {option.label}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
+    <Modal transparent onRequestClose={onClose}>
+      <TouchableWithoutFeedback onPress={onClose}>
+        <View style={styles.overlay}>
+          <View style={[styles.container, {backgroundColor: theme.background}]}>
+            {options.map((option, index) => (
+              <TouchableOpacity
+                key={option.value}
+                style={[
+                  styles.option,
+                  selected === option.value && {
+                    backgroundColor: theme.selectedItemBackground,
+                  },
+                  // eslint-disable-next-line react-native/no-inline-styles
+                  {
+                    borderBottomColor:
+                      index === options.length - 1
+                        ? 'transparent'
+                        : theme.itemBorderColor,
+                  },
+                  index === 0 && styles.firstOption,
+                ]}
+                onPress={() => {
+                  onSelect(option.value);
+                  onClose();
+                }}>
+                <Text style={[styles.label, {color: theme.text}]}>
+                  {option.label}
+                </Text>
+              </TouchableOpacity>
+            ))}
           </View>
-        </TouchableWithoutFeedback>
-      </Modal>
-    </SafeAreaView>
+        </View>
+      </TouchableWithoutFeedback>
+    </Modal>
   );
 };
 

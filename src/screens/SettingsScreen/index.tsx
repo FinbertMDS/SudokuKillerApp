@@ -93,7 +93,7 @@ export const SettingsScreen = () => {
 
   return (
     <SafeAreaView
-      edges={['top', 'bottom']}
+      edges={['top']}
       style={[styles.container, {backgroundColor: theme.background}]}>
       <Header
         title={t('settings')}
@@ -154,6 +154,7 @@ export const SettingsScreen = () => {
             </Text>
           </TouchableOpacity>
         )}
+        <View style={styles.bottomSpacer} />
       </ScrollView>
     </SafeAreaView>
   );
@@ -165,7 +166,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    padding: 16,
+    paddingHorizontal: 16,
   },
   labelContainer: {
     flex: 1,
@@ -191,5 +192,8 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontWeight: 'bold' as const,
+  },
+  bottomSpacer: {
+    height: 16,
   },
 });
