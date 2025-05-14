@@ -31,6 +31,111 @@
 Các icon đang dùng 
 
 
+Tôi sẽ giúp bạn review toàn bộ code và đưa ra các gợi ý để tối ưu dung lượng ứng dụng. Đầu tiên, hãy xem cấu trúc thư mục của dự án:
+
+Ran tool
+Hãy kiểm tra nội dung của package.json để xem các dependencies:
+
+Read file: package.json
+Hãy kiểm tra cấu trúc thư mục src:
+
+Ran tool
+Dựa trên review code của dự án, tôi có một số gợi ý để tối ưu dung lượng app sau khi build:
+
+1. **Tối ưu Dependencies:**
+   - Loại bỏ các dependencies không cần thiết hoặc trùng lặp
+   - Sử dụng phiên bản nhẹ hơn của các thư viện:
+     - Thay vì `date-fns` (full package), có thể sử dụng `date-fns/lite` hoặc chỉ import các functions cần thiết
+     - Với `react-native-vector-icons`, chỉ nên import các icon families thực sự cần dùng
+
+2. **Code Splitting và Lazy Loading:**
+   - Implement lazy loading cho các screens không cần thiết ngay lập tức
+   - Sử dụng dynamic imports cho các components lớn
+   - Tách các features thành các chunks riêng biệt
+
+3. **Asset Optimization:**
+   - Tối ưu hóa images bằng cách sử dụng công cụ như `imagemin`
+   - Sử dụng webp thay cho png/jpg khi có thể
+   - Implement lazy loading cho images
+
+4. **Bundle Optimization:**
+   ```javascript
+   // metro.config.js
+   module.exports = {
+     transformer: {
+       getTransformOptions: async () => ({
+         transform: {
+           experimentalImportSupport: false,
+           inlineRequires: true,
+         },
+       }),
+     },
+     // Enable Hermes Engine
+     enableHermes: true,
+   };
+   ```
+
+5. **Production Build Configuration:**
+   - Trong Android (android/app/build.gradle):
+     ```gradle
+     def enableProguardInReleaseBuilds = true
+     def enableSeparateBuildPerCPUArchitecture = true
+     ```
+   - Enable R8 full mode trong Android
+   - Enable Hermes engine
+
+6. **Code Optimization:**
+   - Sử dụng React.memo() cho các components không cần re-render thường xuyên
+   - Implement proper memoization với useMemo và useCallback
+   - Tối ưu các re-renders không cần thiết
+
+7. **Tree Shaking:**
+   - Cấu hình babel để enable tree shaking
+   - Sử dụng ES modules (import/export) thay vì CommonJS (require)
+   - Loại bỏ dead code và unused exports
+
+8. **i18n Optimization:**
+   - Chỉ load ngôn ngữ hiện tại, các ngôn ngữ khác load theo demand
+   - Tách các translation files thành các chunks nhỏ hơn
+
+9. **Performance Monitoring:**
+   - Implement performance monitoring để track bundle size và performance metrics
+   - Sử dụng React Native Performance Monitor
+
+10. **Build Configuration:**
+    ```javascript
+    // babel.config.js
+    module.exports = {
+      presets: ['module:@react-native/babel-preset'],
+      plugins: [
+        'transform-remove-console', // remove console.log in production
+        ['react-native-reanimated/plugin'],
+      ],
+    };
+    ```
+
+11. **Specific Optimizations:**
+    - Với `react-native-reanimated`, sử dụng worklets thay vì JS thread khi có thể
+    - Với `react-native-svg`, convert các SVG phức tạp thành components tĩnh
+    - Optimize các network calls và caching strategy
+
+12. **Development vs Production:**
+    - Tách biệt config cho development và production
+    - Loại bỏ các debug tools và console.log trong production build
+    - Implement proper error boundaries
+
+Để implement các optimizations này, bạn cần:
+
+1. Cập nhật metro.config.js với cấu hình tối ưu
+2. Thêm các plugin babel cần thiết
+3. Cập nhật gradle config cho Android
+4. Review và refactor code theo các best practices đã đề xuất
+5. Implement code splitting và lazy loading
+6. Optimize assets và translations
+
+Bạn có muốn tôi giúp implement bất kỳ optimization nào trong số này không?
+
+
 -----
 - theme background
   - dark: #131418
