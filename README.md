@@ -56,6 +56,27 @@ npx react-native run-ios   # or run-android
 
 ---
 
+## 🛠 Build app
+
+Prepare file for build app
+- .env
+```text
+UNSPLASH_ACCESS_KEY=xxx
+```
+- android/app/sudoku-key.keystore
+```bash
+keytool -genkeypair -v -keystore sudoku-key.keystore -alias sudokuKey -keyalg RSA -keysize 2048 -validity 10000
+```
+
+```bash
+git clone https://github.com/FinbertMDS/SudokuKillerApp.git
+cd SudokuKillerApp
+cd android
+./gradlew assembleRelease
+```
+
+---
+
 ## 📈 Planned Features (Coming Soon)
 
 - Online Multiplayer mode (Challenge your friends!)
