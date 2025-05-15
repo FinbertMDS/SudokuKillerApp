@@ -49,12 +49,12 @@ const App = () => {
             options={{headerShown: false}}
           />
           <Stack.Screen
-            name="AboutGame"
+            name={SCREENS.ABOUT_GAME}
             component={AboutGame}
             options={{headerShown: false}}
           />
           <Stack.Screen
-            name="Licenses"
+            name={SCREENS.LICENSES}
             component={LicensesScreen}
             options={{headerShown: false}}
           />
