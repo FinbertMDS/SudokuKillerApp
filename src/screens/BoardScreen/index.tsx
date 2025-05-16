@@ -114,7 +114,7 @@ const BoardScreen = () => {
       setIsLoading(false);
 
       if (initGame && savedGame) {
-        setInitialBoard(deepCloneBoard(savedGame.savedBoard));
+        setInitialBoard(deepCloneBoard(initGame.initialBoard));
         setBoard(deepCloneBoard(savedGame.savedBoard));
         setHistory(savedGame.savedHistory);
         setNotes(savedGame.savedNotes);
@@ -313,12 +313,12 @@ const BoardScreen = () => {
 
     const newBoard = deepCloneBoard(board);
     newBoard[row][col] = null;
+    setSelectedCell({...selectedCell, value: null});
     setBoard(newBoard);
     const newNotes = deepCloneNotes(notes);
     newNotes[row][col] = [];
     setNotes(newNotes);
     saveHistory(newBoard);
-    setSelectedCell({...selectedCell, value: null});
   };
 
   const handleHint = () => {
@@ -332,6 +332,7 @@ const BoardScreen = () => {
     const solvedNum = solvedBoard[row][col];
     const newBoard = deepCloneBoard(board);
     newBoard[row][col] = solvedNum;
+    setSelectedCell({...selectedCell, value: solvedNum});
     setBoard(newBoard);
     saveHistory(newBoard);
     setNotes(prevNotes => removeNoteFromPeers(prevNotes, row, col, solvedNum));
