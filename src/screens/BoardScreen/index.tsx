@@ -183,14 +183,19 @@ const BoardScreen = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isClosedRewarded]);
-  const {mistakes, limitReached, incrementMistake, resetMistakes} =
-    useMistakeCounter({
-      maxMistakes: MAX_MISTAKES,
-      onLimitReached: () => {
-        setIsPlaying(false);
-        setIsPaused(true);
-      },
-    });
+  const {
+    totalMistakes,
+    mistakes,
+    limitReached,
+    incrementMistake,
+    resetMistakes,
+  } = useMistakeCounter({
+    maxMistakes: MAX_MISTAKES,
+    onLimitReached: () => {
+      setIsPlaying(false);
+      setIsPaused(true);
+    },
+  });
 
   const handleLimitReached = async () => {
     await handleResetGame();
@@ -259,6 +264,7 @@ const BoardScreen = () => {
       savedLevel: level,
       savedBoard: board,
       savedMistake: mistakes,
+      savedTotalMistake: totalMistakes,
       savedTimePlayed: seconds,
       savedHistory: history,
       savedNotes: notes,
@@ -274,6 +280,7 @@ const BoardScreen = () => {
       savedLevel: level,
       savedBoard: board,
       savedMistake: mistakes,
+      savedTotalMistake: totalMistakes,
       savedTimePlayed: seconds,
       savedHistory: history,
       savedNotes: notes,
@@ -295,6 +302,7 @@ const BoardScreen = () => {
       savedLevel: level,
       savedBoard: board,
       savedMistake: mistakes,
+      savedTotalMistake: totalMistakes,
       savedTimePlayed: seconds,
       savedHistory: history,
       savedNotes: notes,
@@ -508,7 +516,7 @@ const BoardScreen = () => {
                 id: id,
                 level: level,
                 timePlayed: seconds,
-                mistakes: mistakes,
+                mistakes: totalMistakes,
               });
               await BoardService.clear();
               navigation.goBack();

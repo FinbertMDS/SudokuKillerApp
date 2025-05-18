@@ -10,6 +10,7 @@ interface MistakeOptions {
 }
 
 export function useMistakeCounter(options?: MistakeOptions) {
+  const [totalMistakes, setTotalMistakes] = useState(0);
   const [mistakes, setMistakes] = useState(0);
   const [limitReached, setLimitReached] = useState(false);
   const maxMistakes = options?.maxMistakes ?? MAX_MISTAKES;
@@ -18,20 +19,13 @@ export function useMistakeCounter(options?: MistakeOptions) {
   // Load last mistakes from storage once
   useEffect(() => {
     BoardService.loadSavedMistake().then(value => {
-      if (value != null) {
-        try {
-          const saved = parseInt(value.toString(), 10);
-          if (!isNaN(saved)) {
-            setMistakes(saved);
-          }
-        } catch (error) {
-          console.error('Failed to parse saved mistake:', error);
-        }
-      }
+      setMistakes(value.savedMistake);
+      setTotalMistakes(value.savedTotalMistake);
     });
   }, []);
 
   const incrementMistake = () => {
+    setTotalMistakes(prev => prev + 1);
     setMistakes(prev => {
       const updated = prev + 1;
       if (updated >= maxMistakes) {
@@ -50,6 +44,7 @@ export function useMistakeCounter(options?: MistakeOptions) {
   };
 
   return {
+    totalMistakes,
     mistakes,
     limitReached,
     incrementMistake,

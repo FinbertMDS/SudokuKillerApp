@@ -28,8 +28,14 @@ export type SavedGame = {
   savedLevel: Level;
   savedBoard: CellValue[][];
   savedMistake: number;
+  savedTotalMistake: number;
   savedTimePlayed: number;
   savedHistory: CellValue[][][];
   savedNotes: string[][][];
   lastSaved: Date;
+};
+
+export type SavedMistake = {
+  savedMistake: number;
+  savedTotalMistake: number;
 };
