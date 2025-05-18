@@ -12,7 +12,7 @@ interface MistakeOptions {
 export function useMistakeCounter(options?: MistakeOptions) {
   const [totalMistakes, setTotalMistakes] = useState(0);
   const [mistakes, setMistakes] = useState(0);
-  const [limitReached, setLimitReached] = useState(false);
+  const [limitMistakeReached, setLimitMistakeReached] = useState(false);
   const maxMistakes = options?.maxMistakes ?? MAX_MISTAKES;
   const onLimitReached = options?.onLimitReached;
 
@@ -29,7 +29,7 @@ export function useMistakeCounter(options?: MistakeOptions) {
     setMistakes(prev => {
       const updated = prev + 1;
       if (updated >= maxMistakes) {
-        setLimitReached(true);
+        setLimitMistakeReached(true);
         if (onLimitReached) {
           onLimitReached();
         }
@@ -40,13 +40,13 @@ export function useMistakeCounter(options?: MistakeOptions) {
 
   const resetMistakes = () => {
     setMistakes(0);
-    setLimitReached(false);
+    setLimitMistakeReached(false);
   };
 
   return {
     totalMistakes,
     mistakes,
-    limitReached,
+    limitMistakeReached,
     incrementMistake,
     resetMistakes,
   };

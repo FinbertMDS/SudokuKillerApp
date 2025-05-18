@@ -27,6 +27,8 @@ export type SavedGame = {
   savedId: string;
   savedLevel: Level;
   savedBoard: CellValue[][];
+  savedHintCount: number;
+  savedTotalHintCountUsed: number;
   savedMistake: number;
   savedTotalMistake: number;
   savedTimePlayed: number;
@@ -38,4 +40,9 @@ export type SavedGame = {
 export type SavedMistake = {
   savedMistake: number;
   savedTotalMistake: number;
+};
+
+export type SavedHintCount = {
+  savedHintCount: number;
+  savedTotalHintCountUsed: number;
 };

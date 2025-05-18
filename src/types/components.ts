@@ -38,3 +38,13 @@ export type DailyBackgrounds = {
   dark: string | null;
   date?: string;
 };
+
+export type ActionButtonProps = {
+  id: string;
+  label: string;
+  icon: string[];
+  iconChangeFlag?: boolean;
+  showBadge?: boolean;
+  badgeCount?: number;
+  onPress?: () => void;
+};

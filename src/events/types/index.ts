@@ -13,6 +13,7 @@ export type GameEndedCoreEvent = {
   level: Level;
   timePlayed: number;
   mistakes: number;
+  hintCount: number;
 };
 
 export type StatisticsUpdatedCoreEvent = {

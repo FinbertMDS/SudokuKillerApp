@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row' as const,
     justifyContent: 'space-around' as const,
     alignItems: 'center' as const,
-    paddingVertical: 20,
+    marginTop: 20,
   },
   infoBlock: {
     alignItems: 'center' as const,

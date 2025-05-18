@@ -521,13 +521,12 @@ const Grid = ({
 
 const styles = StyleSheet.create({
   boardContainer: {
-    paddingVertical: 10,
     alignItems: 'center' as const,
+    marginTop: 20,
   },
   gridWrapper: {
     width: CELL_SIZE * BOARD_SIZE,
     height: CELL_SIZE * BOARD_SIZE,
-    marginVertical: 10,
   },
   grid: {
     flexDirection: 'column' as const,

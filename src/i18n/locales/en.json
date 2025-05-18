@@ -124,8 +124,11 @@
   "filter.thisMonth": "This Month",
   "filter.thisYear": "This Year",
 
+  "ad.cancel": "Cancel",
+  "ad.confirm": "Watch Ad",
+
   "mistakeWarning.title": "Mistake Limit Reached",
   "mistakeWarning.message": "You've made more than {{max}} mistakes!\nWatch an ad to continue playing.",
-  "mistakeWarning.cancel": "Cancel",
-  "mistakeWarning.confirm": "Watch Ad"
+  "hintWarning.title": "Out of Hints",
+  "hintWarning.message": "You've used all your hints!\nWatch an ad to reset your hints and continue solving."
 }

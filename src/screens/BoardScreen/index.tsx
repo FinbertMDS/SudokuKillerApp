@@ -32,6 +32,7 @@ import {CORE_EVENTS} from '../../events';
 import eventBus from '../../events/eventBus';
 import {useAppPause} from '../../hooks/useAppPause';
 import {useGameTimer} from '../../hooks/useGameTimer';
+import {useHintCounter} from '../../hooks/useHintCounter';
 import {useMistakeCounter} from '../../hooks/useMistakeCounter';
 import {BoardService} from '../../services/BoardService';
 import {SettingsService} from '../../services/SettingsService';
@@ -60,6 +61,7 @@ import {
   ANIMATION_TYPE,
   BOARD_SIZE,
   DEFAULT_SETTINGS,
+  MAX_HINTS,
   MAX_MISTAKES,
   MAX_TIMEPLAYED,
   SCREENS,
@@ -168,6 +170,9 @@ const BoardScreen = () => {
     return () => eventBus.off(CORE_EVENTS.settingsUpdated, handeSettingUpdated);
   }, []);
   // ===========================================================
+
+  // Hiển thị rewarded ad và xử lý khi đóng ad
+  // ===========================================================
   const {
     isLoaded: isLoadedRewarded,
     isClosed: isClosedRewarded,
@@ -179,14 +184,21 @@ const BoardScreen = () => {
   }, [loadRewarded]);
   useEffect(() => {
     if (isClosedRewarded) {
-      handleWatchAdToReset();
+      setIsPlaying(true);
+      setIsPaused(false);
+      if (limitMistakeReached) {
+        resetMistakes();
+      } else if (limitHintReached) {
+        resetHintCount();
+      }
+      loadRewarded();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isClosedRewarded]);
   const {
     totalMistakes,
     mistakes,
-    limitReached,
+    limitMistakeReached,
     incrementMistake,
     resetMistakes,
   } = useMistakeCounter({
@@ -196,24 +208,46 @@ const BoardScreen = () => {
       setIsPaused(true);
     },
   });
+  const {
+    totalHintCountUsed,
+    hintCount,
+    limitHintReached,
+    decrementHintCount,
+    resetHintCount,
+    changeLimitHintReached,
+  } = useHintCounter({
+    maxHintCount: MAX_HINTS,
+    onLimitReached: () => {
+      setIsPlaying(false);
+      setIsPaused(true);
+    },
+  });
 
-  const handleLimitReached = async () => {
+  const handleLimitMistakeReached = async () => {
     await handleResetGame();
     navigation.goBack();
   };
 
-  const handleWatchAdToContinue = () => {
+  const handleLimitHintReached = (_isPlaying: boolean = false) => {
+    if (!_isPlaying) {
+      setIsPlaying(false);
+      setIsPaused(true);
+      changeLimitHintReached(true);
+    } else {
+      setIsPlaying(true);
+      setIsPaused(false);
+      changeLimitHintReached(false);
+    }
+  };
+
+  const handleWatchAdToContinue = (typeAd: 'mistake' | 'hint') => {
     if (isLoadedRewarded) {
       showRewarded();
     } else {
-      handleLimitReached();
+      if (typeAd === 'mistake') {
+        handleLimitMistakeReached();
+      }
     }
-  };
-  const handleWatchAdToReset = () => {
-    resetMistakes();
-    setIsPlaying(true);
-    setIsPaused(false);
-    loadRewarded();
   };
   // ===========================================================
 
@@ -263,6 +297,8 @@ const BoardScreen = () => {
       savedId: id,
       savedLevel: level,
       savedBoard: board,
+      savedHintCount: hintCount,
+      savedTotalHintCountUsed: totalHintCountUsed,
       savedMistake: mistakes,
       savedTotalMistake: totalMistakes,
       savedTimePlayed: seconds,
@@ -279,6 +315,8 @@ const BoardScreen = () => {
       savedId: id,
       savedLevel: level,
       savedBoard: board,
+      savedHintCount: hintCount,
+      savedTotalHintCountUsed: totalHintCountUsed,
       savedMistake: mistakes,
       savedTotalMistake: totalMistakes,
       savedTimePlayed: seconds,
@@ -301,6 +339,8 @@ const BoardScreen = () => {
       savedId: id,
       savedLevel: level,
       savedBoard: board,
+      savedHintCount: hintCount,
+      savedTotalHintCountUsed: totalHintCountUsed,
       savedMistake: mistakes,
       savedTotalMistake: totalMistakes,
       savedTimePlayed: seconds,
@@ -357,14 +397,49 @@ const BoardScreen = () => {
     saveHistory(newBoard);
   };
 
+  const handleCheckSolved = (_totalHintCountUsed: number) => {
+    setIsPlaying(false);
+    setIsPaused(true);
+
+    Alert.alert(
+      t('done'),
+      t('congratulations'),
+      [
+        {
+          text: t('backToMain'),
+          onPress: async () => {
+            eventBus.emit(CORE_EVENTS.gameEnded, {
+              id: id,
+              level: level,
+              timePlayed: seconds,
+              mistakes: totalMistakes,
+              hintCount: _totalHintCountUsed,
+            });
+            await BoardService.clear();
+            navigation.goBack();
+          },
+        },
+      ],
+      {cancelable: false},
+    );
+  };
+
   const handleHint = () => {
     if (!selectedCell) {
       return;
     }
     const {row, col} = selectedCell;
-    if (initialBoard[row][col] != null) {
+    if (
+      initialBoard[row][col] != null ||
+      board[row][col] === solvedBoard[row][col]
+    ) {
       return;
     }
+    if (hintCount <= 0) {
+      handleLimitHintReached(false);
+      return;
+    }
+    decrementHintCount();
     const solvedNum = solvedBoard[row][col];
     const newBoard = deepCloneBoard(board);
     newBoard[row][col] = solvedNum;
@@ -372,7 +447,10 @@ const BoardScreen = () => {
     setBoard(newBoard);
     saveHistory(newBoard);
     setNotes(prevNotes => removeNoteFromPeers(prevNotes, row, col, solvedNum));
-    handleCheckSolved(newBoard);
+
+    if (checkBoardIsSolved(newBoard, solvedBoard)) {
+      handleCheckSolved(totalHintCountUsed + 1);
+    }
   };
 
   /**
@@ -431,7 +509,9 @@ const BoardScreen = () => {
       }
 
       handleCheckRowOrColResolved(row, col, newBoard);
-      handleCheckSolved(newBoard);
+      if (checkBoardIsSolved(newBoard, solvedBoard)) {
+        handleCheckSolved(totalHintCountUsed);
+      }
     }
   };
 
@@ -497,34 +577,6 @@ const BoardScreen = () => {
       });
       delete timeoutRefs.current[key]; // Xóa timeoutRef sau khi done
     }, ANIMATION_DURATION);
-  };
-
-  const handleCheckSolved = (newBoard: CellValue[][]) => {
-    if (checkBoardIsSolved(newBoard, solvedBoard)) {
-      setIsPlaying(false);
-      setIsPaused(true);
-
-      Alert.alert(
-        t('done'),
-        t('congratulations'),
-        [
-          {
-            text: t('backToMain'),
-            onPress: async () => {
-              eventBus.emit(CORE_EVENTS.gameEnded, {
-                id: id,
-                level: level,
-                timePlayed: seconds,
-                mistakes: totalMistakes,
-              });
-              await BoardService.clear();
-              navigation.goBack();
-            },
-          },
-        ],
-        {cancelable: false},
-      );
-    }
   };
 
   useAppPause(
@@ -603,6 +655,7 @@ const BoardScreen = () => {
       />
       <ActionButtons
         noteMode={noteMode}
+        hintCount={hintCount}
         onNote={setNoteMode}
         onUndo={handleUndo}
         onErase={handleErase}
@@ -622,14 +675,26 @@ const BoardScreen = () => {
           onResume={handleResume}
         />
       )}
-      {limitReached && (
+      {limitMistakeReached && (
         <ConfirmDialog
           title={t('mistakeWarning.title')}
           message={t('mistakeWarning.message', {max: MAX_MISTAKES})}
-          cancelText={t('mistakeWarning.cancel')}
-          confirmText={t('mistakeWarning.confirm')}
-          onCancel={() => handleLimitReached()}
-          onConfirm={() => handleWatchAdToContinue()}
+          cancelText={t('ad.cancel')}
+          confirmText={t('ad.confirm')}
+          onCancel={() => handleLimitMistakeReached()}
+          onConfirm={() => handleWatchAdToContinue('mistake')}
+        />
+      )}
+      {limitHintReached && (
+        <ConfirmDialog
+          title={t('hintWarning.title')}
+          message={t('hintWarning.message', {max: MAX_HINTS})}
+          cancelText={t('ad.cancel')}
+          confirmText={t('ad.confirm')}
+          onCancel={() => {
+            handleLimitHintReached(true);
+          }}
+          onConfirm={() => handleWatchAdToContinue('hint')}
         />
       )}
       <View style={[styles.adContainer, {backgroundColor: theme.background}]}>
