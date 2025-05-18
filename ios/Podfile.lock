@@ -5,6 +5,9 @@ PODS:
   - FBLazyVector (0.79.0)
   - fmt (11.0.2)
   - glog (0.3.5)
+  - Google-Mobile-Ads-SDK (12.3.0):
+    - GoogleUserMessagingPlatform (>= 1.1)
+  - GoogleUserMessagingPlatform (2.7.0)
   - hermes-engine (0.79.0):
     - hermes-engine/Pre-built (= 0.79.0)
   - hermes-engine/Pre-built (0.79.0)
@@ -1781,6 +1784,32 @@ PODS:
     - React-utils (= 0.79.0)
   - RNDeviceInfo (14.0.4):
     - React-Core
+  - RNGoogleMobileAds (15.2.0):
+    - DoubleConversion
+    - glog
+    - Google-Mobile-Ads-SDK (= 12.3.0)
+    - GoogleUserMessagingPlatform (= 2.7.0)
+    - hermes-engine
+    - RCT-Folly (= 2024.11.18.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-hermes
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - RNLocalize (3.4.1):
     - DoubleConversion
     - glog
@@ -2133,6 +2162,7 @@ DEPENDENCIES:
   - ReactCodegen (from `build/generated/ios`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
+  - RNGoogleMobileAds (from `../node_modules/react-native-google-mobile-ads`)
   - RNLocalize (from `../node_modules/react-native-localize`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
@@ -2142,6 +2172,8 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - Google-Mobile-Ads-SDK
+    - GoogleUserMessagingPlatform
     - SocketRocket
 
 EXTERNAL SOURCES:
@@ -2294,6 +2326,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   RNDeviceInfo:
     :path: "../node_modules/react-native-device-info"
+  RNGoogleMobileAds:
+    :path: "../node_modules/react-native-google-mobile-ads"
   RNLocalize:
     :path: "../node_modules/react-native-localize"
   RNReanimated:
@@ -2314,6 +2348,8 @@ SPEC CHECKSUMS:
   FBLazyVector: 758fbc1be5fb7ce700b23160033d82e574c2b6b7
   fmt: a40bb5bd0294ea969aaaba240a927bd33d878cdd
   glog: 5683914934d5b6e4240e497e0f4a3b42d1854183
+  Google-Mobile-Ads-SDK: 01b1b77e0bdba8b4027ae62e9bd52e5a95d930aa
+  GoogleUserMessagingPlatform: a8b56893477f67212fbc8411c139e61d463349f5
   hermes-engine: cd4bd90f051e3658c83cc00e87c603dfe1b75947
   RCT-Folly: 36fe2295e44b10d831836cc0d1daec5f8abcf809
   RCTDeprecation: c147f8912f768e5eedbc5f115b2b223d007d9fe3
@@ -2382,6 +2418,7 @@ SPEC CHECKSUMS:
   ReactCodegen: daf57f5314369a4ad607ee77516d45aad03b10d7
   ReactCommon: c07346679f14c0b62ad02b20e18e984da3b575ce
   RNDeviceInfo: feea80a690d2bde1fe51461cf548039258bd03f2
+  RNGoogleMobileAds: 2e1a593c91bbc2e21e13ce0ace54c72707ca173d
   RNLocalize: 68e3e3b7d778a1f8a9314f437d272f236280c22f
   RNReanimated: 8b24b49fc13fce9a6e1729ccff645a63d2b7a6d1
   RNScreens: c5c07a86e4088ce92f0d3854082250dfa9c61f75

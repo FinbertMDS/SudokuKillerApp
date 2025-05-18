@@ -122,5 +122,10 @@
   "filter.today": "Hôm nay",
   "filter.thisWeek": "Tuần này",
   "filter.thisMonth": "Tháng này",
-  "filter.thisYear": "Năm này"
+  "filter.thisYear": "Năm này",
+
+  "mistakeWarning.title": "Đã vượt quá số lần sai",
+  "mistakeWarning.message": "Bạn đã mắc quá {{max}} lỗi!\nXem quảng cáo để tiếp tục chơi.",
+  "mistakeWarning.cancel": "Hủy",
+  "mistakeWarning.confirm": "Xem quảng cáo"
 }

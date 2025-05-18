@@ -29,8 +29,8 @@ const ConfirmDialog = ({
   const {theme} = useTheme();
 
   return (
-    <Modal transparent animationType="fade" onRequestClose={onCancel}>
-      <Pressable style={styles.overlay} onPress={onCancel}>
+    <Modal transparent animationType="fade" onRequestClose={() => onCancel()}>
+      <Pressable style={styles.overlay} onPress={() => onCancel()}>
         <View
           style={[styles.dialogWrapper, {backgroundColor: theme.background}]}>
           <View style={styles.dialog}>
@@ -42,13 +42,13 @@ const ConfirmDialog = ({
 
           <View style={styles.buttonContainer}>
             <TouchableOpacity
-              onPress={onCancel}
+              onPress={() => onCancel()}
               style={[styles.button, styles.borderRight]}>
               <Text style={[styles.cancelText, {color: theme.text}]}>
                 {cancelText}
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={onConfirm} style={styles.button}>
+            <TouchableOpacity onPress={() => onConfirm()} style={styles.button}>
               <Text style={[styles.confirmText, {color: theme.danger}]}>
                 {confirmText}
               </Text>

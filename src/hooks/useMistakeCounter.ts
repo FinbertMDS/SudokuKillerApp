@@ -1,8 +1,8 @@
 // useMistakeCounter.ts
 
-import { useEffect, useState } from 'react';
-import { BoardService } from '../services/BoardService';
-import { MAX_MISTAKES } from '../utils/constants';
+import {useEffect, useState} from 'react';
+import {BoardService} from '../services/BoardService';
+import {MAX_MISTAKES} from '../utils/constants';
 
 interface MistakeOptions {
   maxMistakes?: number;
@@ -11,6 +11,7 @@ interface MistakeOptions {
 
 export function useMistakeCounter(options?: MistakeOptions) {
   const [mistakes, setMistakes] = useState(0);
+  const [limitReached, setLimitReached] = useState(false);
   const maxMistakes = options?.maxMistakes ?? MAX_MISTAKES;
   const onLimitReached = options?.onLimitReached;
 
@@ -34,6 +35,7 @@ export function useMistakeCounter(options?: MistakeOptions) {
     setMistakes(prev => {
       const updated = prev + 1;
       if (updated >= maxMistakes) {
+        setLimitReached(true);
         if (onLimitReached) {
           onLimitReached();
         }
@@ -44,10 +46,12 @@ export function useMistakeCounter(options?: MistakeOptions) {
 
   const resetMistakes = () => {
     setMistakes(0);
+    setLimitReached(false);
   };
 
   return {
     mistakes,
+    limitReached,
     incrementMistake,
     resetMistakes,
   };

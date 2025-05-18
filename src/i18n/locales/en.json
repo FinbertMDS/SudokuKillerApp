@@ -122,5 +122,10 @@
   "filter.today": "Today",
   "filter.thisWeek": "This Week",
   "filter.thisMonth": "This Month",
-  "filter.thisYear": "This Year"
+  "filter.thisYear": "This Year",
+
+  "mistakeWarning.title": "Mistake Limit Reached",
+  "mistakeWarning.message": "You've made more than {{max}} mistakes!\nWatch an ad to continue playing.",
+  "mistakeWarning.cancel": "Cancel",
+  "mistakeWarning.confirm": "Watch Ad"
 }

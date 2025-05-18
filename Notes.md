@@ -38,6 +38,20 @@ Release bug
 - thống kê: khi scroll xuống dưới thì 2 chip bên trên vẫn phải có padding
 
 
+------
+
+app ID
+ca-app-pub-4776985253905766~3093131803
+
+ad unit ID: banner
+ca-app-pub-4776985253905766/8720863006
+
+ad unit ID: interstitial
+ca-app-pub-4776985253905766/9006985221
+
+ad unit ID: killer-sudoku-ios-reward
+ca-app-pub-4776985253905766/7829634920
+
 --------------
 
 Tôi sẽ giúp bạn review toàn bộ code và đưa ra các gợi ý để tối ưu dung lượng ứng dụng. Đầu tiên, hãy xem cấu trúc thư mục của dự án:

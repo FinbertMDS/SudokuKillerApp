@@ -6,13 +6,26 @@ import {
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {ActivityIndicator, Alert, StyleSheet} from 'react-native';
+import {
+  ActivityIndicator,
+  Alert,
+  Platform,
+  StyleSheet,
+  View,
+} from 'react-native';
+import {
+  BannerAd,
+  BannerAdSize,
+  useForeground,
+  useRewardedAd,
+} from 'react-native-google-mobile-ads';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import ActionButtons from '../../components/Board/ActionButtons';
 import Grid from '../../components/Board/Grid';
 import InfoPanel from '../../components/Board/InfoPanel';
 import NumberPad from '../../components/Board/NumberPad';
 import PauseModal from '../../components/Board/PauseModal';
+import ConfirmDialog from '../../components/commons/ConfirmDialog';
 import Header from '../../components/commons/Header';
 import {useTheme} from '../../context/ThemeContext';
 import {CORE_EVENTS} from '../../events';
@@ -52,6 +65,7 @@ import {
   SCREENS,
 } from '../../utils/constants';
 import {formatTime} from '../../utils/dateUtil';
+import {getAdUnit} from '../../utils/getAdUnit';
 
 const BoardScreen = () => {
   const {theme} = useTheme();
@@ -154,33 +168,48 @@ const BoardScreen = () => {
     return () => eventBus.off(CORE_EVENTS.settingsUpdated, handeSettingUpdated);
   }, []);
   // ===========================================================
+  const {
+    isLoaded: isLoadedRewarded,
+    isClosed: isClosedRewarded,
+    load: loadRewarded,
+    show: showRewarded,
+  } = useRewardedAd(getAdUnit('rewarded'));
+  useEffect(() => {
+    loadRewarded();
+  }, [loadRewarded]);
+  useEffect(() => {
+    if (isClosedRewarded) {
+      handleWatchAdToReset();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isClosedRewarded]);
+  const {mistakes, limitReached, incrementMistake, resetMistakes} =
+    useMistakeCounter({
+      maxMistakes: MAX_MISTAKES,
+      onLimitReached: () => {
+        setIsPlaying(false);
+        setIsPaused(true);
+      },
+    });
 
-  // Hiển thị số lần sai
-  // ===========================================================
-  const {mistakes, incrementMistake, resetMistakes} = useMistakeCounter({
-    maxMistakes: MAX_MISTAKES,
-    onLimitReached: async () => {
-      // Gọi khi người chơi đã sai quá nhiều lần
-      await handleResetGame();
-      // Bạn có thể show modal thua hoặc reset game
-      Alert.alert(
-        t('mistakeWarning'),
-        t('tooManyMistakes', {max: MAX_MISTAKES}),
-        [
-          {
-            text: t('ok'),
-            onPress: () => {
-              // setIsPlaying(true);
-              navigation.goBack();
-            },
-          },
-        ],
-        {
-          cancelable: false,
-        },
-      );
-    },
-  });
+  const handleLimitReached = async () => {
+    await handleResetGame();
+    navigation.goBack();
+  };
+
+  const handleWatchAdToContinue = () => {
+    if (isLoadedRewarded) {
+      showRewarded();
+    } else {
+      handleLimitReached();
+    }
+  };
+  const handleWatchAdToReset = () => {
+    resetMistakes();
+    setIsPlaying(true);
+    setIsPaused(false);
+    loadRewarded();
+  };
   // ===========================================================
 
   // Hiển thị thời gian đã chơi
@@ -519,6 +548,12 @@ const BoardScreen = () => {
     }, []),
   );
 
+  const bannerRef = useRef<BannerAd>(null);
+  const bannerId = getAdUnit('banner');
+  useForeground(() => {
+    Platform.OS === 'ios' && bannerRef.current?.load();
+  });
+
   if (isLoading) {
     return (
       <SafeAreaView
@@ -531,7 +566,7 @@ const BoardScreen = () => {
 
   return (
     <SafeAreaView
-      edges={['top']}
+      edges={['top', 'bottom']}
       style={[styles.container, {backgroundColor: theme.background}]}>
       <Header
         title={t('appName')}
@@ -580,6 +615,23 @@ const BoardScreen = () => {
           onResume={handleResume}
         />
       )}
+      {limitReached && (
+        <ConfirmDialog
+          title={t('mistakeWarning.title')}
+          message={t('mistakeWarning.message', {max: MAX_MISTAKES})}
+          cancelText={t('mistakeWarning.cancel')}
+          confirmText={t('mistakeWarning.confirm')}
+          onCancel={() => handleLimitReached()}
+          onConfirm={() => handleWatchAdToContinue()}
+        />
+      )}
+      <View style={[styles.adContainer, {backgroundColor: theme.background}]}>
+        <BannerAd
+          ref={bannerRef}
+          unitId={bannerId}
+          size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+        />
+      </View>
     </SafeAreaView>
   );
 };
@@ -593,6 +645,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  adContainer: {
+    width: '100%',
+    alignItems: 'center',
+    position: 'absolute',
+    bottom: 30,
   },
 });
 
