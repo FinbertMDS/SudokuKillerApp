@@ -344,17 +344,16 @@ const BoardScreen = () => {
     if (initialBoard[row][col]) {
       return;
     }
+    const newNotes = deepCloneNotes(notes);
+    newNotes[row][col] = [];
+    setNotes(newNotes);
     if (board[row][col] === null || board[row][col] === 0) {
       return;
     }
-
     const newBoard = deepCloneBoard(board);
     newBoard[row][col] = null;
     setSelectedCell({...selectedCell, value: null});
     setBoard(newBoard);
-    const newNotes = deepCloneNotes(notes);
-    newNotes[row][col] = [];
-    setNotes(newNotes);
     saveHistory(newBoard);
   };
 
