@@ -78,7 +78,7 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.sudokukillerapp"
+    namespace "com.finbertngo.sudokukiller"
     defaultConfig {
         applicationId "com.finbertngo.sudokukiller"
         minSdkVersion rootProject.ext.minSdkVersion
