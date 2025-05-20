@@ -448,6 +448,7 @@ const BoardScreen = () => {
     saveHistory(newBoard);
     setNotes(prevNotes => removeNoteFromPeers(prevNotes, row, col, solvedNum));
 
+    handleCheckRowOrColResolved(row, col, newBoard);
     if (checkBoardIsSolved(newBoard, solvedBoard)) {
       handleCheckSolved(totalHintCountUsed + 1);
     }
@@ -624,55 +625,64 @@ const BoardScreen = () => {
   }
 
   return (
-    <SafeAreaView
-      edges={['top', 'bottom']}
-      style={[styles.container, {backgroundColor: theme.background}]}>
-      <Header
-        title={t('appName')}
-        showBack={true}
-        showSettings={true}
-        showTheme={true}
-        onBack={handleBackPress}
-        onSettings={handleGoToSettings}
-      />
-      <InfoPanel
-        level={level}
-        mistakes={mistakes}
-        time={seconds}
-        isPaused={isPaused}
-        settings={settings}
-        onPause={handlePause}
-      />
-      <Grid
-        board={board}
-        cages={cages}
-        notes={notes}
-        solvedBoard={solvedBoard}
-        selectedCell={selectedCell}
-        settings={settings}
-        onPress={handleCellPress}
-        animatedCells={animatedCells}
-      />
-      <ActionButtons
-        noteMode={noteMode}
-        hintCount={hintCount}
-        onNote={setNoteMode}
-        onUndo={handleUndo}
-        onErase={handleErase}
-        onHint={handleHint}
-        onSolve={handleSolve}
-      />
-      <NumberPad
-        board={board}
-        settings={settings}
-        onSelectNumber={handleNumberPress}
-      />
+    <>
+      <SafeAreaView
+        edges={['top', 'bottom']}
+        style={[styles.container, {backgroundColor: theme.background}]}>
+        <Header
+          title={t('appName')}
+          showBack={true}
+          showSettings={true}
+          showTheme={true}
+          onBack={handleBackPress}
+          onSettings={handleGoToSettings}
+        />
+        <InfoPanel
+          level={level}
+          mistakes={mistakes}
+          time={seconds}
+          isPaused={isPaused}
+          settings={settings}
+          onPause={handlePause}
+        />
+        <Grid
+          board={board}
+          cages={cages}
+          notes={notes}
+          solvedBoard={solvedBoard}
+          selectedCell={selectedCell}
+          settings={settings}
+          onPress={handleCellPress}
+          animatedCells={animatedCells}
+        />
+        <ActionButtons
+          noteMode={noteMode}
+          hintCount={hintCount}
+          onNote={setNoteMode}
+          onUndo={handleUndo}
+          onErase={handleErase}
+          onHint={handleHint}
+          onSolve={handleSolve}
+        />
+        <NumberPad
+          board={board}
+          settings={settings}
+          onSelectNumber={handleNumberPress}
+        />
+        <View style={[styles.adContainer, {backgroundColor: theme.background}]}>
+          <BannerAd
+            ref={bannerRef}
+            unitId={bannerId}
+            size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+          />
+        </View>
+      </SafeAreaView>
       {showPauseModal && (
         <PauseModal
           level={level}
           mistake={mistakes}
           time={seconds}
-          onResume={handleResume}
+          onResume={() => handleResume()}
         />
       )}
       {limitMistakeReached && (
@@ -681,8 +691,12 @@ const BoardScreen = () => {
           message={t('mistakeWarning.message', {max: MAX_MISTAKES})}
           cancelText={t('ad.cancel')}
           confirmText={t('ad.confirm')}
-          onCancel={() => handleLimitMistakeReached()}
-          onConfirm={() => handleWatchAdToContinue('mistake')}
+          onCancel={() => {
+            handleLimitMistakeReached();
+          }}
+          onConfirm={() => {
+            handleWatchAdToContinue('mistake');
+          }}
         />
       )}
       {limitHintReached && (
@@ -694,24 +708,19 @@ const BoardScreen = () => {
           onCancel={() => {
             handleLimitHintReached(true);
           }}
-          onConfirm={() => handleWatchAdToContinue('hint')}
+          onConfirm={() => {
+            handleWatchAdToContinue('hint');
+          }}
         />
       )}
-      <View style={[styles.adContainer, {backgroundColor: theme.background}]}>
-        <BannerAd
-          ref={bannerRef}
-          unitId={bannerId}
-          size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-        />
-      </View>
-    </SafeAreaView>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
+    // alignItems: 'center',
   },
   loadingContainer: {
     flex: 1,

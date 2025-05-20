@@ -146,6 +146,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
+    marginTop: 16,
     paddingHorizontal: 16,
   },
   item: {
