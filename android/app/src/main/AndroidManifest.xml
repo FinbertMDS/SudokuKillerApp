@@ -10,7 +10,13 @@
       android:roundIcon="@mipmap/ic_launcher_round"
       android:allowBackup="false"
       android:theme="@style/AppTheme"
-      android:supportsRtl="true">
+      android:supportsRtl="true"
+      xmlns:tools="http://schemas.android.com/tools"
+    >
+      <meta-data
+        android:name="com.google.android.gms.ads.APPLICATION_ID"
+        android:value="ca-app-pub-4776985253905766~6216922933"
+        tools:replace="android:value"/>
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"

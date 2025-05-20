@@ -1,7 +1,7 @@
 import React from 'react';
 import {
+  Dimensions,
   Modal,
-  Pressable,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -30,7 +30,7 @@ const ConfirmDialog = ({
 
   return (
     <Modal transparent animationType="fade" onRequestClose={() => onCancel()}>
-      <Pressable style={styles.overlay} onPress={() => onCancel()}>
+      <View style={styles.overlay}>
         <View
           style={[styles.dialogWrapper, {backgroundColor: theme.background}]}>
           <View style={styles.dialog}>
@@ -55,20 +55,25 @@ const ConfirmDialog = ({
             </TouchableOpacity>
           </View>
         </View>
-      </Pressable>
+      </View>
     </Modal>
   );
 };
 
+const {width, height} = Dimensions.get('window');
+
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
+    position: 'absolute' as const,
+    width,
+    height,
     justifyContent: 'center' as const,
     alignItems: 'center' as const,
     backgroundColor: 'rgba(0,0,0,0.5)',
   },
   dialogWrapper: {
-    width: 270,
+    width: width * 0.7,
     borderRadius: 13,
     overflow: 'hidden' as const,
     elevation: 5,

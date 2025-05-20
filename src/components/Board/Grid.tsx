@@ -79,7 +79,7 @@ const Grid = ({
         animatedCells[key] === ANIMATION_TYPE.ROW_COL
       ) {
         rowScales[row].value = withSequence(
-          withTiming(0.9, {duration: ANIMATION_DURATION / 3}),
+          withTiming(0.3, {duration: ANIMATION_DURATION / 3}),
           withTiming(1, {duration: ANIMATION_DURATION / 3}),
         );
       }
@@ -88,7 +88,7 @@ const Grid = ({
         animatedCells[key] === ANIMATION_TYPE.ROW_COL
       ) {
         colScales[col].value = withSequence(
-          withTiming(0.9, {duration: ANIMATION_DURATION / 3}),
+          withTiming(0.3, {duration: ANIMATION_DURATION / 3}),
           withTiming(1, {duration: ANIMATION_DURATION / 3}),
         );
       }

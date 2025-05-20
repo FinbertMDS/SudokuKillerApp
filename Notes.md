@@ -43,14 +43,28 @@ Release bug
 app ID
 ca-app-pub-4776985253905766~3093131803
 
-ad unit ID: banner
+ad unit ID: killer-sudoku-ios-main
 ca-app-pub-4776985253905766/8720863006
 
-ad unit ID: interstitial
+ad unit ID: killer-sudoku-ios-interstitial
 ca-app-pub-4776985253905766/9006985221
 
 ad unit ID: killer-sudoku-ios-reward
 ca-app-pub-4776985253905766/7829634920
+
+----
+android
+app ID
+ca-app-pub-4776985253905766~6216922933
+
+ad unit ID: killer-sudoku-android-main
+ca-app-pub-4776985253905766/8853876327
+
+ad unit ID: killer-sudoku-android-interstitial
+ca-app-pub-4776985253905766/1559800119
+
+ad unit ID: killer-sudoku-android-reward
+ca-app-pub-4776985253905766/6812126796
 
 --------------
 
