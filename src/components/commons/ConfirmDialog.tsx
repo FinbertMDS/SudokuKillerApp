@@ -1,12 +1,6 @@
 import React from 'react';
-import {
-  Dimensions,
-  Modal,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import Modal from 'react-native-modal';
 import {useTheme} from '../../context/ThemeContext';
 
 type ConfirmDialogProps = {
@@ -29,8 +23,16 @@ const ConfirmDialog = ({
   const {theme} = useTheme();
 
   return (
-    <Modal transparent animationType="fade" onRequestClose={() => onCancel()}>
-      <View style={styles.overlay}>
+    <View style={StyleSheet.absoluteFillObject}>
+      <Modal
+        isVisible={true}
+        animationIn="zoomIn"
+        animationOut="zoomOut"
+        backdropOpacity={0.5}
+        useNativeDriver
+        onBackButtonPress={() => onCancel()}
+        onBackdropPress={() => onCancel()}
+        onDismiss={() => onCancel()}>
         <View
           style={[styles.dialogWrapper, {backgroundColor: theme.background}]}>
           <View style={styles.dialog}>
@@ -55,25 +57,13 @@ const ConfirmDialog = ({
             </TouchableOpacity>
           </View>
         </View>
-      </View>
-    </Modal>
+      </Modal>
+    </View>
   );
 };
 
-const {width, height} = Dimensions.get('window');
-
 const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    position: 'absolute' as const,
-    width,
-    height,
-    justifyContent: 'center' as const,
-    alignItems: 'center' as const,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-  },
   dialogWrapper: {
-    width: width * 0.7,
     borderRadius: 13,
     overflow: 'hidden' as const,
     elevation: 5,

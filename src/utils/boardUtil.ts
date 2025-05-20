@@ -262,3 +262,32 @@ export const generateBoard = (level: Level, id: string) => {
 
   return initGame;
 };
+
+export const isRowFilled = (
+  row: number,
+  newBoard: CellValue[][],
+  solvedBoard: number[][],
+): boolean => {
+  if (!newBoard[row]) {
+    return false;
+  } // Nếu dòng không tồn tại, coi như chưa filled
+  for (let col = 0; col < BOARD_SIZE; col++) {
+    if (!newBoard[row][col] || newBoard[row][col] !== solvedBoard[row][col]) {
+      return false; // Nếu có ô nào trong dòng là 0, coi như chưa filled
+    }
+  }
+  return true; // Nếu tất cả ô trong dòng đều khác 0, coi như đã filled
+};
+
+export const isColFilled = (
+  col: number,
+  newBoard: CellValue[][],
+  solvedBoard: number[][],
+): boolean => {
+  for (let row = 0; row < BOARD_SIZE; row++) {
+    if (!newBoard[row][col] || newBoard[row][col] !== solvedBoard[row][col]) {
+      return false; // Nếu có ô nào trong cột là 0, coi như chưa filled
+    }
+  }
+  return true; // Nếu tất cả ô trong cột đều khác 0, coi như đã filled
+};

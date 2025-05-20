@@ -55,10 +55,6 @@ import {
   removeNoteFromPeers,
 } from '../../utils/boardUtil';
 import {
-  ANIMATION_CELL_KEY_SEPARATOR,
-  ANIMATION_DURATION,
-  ANIMATION_TYPE,
-  BOARD_SIZE,
   DEFAULT_SETTINGS,
   MAX_HINTS,
   MAX_MISTAKES,
@@ -90,10 +86,6 @@ const BoardScreen = () => {
   const handleCellPress = useCallback((cell: Cell | null) => {
     setSelectedCell(cell);
   }, []);
-  // Xử lý animation khi nhập xong 1 hàng/cột
-  const [animatedCells, setAnimatedCells] = useState<{[key: string]: number}>(
-    {},
-  );
 
   const [board, setBoard] = useState<CellValue[][]>(
     createEmptyGrid<CellValue>(),
@@ -427,7 +419,6 @@ const BoardScreen = () => {
     saveHistory(newBoard);
     setNotes(prevNotes => removeNoteFromPeers(prevNotes, row, col, solvedNum));
 
-    handleCheckRowOrColResolved(row, col, newBoard);
     if (checkBoardIsSolved(newBoard, solvedBoard)) {
       handleCheckSolved(totalHintCountUsed + 1);
     }
@@ -488,32 +479,10 @@ const BoardScreen = () => {
         return;
       }
 
-      handleCheckRowOrColResolved(row, col, newBoard);
       if (checkBoardIsSolved(newBoard, solvedBoard)) {
         handleCheckSolved(totalHintCountUsed);
       }
     }
-  };
-
-  const isRowFilled = (row: number, newBoard: CellValue[][]): boolean => {
-    if (!newBoard[row]) {
-      return false;
-    } // Nếu dòng không tồn tại, coi như chưa filled
-    for (let col = 0; col < BOARD_SIZE; col++) {
-      if (!newBoard[row][col]) {
-        return false; // Nếu có ô nào trong dòng là 0, coi như chưa filled
-      }
-    }
-    return true; // Nếu tất cả ô trong dòng đều khác 0, coi như đã filled
-  };
-
-  const isColFilled = (col: number, newBoard: CellValue[][]): boolean => {
-    for (let row = 0; row < BOARD_SIZE; row++) {
-      if (!newBoard[row][col]) {
-        return false; // Nếu có ô nào trong cột là 0, coi như chưa filled
-      }
-    }
-    return true; // Nếu tất cả ô trong cột đều khác 0, coi như đã filled
   };
 
   const timeoutRefs = useRef<{[key: string]: NodeJS.Timeout}>({});
@@ -525,39 +494,6 @@ const BoardScreen = () => {
       });
     };
   }, []);
-
-  const handleCheckRowOrColResolved = (
-    row: number,
-    col: number,
-    newBoard: CellValue[][],
-  ) => {
-    const key = `${row}${ANIMATION_CELL_KEY_SEPARATOR}${col}`;
-
-    let animationType = ANIMATION_TYPE.NONE as number;
-    if (isRowFilled(row, newBoard) && isColFilled(col, newBoard)) {
-      animationType = ANIMATION_TYPE.ROW_COL;
-    } else if (isRowFilled(row, newBoard)) {
-      animationType = ANIMATION_TYPE.ROW;
-    } else if (isColFilled(col, newBoard)) {
-      animationType = ANIMATION_TYPE.COL;
-    }
-
-    // Clear timeout cũ nếu có
-    if (timeoutRefs.current[key]) {
-      clearTimeout(timeoutRefs.current[key]);
-    }
-    // Set lại animation
-    setAnimatedCells(prev => ({...prev, [key]: animationType}));
-    // Tạo timeout mới
-    timeoutRefs.current[key] = setTimeout(() => {
-      setAnimatedCells(prev => {
-        const updated = {...prev};
-        delete updated[key];
-        return updated;
-      });
-      delete timeoutRefs.current[key]; // Xóa timeoutRef sau khi done
-    }, ANIMATION_DURATION);
-  };
 
   useAppPause(
     () => {
@@ -634,7 +570,6 @@ const BoardScreen = () => {
           selectedCell={selectedCell}
           settings={settings}
           onPress={handleCellPress}
-          animatedCells={animatedCells}
         />
         <ActionButtons
           noteMode={noteMode}
@@ -712,7 +647,7 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     position: 'absolute',
-    bottom: 30,
+    bottom: 0,
   },
 });
 

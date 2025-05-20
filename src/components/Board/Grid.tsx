@@ -9,9 +9,12 @@ import Animated, {
 import Svg, {Line} from 'react-native-svg';
 import {useTheme} from '../../context/ThemeContext';
 import {AppSettings, Cell, CellValue} from '../../types';
-import {getAdjacentCellsInSameCage} from '../../utils/boardUtil';
 import {
-  ANIMATION_CELL_KEY_SEPARATOR,
+  getAdjacentCellsInSameCage,
+  isColFilled,
+  isRowFilled,
+} from '../../utils/boardUtil';
+import {
   ANIMATION_DURATION,
   ANIMATION_TYPE,
   BOARD_SIZE,
@@ -27,7 +30,6 @@ type GridProps = {
   notes: string[][][];
   solvedBoard: number[][];
   selectedCell: Cell | null;
-  animatedCells: {[key: string]: number};
   settings: AppSettings;
   onPress: (cell: Cell | null) => void;
 };
@@ -38,7 +40,6 @@ const Grid = ({
   notes,
   solvedBoard,
   selectedCell,
-  animatedCells,
   settings,
   onPress,
 }: GridProps) => {
@@ -60,41 +61,48 @@ const Grid = ({
     ),
   ).current;
 
-  useEffect(() => {
-    // Kiểm tra animatedCells có tồn tại không và có chứa ít nhất 1 key không
-    if (!animatedCells || Object.keys(animatedCells).length === 0) {
+  const handleAnimation = (row: number, col: number) => {
+    let animationType = ANIMATION_TYPE.NONE as number;
+    if (
+      isRowFilled(row, board, solvedBoard) &&
+      isColFilled(col, board, solvedBoard)
+    ) {
+      animationType = ANIMATION_TYPE.ROW_COL;
+    } else if (isRowFilled(row, board, solvedBoard)) {
+      animationType = ANIMATION_TYPE.ROW;
+    } else if (isColFilled(col, board, solvedBoard)) {
+      animationType = ANIMATION_TYPE.COL;
+    }
+    if (animationType === ANIMATION_TYPE.NONE) {
       return;
     }
 
-    // Chỉ cần lặp qua các ô đã được animate
-    Object.keys(animatedCells).forEach(key => {
-      const [row, col] = key.split(ANIMATION_CELL_KEY_SEPARATOR).map(Number);
+    if (
+      animationType === ANIMATION_TYPE.ROW ||
+      animationType === ANIMATION_TYPE.ROW_COL
+    ) {
+      rowScales[row].value = withSequence(
+        withTiming(0.3, {duration: ANIMATION_DURATION / 3}),
+        withTiming(1, {duration: ANIMATION_DURATION / 3}),
+      );
+    }
+    if (
+      animationType === ANIMATION_TYPE.COL ||
+      animationType === ANIMATION_TYPE.ROW_COL
+    ) {
+      colScales[col].value = withSequence(
+        withTiming(0.3, {duration: ANIMATION_DURATION / 3}),
+        withTiming(1, {duration: ANIMATION_DURATION / 3}),
+      );
+    }
+  };
 
-      if (animatedCells[key] === ANIMATION_TYPE.NONE) {
-        return;
-      }
-
-      if (
-        animatedCells[key] === ANIMATION_TYPE.ROW ||
-        animatedCells[key] === ANIMATION_TYPE.ROW_COL
-      ) {
-        rowScales[row].value = withSequence(
-          withTiming(0.3, {duration: ANIMATION_DURATION / 3}),
-          withTiming(1, {duration: ANIMATION_DURATION / 3}),
-        );
-      }
-      if (
-        animatedCells[key] === ANIMATION_TYPE.COL ||
-        animatedCells[key] === ANIMATION_TYPE.ROW_COL
-      ) {
-        colScales[col].value = withSequence(
-          withTiming(0.3, {duration: ANIMATION_DURATION / 3}),
-          withTiming(1, {duration: ANIMATION_DURATION / 3}),
-        );
-      }
-    });
+  useEffect(() => {
+    if (selectedCell) {
+      handleAnimation(selectedCell.row, selectedCell.col);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [animatedCells]);
+  }, [board]);
 
   const isCellInSameRowOrColOrBox = (row: number, col: number) => {
     if (!selectedCell) {
@@ -474,7 +482,9 @@ const Grid = ({
               </View>
             )}
 
-            <Animated.View style={[styles.cell, animatedStyle]}>
+            <Animated.View
+              style={[styles.cell, animatedStyle]}
+              pointerEvents="box-none">
               {showValue && (
                 <Text
                   style={[

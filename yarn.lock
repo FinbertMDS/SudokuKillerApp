@@ -5693,6 +5693,13 @@ react-is@^18.0.0, react-is@^18.2.0:
   resolved "https://registry.npmjs.org/react-is/-/react-is-18.3.1.tgz"
   integrity sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==
 
+react-native-animatable@1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/react-native-animatable/-/react-native-animatable-1.4.0.tgz#05a259e1566081ce7d3f6fba1e92edc65f5c6160"
+  integrity sha512-DZwaDVWm2NBvBxf7I0wXKXLKb/TxDnkV53sWhCvei1pRyTX3MVFpkvdYBknNBqPrxYuAIlPxEp7gJOidIauUkw==
+  dependencies:
+    prop-types "^15.8.1"
+
 react-native-chart-kit@^6.12.0:
   version "6.12.0"
   resolved "https://registry.yarnpkg.com/react-native-chart-kit/-/react-native-chart-kit-6.12.0.tgz#187a4987a668a85b7e93588c248ed2c33b3a06f6"
@@ -5741,6 +5748,13 @@ react-native-mmkv@^3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/react-native-mmkv/-/react-native-mmkv-3.2.0.tgz#460723eb23b9cc92c65b0416eae9874a6ddf5b82"
   integrity sha512-9y7K//1MaU46TFrXkyU0wT5VGk9Y2FDLFV6NPl+z3jTbm2G7SC1UIxneF6CfhSmBX5CfKze9SO7kwDuRx7flpQ==
+
+react-native-modal@^14.0.0-rc.1:
+  version "14.0.0-rc.1"
+  resolved "https://registry.yarnpkg.com/react-native-modal/-/react-native-modal-14.0.0-rc.1.tgz#d193af884c910ec34a4953508c7656b5fc83d7d4"
+  integrity sha512-v5pvGyx1FlmBzdHyPqBsYQyS2mIJhVmuXyNo5EarIzxicKhuoul6XasXMviGcXboEUT0dTYWs88/VendojPiVw==
+  dependencies:
+    react-native-animatable "1.4.0"
 
 react-native-reanimated@^3.17.5:
   version "3.17.5"

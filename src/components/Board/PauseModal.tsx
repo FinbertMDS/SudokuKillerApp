@@ -1,13 +1,7 @@
 import React from 'react';
 import {useTranslation} from 'react-i18next';
-import {
-  Dimensions,
-  Modal,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import Modal from 'react-native-modal';
 import {useTheme} from '../../context/ThemeContext';
 import {Level} from '../../types';
 import {MAX_MISTAKES} from '../../utils/constants';
@@ -25,81 +19,65 @@ const PauseModal = ({level, mistake, time, onResume}: PauseModalProps) => {
   const {t} = useTranslation();
 
   return (
-    <>
+    <View style={StyleSheet.absoluteFillObject}>
       {/* Modal tạm dừng */}
       <Modal
-        animationType="fade"
-        transparent
-        visible
-        statusBarTranslucent
-        onRequestClose={() => onResume()}>
-        <View style={styles.overlay}>
-          <View style={[styles.modalBox, {backgroundColor: theme.background}]}>
-            {/* Header */}
-            <Text style={[styles.modalHeader, {color: theme.text}]}>
-              {t('paused')}
-            </Text>
+        isVisible={true}
+        animationIn="zoomIn"
+        animationOut="zoomOut"
+        backdropOpacity={0.5}
+        useNativeDriver
+        onBackButtonPress={() => onResume()}
+        onBackdropPress={() => onResume()}
+        onDismiss={() => onResume()}>
+        <View style={[styles.modalBox, {backgroundColor: theme.background}]}>
+          {/* Header */}
+          <Text style={[styles.modalHeader, {color: theme.text}]}>
+            {t('paused')}
+          </Text>
 
-            {/* Thông tin Board */}
-            <View style={styles.modalBoardInfo}>
-              <View style={styles.infoBlock}>
-                <Text style={styles.infoTitle}>{t('level')}</Text>
-                <Text style={[styles.infoValue, {color: theme.text}]}>
-                  {t(`level.${level}`)}
-                </Text>
-              </View>
-              <View style={styles.infoBlock}>
-                <Text style={styles.infoTitle}>{t('mistakes')}</Text>
-                <Text style={[styles.infoValue, {color: theme.text}]}>
-                  {mistake}/{MAX_MISTAKES}
-                </Text>
-              </View>
-              <View style={styles.infoBlock}>
-                <Text style={styles.infoTitle}>{t('time')}</Text>
-                <Text style={[styles.infoValue, {color: theme.text}]}>
-                  {formatTime(time)}
-                </Text>
-              </View>
-            </View>
-
-            {/* Button Tiếp tục */}
-            <TouchableOpacity
-              style={[styles.resumeButton, {backgroundColor: theme.primary}]}
-              onPress={onResume}>
-              <Text
-                style={[styles.resumeButtonText, {color: theme.buttonText}]}>
-                {t('continue')}
+          {/* Thông tin Board */}
+          <View style={styles.modalBoardInfo}>
+            <View style={styles.infoBlock}>
+              <Text style={styles.infoTitle}>{t('level')}</Text>
+              <Text style={[styles.infoValue, {color: theme.text}]}>
+                {t(`level.${level}`)}
               </Text>
-            </TouchableOpacity>
+            </View>
+            <View style={styles.infoBlock}>
+              <Text style={styles.infoTitle}>{t('mistakes')}</Text>
+              <Text style={[styles.infoValue, {color: theme.text}]}>
+                {mistake}/{MAX_MISTAKES}
+              </Text>
+            </View>
+            <View style={styles.infoBlock}>
+              <Text style={styles.infoTitle}>{t('time')}</Text>
+              <Text style={[styles.infoValue, {color: theme.text}]}>
+                {formatTime(time)}
+              </Text>
+            </View>
           </View>
+
+          {/* Button Tiếp tục */}
+          <TouchableOpacity
+            style={[styles.resumeButton, {backgroundColor: theme.primary}]}
+            onPress={onResume}>
+            <Text style={[styles.resumeButtonText, {color: theme.buttonText}]}>
+              {t('continue')}
+            </Text>
+          </TouchableOpacity>
         </View>
       </Modal>
-    </>
+    </View>
   );
 };
 
-const {width, height} = Dimensions.get('window');
-
 const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    position: 'absolute' as const,
-    width,
-    height,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   modalBox: {
-    width: width * 0.9,
     padding: 20,
-    borderRadius: 12,
+    borderRadius: 13,
     alignItems: 'center',
-    elevation: 10, // for Android shadow
-    shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowRadius: 10,
-    shadowOffset: {width: 0, height: 4},
+    justifyContent: 'center',
   },
   modalHeader: {
     fontSize: 22,
