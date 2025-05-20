@@ -459,16 +459,20 @@ const Grid = ({
               </Text>
             )}
 
-            <View style={styles.notesContainerTop}>
-              {Array.from({length: BOARD_SIZE}, (_, i) => {
-                const noteValue = (i + 1).toString();
-                return (
-                  <Text key={i} style={[styles.noteText, {color: theme.text}]}>
-                    {cellNotes.includes(noteValue) ? i + 1 : ' '}
-                  </Text>
-                );
-              })}
-            </View>
+            {cellNotes.length > 0 && (
+              <View style={styles.notesContainerTop}>
+                {Array.from({length: BOARD_SIZE}, (_, i) => {
+                  const noteValue = (i + 1).toString();
+                  return (
+                    <Text
+                      key={i}
+                      style={[styles.noteText, {color: theme.text}]}>
+                      {cellNotes.includes(noteValue) ? i + 1 : ' '}
+                    </Text>
+                  );
+                })}
+              </View>
+            )}
 
             <Animated.View style={[styles.cell, animatedStyle]}>
               {showValue && (
