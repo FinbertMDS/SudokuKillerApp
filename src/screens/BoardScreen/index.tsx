@@ -508,8 +508,10 @@ const BoardScreen = () => {
       }
     },
     () => {
-      setIsPaused(true);
-      setShowPauseModal(true);
+      if (!isPaused) {
+        setIsPaused(true);
+        setShowPauseModal(true);
+      }
     },
   );
 
