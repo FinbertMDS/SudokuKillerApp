@@ -1,4 +1,4 @@
-package com.sudokukillerapp
+package com.finbertngo.sudokukiller
 
 import android.app.Application
 import com.facebook.react.PackageList

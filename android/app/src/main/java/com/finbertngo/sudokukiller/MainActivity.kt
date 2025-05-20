@@ -1,4 +1,4 @@
-package com.sudokukillerapp
+package com.finbertngo.sudokukiller
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
