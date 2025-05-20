@@ -19,7 +19,7 @@ import {
   useForeground,
   useRewardedAd,
 } from 'react-native-google-mobile-ads';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import ActionButtons from '../../components/Board/ActionButtons';
 import Grid from '../../components/Board/Grid';
 import InfoPanel from '../../components/Board/InfoPanel';
@@ -530,6 +530,7 @@ const BoardScreen = () => {
   useForeground(() => {
     Platform.OS === 'ios' && bannerRef.current?.load();
   });
+  const insets = useSafeAreaInsets();
 
   if (isLoading) {
     return (
@@ -587,7 +588,14 @@ const BoardScreen = () => {
           settings={settings}
           onSelectNumber={handleNumberPress}
         />
-        <View style={[styles.adContainer, {backgroundColor: theme.background}]}>
+        <View
+          style={[
+            styles.adContainer,
+            {
+              bottom: insets.bottom,
+              backgroundColor: theme.background,
+            },
+          ]}>
           <BannerAd
             ref={bannerRef}
             unitId={bannerId}
@@ -649,7 +657,6 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     position: 'absolute',
-    bottom: 0,
   },
 });
 

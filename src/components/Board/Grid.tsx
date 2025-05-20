@@ -535,8 +535,9 @@ const Grid = ({
 
 const styles = StyleSheet.create({
   boardContainer: {
+    width: '100%' as const,
     alignItems: 'center' as const,
-    marginTop: 20,
+    marginTop: 40,
   },
   gridWrapper: {
     width: CELL_SIZE * BOARD_SIZE,

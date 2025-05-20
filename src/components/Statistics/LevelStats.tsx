@@ -106,6 +106,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center' as const,
     alignItems: 'center' as const,
+    paddingTop: 20,
   },
   card: {
     width: SCREEN_WIDTH - 100,

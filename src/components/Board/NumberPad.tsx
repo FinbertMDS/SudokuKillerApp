@@ -37,7 +37,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row' as const,
     flexWrap: 'wrap' as const,
     justifyContent: 'center' as const,
-    marginTop: 20,
+    width: '100%' as const,
+    alignItems: 'center' as const,
+    marginTop: 40,
   },
   button: {
     width: 40,
@@ -47,7 +49,7 @@ const styles = StyleSheet.create({
     alignItems: 'center' as const,
   },
   text: {
-    fontSize: 24,
+    fontSize: 32,
   },
 });
 
