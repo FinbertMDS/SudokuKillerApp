@@ -31,7 +31,6 @@ import {useTheme} from '../../context/ThemeContext';
 import {CORE_EVENTS} from '../../events';
 import eventBus from '../../events/eventBus';
 import {useAppPause} from '../../hooks/useAppPause';
-import {useGameTimer} from '../../hooks/useGameTimer';
 import {useHintCounter} from '../../hooks/useHintCounter';
 import {useMistakeCounter} from '../../hooks/useMistakeCounter';
 import {BoardService} from '../../services/BoardService';
@@ -63,10 +62,8 @@ import {
   DEFAULT_SETTINGS,
   MAX_HINTS,
   MAX_MISTAKES,
-  MAX_TIMEPLAYED,
   SCREENS,
 } from '../../utils/constants';
-import {formatTime} from '../../utils/dateUtil';
 import {getAdUnit} from '../../utils/getAdUnit';
 
 const BoardScreen = () => {
@@ -253,34 +250,16 @@ const BoardScreen = () => {
 
   // Hiển thị thời gian đã chơi
   // ===========================================================
-  const {seconds, resetTimer} = useGameTimer(isPlaying, {
-    maxTimePlayed: MAX_TIMEPLAYED,
-    onLimitReached: async () => {
-      await handleResetGame();
-      Alert.alert(
-        t('timeWarning'),
-        t('playedLimit', {limit: formatTime(MAX_TIMEPLAYED)}),
-        [
-          {
-            text: t('ok'),
-            onPress: () => {
-              // setIsPlaying(true);
-              navigation.goBack();
-            },
-          },
-        ],
-        {
-          cancelable: false,
-        },
-      );
-    },
-  });
+  const secondsRef = useRef(0);
+  const handleLimitTimeReached = async () => {
+    await handleResetGame();
+    navigation.goBack();
+  };
   // ===========================================================
 
   const handleResetGame = async () => {
     await BoardService.clear();
     setIsPlaying(false);
-    resetTimer();
     setIsPaused(false);
     setShowPauseModal(false);
     setSelectedCell(null);
@@ -301,7 +280,7 @@ const BoardScreen = () => {
       savedTotalHintCountUsed: totalHintCountUsed,
       savedMistake: mistakes,
       savedTotalMistake: totalMistakes,
-      savedTimePlayed: seconds,
+      savedTimePlayed: secondsRef.current,
       savedHistory: history,
       savedNotes: notes,
       lastSaved: new Date(),
@@ -319,7 +298,7 @@ const BoardScreen = () => {
       savedTotalHintCountUsed: totalHintCountUsed,
       savedMistake: mistakes,
       savedTotalMistake: totalMistakes,
-      savedTimePlayed: seconds,
+      savedTimePlayed: secondsRef.current,
       savedHistory: history,
       savedNotes: notes,
       lastSaved: new Date(),
@@ -343,7 +322,7 @@ const BoardScreen = () => {
       savedTotalHintCountUsed: totalHintCountUsed,
       savedMistake: mistakes,
       savedTotalMistake: totalMistakes,
-      savedTimePlayed: seconds,
+      savedTimePlayed: secondsRef.current,
       savedHistory: history,
       savedNotes: notes,
       lastSaved: new Date(),
@@ -411,7 +390,7 @@ const BoardScreen = () => {
             eventBus.emit(CORE_EVENTS.gameEnded, {
               id: id,
               level: level,
-              timePlayed: seconds,
+              timePlayed: secondsRef.current,
               mistakes: totalMistakes,
               hintCount: _totalHintCountUsed,
             });
@@ -638,12 +617,14 @@ const BoardScreen = () => {
           onSettings={handleGoToSettings}
         />
         <InfoPanel
+          isPlaying={isPlaying}
           level={level}
           mistakes={mistakes}
-          time={seconds}
+          secondsRef={secondsRef}
           isPaused={isPaused}
           settings={settings}
           onPause={handlePause}
+          onLimitTimeReached={handleLimitTimeReached}
         />
         <Grid
           board={board}
@@ -681,7 +662,7 @@ const BoardScreen = () => {
         <PauseModal
           level={level}
           mistake={mistakes}
-          time={seconds}
+          time={secondsRef.current}
           onResume={() => handleResume()}
         />
       )}
