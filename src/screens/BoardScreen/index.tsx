@@ -235,6 +235,8 @@ const BoardScreen = () => {
     } else {
       if (typeAd === 'mistake') {
         handleLimitMistakeReached();
+      } else {
+        handleLimitHintReached(true);
       }
     }
   };
