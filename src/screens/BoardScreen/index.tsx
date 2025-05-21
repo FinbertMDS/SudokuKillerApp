@@ -55,6 +55,7 @@ import {
   removeNoteFromPeers,
 } from '../../utils/boardUtil';
 import {
+  AD_REQUEST_OPTIONS,
   DEFAULT_SETTINGS,
   MAX_HINTS,
   MAX_MISTAKES,
@@ -167,7 +168,7 @@ const BoardScreen = () => {
     isClosed: isClosedRewarded,
     load: loadRewarded,
     show: showRewarded,
-  } = useRewardedAd(getAdUnit('rewarded'));
+  } = useRewardedAd(getAdUnit('rewarded'), AD_REQUEST_OPTIONS);
   useEffect(() => {
     loadRewarded();
   }, [loadRewarded]);
@@ -602,6 +603,7 @@ const BoardScreen = () => {
             ref={bannerRef}
             unitId={bannerId}
             size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+            requestOptions={AD_REQUEST_OPTIONS}
           />
         </View>
       </SafeAreaView>

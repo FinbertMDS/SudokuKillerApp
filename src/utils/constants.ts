@@ -1,3 +1,4 @@
+import {RequestOptions} from 'react-native-google-mobile-ads';
 import {AppSettings, Level} from '../types';
 
 export const LEVELS = ['easy', 'medium', 'hard', 'expert'] as Level[];
@@ -84,3 +85,44 @@ export const UNSPLASH_KEYWORDS_DARK = [
   'moody blurred background',
   'dark blurry night',
 ];
+
+export const AD_REQUEST_OPTIONS: RequestOptions = {
+  requestNonPersonalizedAdsOnly: true,
+  keywords: [
+    // Sudoku
+    'puzzle',
+    'brain',
+    'logic',
+    'math',
+    'killer sudoku',
+    'sudoku',
+    'mental training',
+    // Education
+    'education',
+    'learning',
+    'study',
+    'student',
+    'cognitive skills',
+    'e-learning',
+    'mental math',
+    // Language
+    'language learning',
+    'English',
+    'Japanese',
+    'vocabulary',
+    'grammar',
+    // Mindfulness
+    'focus',
+    'meditation',
+    'calm',
+    'relaxation',
+    'mental health',
+    'wellness',
+    // Sports
+    'sports',
+    'exercise',
+    'fitness',
+    'health',
+    'yoga',
+  ],
+};
