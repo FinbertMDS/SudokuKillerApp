@@ -21,8 +21,6 @@ export const MAX_TIMEPLAYED = 3 * 60 * 60; // in seconds
 export const MAX_MISTAKES = 5;
 export const MAX_HINTS = 5;
 export const CAGE_PADDING = 3;
-export const CAGE_PADDING_FIRST_1 = 7;
-export const CAGE_PADDING_FIRST_2 = 10;
 
 export const ANIMATION_DURATION = 300; // in ms
 export const ANIMATION_TYPE = {

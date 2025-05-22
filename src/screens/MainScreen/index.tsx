@@ -90,9 +90,12 @@ const MainScreen = () => {
         showSettings={true}
         showTheme={true}
       />
-
-      {/* <LanguageSwitcher /> */}
-      <View style={[styles.content]}>
+      <View style={styles.middle}>
+        <Text style={styles.title}>
+          {t('welcomeTitle', {appName: t('appName')})}
+        </Text>
+      </View>
+      <View style={[styles.footer]}>
         {hasSavedGame && (
           <TouchableOpacity
             style={[
@@ -135,9 +138,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  content: {
+  middle: {
     flex: 1,
     justifyContent: 'center',
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 22,
+    textAlign: 'center',
+    lineHeight: 66,
+  },
+  footer: {
+    paddingBottom: 64,
+    paddingHorizontal: 20,
     alignItems: 'center',
   },
   button: {

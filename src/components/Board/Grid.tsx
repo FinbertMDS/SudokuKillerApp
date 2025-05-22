@@ -19,8 +19,6 @@ import {
   ANIMATION_TYPE,
   BOARD_SIZE,
   CAGE_PADDING,
-  CAGE_PADDING_FIRST_1,
-  CAGE_PADDING_FIRST_2,
   CELL_SIZE,
 } from '../../utils/constants';
 
@@ -142,8 +140,8 @@ const Grid = ({
         } // bỏ qua ô không thuộc cage nào
 
         const cage = getCageForCell(r, c);
-        const cagePaddingFirst =
-          cage && cage?.sum <= 10 ? CAGE_PADDING_FIRST_1 : CAGE_PADDING_FIRST_2;
+        const cagePaddingFirstRight = cage && cage?.sum < 10 ? 7 : 12;
+        const cagePaddingFirstBottom = cage && cage?.sum < 10 ? 8 : 9;
         const isCageFirst =
           cage && cage?.cells[0][0] === r && cage?.cells[0][1] === c;
 
@@ -202,7 +200,7 @@ const Grid = ({
               x1={c * CELL_SIZE + CAGE_PADDING}
               y1={
                 r * CELL_SIZE +
-                (isCageFirst ? cagePaddingFirst : 0) +
+                (isCageFirst ? cagePaddingFirstBottom : 0) +
                 (adjacentCells.top ? 0 : CAGE_PADDING)
               }
               x2={c * CELL_SIZE + CAGE_PADDING}
@@ -224,7 +222,7 @@ const Grid = ({
               key={`top-${r}-${c}`}
               x1={
                 c * CELL_SIZE +
-                (isCageFirst ? cagePaddingFirst : 0) +
+                (isCageFirst ? cagePaddingFirstRight : 0) +
                 (adjacentCells.left
                   ? adjacentCells.right
                     ? -CAGE_PADDING
@@ -416,13 +414,16 @@ const Grid = ({
 
       const isMistake = cellValue !== 0 && cellValue !== solvedBoard[row][col];
 
-      const showRelatedOverlay = !isSelected && isRelated;
-      const showOverlay = isSelected || isSameValue;
-      const overlayColor = isSelected
-        ? theme.selectedOverlayColor
-        : isSameValueConflict
-        ? theme.conflictOverlayColor
-        : theme.sameValueOverlayColor;
+      let overlayColor = null;
+      if (isSelected) {
+        overlayColor = theme.selectedOverlayColor;
+      } else if (isSameValueConflict) {
+        overlayColor = theme.conflictOverlayColor;
+      } else if (isRelated) {
+        overlayColor = theme.sameRowOrColumnOverlayColor;
+      } else if (isSameValue) {
+        overlayColor = theme.sameValueOverlayColor;
+      }
 
       const showValue = cellValue !== 0;
       const showMistake = settings.autoCheckMistake && isMistake;
@@ -441,20 +442,9 @@ const Grid = ({
       return (
         <View
           key={`cell-${row}-${col}`}
-          style={[styles.cellWrapper, {backgroundColor: theme.background}]}>
-          {showRelatedOverlay && (
-            <View
-              style={[
-                styles.relatedOverlay,
-                {backgroundColor: theme.overlayColor},
-              ]}
-            />
-          )}
-
-          {showOverlay && (
-            <View
-              style={[styles.selectedOverlay, {backgroundColor: overlayColor}]}
-            />
+          style={[styles.cellWrapper, {backgroundColor: theme.overlayColor}]}>
+          {overlayColor && (
+            <View style={[styles.overlay, {backgroundColor: overlayColor}]} />
           )}
 
           <TouchableOpacity
@@ -564,13 +554,13 @@ const styles = StyleSheet.create({
     height: CELL_SIZE,
     position: 'relative' as const,
   },
-  selectedOverlay: {
+  overlay: {
     position: 'absolute' as const,
     top: 0,
     left: 0,
     width: '100%' as const,
     height: '100%' as const,
-    zIndex: 5,
+    zIndex: 4,
   },
   cell: {
     width: CELL_SIZE,
@@ -580,17 +570,9 @@ const styles = StyleSheet.create({
     // borderWidth: 0.1,
     zIndex: 20,
   },
-  relatedOverlay: {
-    position: 'absolute' as const,
-    top: 0,
-    left: 0,
-    width: '100%' as const,
-    height: '100%' as const,
-    zIndex: 4,
-  },
   cellText: {
-    fontSize: 18,
-    fontWeight: 'bold' as const,
+    fontSize: 22,
+    fontWeight: '500',
   },
   notesContainerTop: {
     position: 'absolute' as const,
@@ -602,16 +584,18 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start' as const,
   },
   noteText: {
-    top: 2,
-    left: 3,
-    fontSize: 8,
+    top: 1,
+    left: 2,
+    fontSize: 9,
     width: 10,
+    textAlign: 'center' as const,
   },
   cageText: {
     position: 'absolute' as const,
-    top: 0,
-    left: 0,
-    fontSize: 9,
+    top: -1,
+    left: 1,
+    fontSize: 10,
+    fontWeight: '600',
   },
 });
 

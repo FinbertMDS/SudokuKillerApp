@@ -1,9 +1,8 @@
 // boardUtil.ts
 
 import {generateKillerSudoku} from 'killer-sudoku-generator';
-import {Difficulty} from 'sudoku-gen/dist/types/difficulty.type';
 import {Cage, CellValue, InitGame, Level} from '../types';
-import {BOARD_SIZE, LEVELS} from './constants';
+import {BOARD_SIZE} from './constants';
 
 /**
  * Chuyển string thành mảng 2 chiều theo số cột nhất định (thường là 9 với Sudoku).
@@ -233,28 +232,12 @@ export function removeNoteFromPeers(
   return updatedNotes;
 }
 
-export const increaseDifficulty = (level: Level): Difficulty => {
-  const mapping: Record<Level, Difficulty> = {
-    easy: 'medium',
-    medium: 'hard',
-    hard: 'expert',
-    expert: 'expert',
-  };
-  return mapping[level];
-};
-
 export const generateBoard = (level: Level, id: string) => {
-  const adjustedDifficulty = increaseDifficulty(level as Level);
-
-  const sudoku = generateKillerSudoku(adjustedDifficulty);
-
-  // if level is expert
-  const shouldHideAllCells = level === LEVELS[LEVELS.length - 1];
-  const puzzleString = shouldHideAllCells ? '-'.repeat(81) : sudoku.puzzle;
+  const sudoku = generateKillerSudoku(level);
 
   const initGame = {
     id,
-    initialBoard: stringToGrid(puzzleString),
+    initialBoard: stringToGrid(sudoku.puzzle),
     solvedBoard: stringToGrid(sudoku.solution),
     cages: sortAreasCells(sudoku.areas),
     savedLevel: level,

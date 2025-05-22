@@ -419,12 +419,12 @@ const BoardScreen = () => {
     newBoard[row][col] = solvedNum;
     setSelectedCell({...selectedCell, value: solvedNum});
     setBoard(newBoard);
-    saveHistory(newBoard);
     setNotes(prevNotes => removeNoteFromPeers(prevNotes, row, col, solvedNum));
 
     if (checkBoardIsSolved(newBoard, solvedBoard)) {
       handleCheckSolved(totalHintCountUsed + 1);
     }
+    saveHistory(newBoard);
   };
 
   /**
@@ -438,9 +438,9 @@ const BoardScreen = () => {
     const clonedSolved = deepCloneBoard(solvedBoard);
     setSelectedCell(null);
     setBoard(clonedSolved);
-    saveHistory(clonedSolved);
     setNotes(createEmptyGridNotes<string>());
     // handleCheckSolved(solvedBoard);
+    saveHistory(clonedSolved);
   };
 
   /**
@@ -467,24 +467,26 @@ const BoardScreen = () => {
       setNotes(newNotes);
     } else {
       const correctValue = solvedBoard[row][col];
+      if (settings.mistakeLimit && num !== correctValue) {
+        if (mistakes >= MAX_MISTAKES) {
+          return;
+        } else {
+          incrementMistake();
+        }
+      }
       const newBoard = deepCloneBoard(board);
       newBoard[row][col] = num;
       setBoard(newBoard);
-      saveHistory(newBoard);
       setSelectedCell({...selectedCell, value: num});
 
       if (settings.autoRemoveNotes) {
         setNotes(prevNotes => removeNoteFromPeers(prevNotes, row, col, num));
       }
 
-      if (settings.mistakeLimit && num !== correctValue) {
-        incrementMistake();
-        return;
-      }
-
       if (checkBoardIsSolved(newBoard, solvedBoard)) {
         handleCheckSolved(totalHintCountUsed);
       }
+      saveHistory(newBoard);
     }
   };
 

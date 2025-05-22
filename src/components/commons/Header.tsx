@@ -44,14 +44,16 @@ const Header = ({
     <>
       {/* Header */}
       <View style={[styles.header, {backgroundColor: theme.background}]}>
-        {showBack && (
+        {showBack ? (
           <View style={styles.side}>
             <TouchableOpacity onPress={onBack ? onBack : defaultOnBack}>
               <Icon name="chevron-left" size={28} color={theme.iconColor} />
             </TouchableOpacity>
           </View>
+        ) : (
+          <View style={styles.side} />
         )}
-        {title && title.length > 0 && (
+        {title && (
           <View style={styles.center}>
             <Text style={[styles.title, {color: theme.text}]}>{title}</Text>
           </View>
@@ -77,6 +79,8 @@ const Header = ({
               </TouchableOpacity>
             )}
           </View>
+        ) : showBack ? (
+          <View style={styles.side} />
         ) : null}
       </View>
     </>
