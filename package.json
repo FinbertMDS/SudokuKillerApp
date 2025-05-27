@@ -7,7 +7,10 @@
     "ios": "react-native run-ios",
     "lint": "eslint .",
     "start": "react-native start",
-    "test": "jest"
+    "test": "jest",
+    "android:build": "cd android && ./gradlew assembleRelease",
+    "android:build:aab": "cd android && ./gradlew bundleRelease",
+    "ios:archive": "cd ios && xcodebuild -workspace SudokuKillerApp.xcworkspace -scheme SudokuKillerApp -configuration Release -sdk iphoneos -archivePath build/SudokuKillerApp.xcarchive archive && mkdir -p ~/Library/Developer/Xcode/Archives/$(date +%Y-%m-%d) && mv build/SudokuKillerApp.xcarchive ~/Library/Developer/Xcode/Archives/$(date +%Y-%m-%d)/SudokuKillerApp-$(date +%H-%M-%S).xcarchive"
   },
   "dependencies": {
     "@react-navigation/bottom-tabs": "^7.3.10",

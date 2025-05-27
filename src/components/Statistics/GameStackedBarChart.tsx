@@ -32,7 +32,7 @@ const GameStackedBarChart = ({
   }
   const chartWidth = Math.max(
     stackedData.labels.length * CHART2_WIDTH,
-    screenWidth,
+    screenWidth - 16,
   );
 
   return (
@@ -44,7 +44,7 @@ const GameStackedBarChart = ({
         <StackedBarChart
           data={stackedData}
           width={chartWidth}
-          height={220}
+          height={250}
           chartConfig={{
             ...chartConfig,
           }}

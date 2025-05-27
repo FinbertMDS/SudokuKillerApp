@@ -1,1 +1,8 @@
+/* 
+  InfoPlist.strings
+  SudokuKillerApp
+
+  Created by Finbert Ngo on 2025/05/29.
+  
+*/
 CFBundleDisplayName = "キラー数独";

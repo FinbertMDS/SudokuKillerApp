@@ -49,6 +49,7 @@ const TimeLineChart = ({dailyStats, chartConfig}: TimeLineChartProps) => {
           fromZero
           chartConfig={chartConfig}
           style={styles.chart}
+          bezier
         />
       </ScrollView>
     </View>
