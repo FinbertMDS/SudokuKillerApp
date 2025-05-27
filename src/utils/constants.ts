@@ -125,3 +125,10 @@ export const AD_REQUEST_OPTIONS: RequestOptions = {
     'yoga',
   ],
 };
+
+export const CELLS_TO_REMOVE_RANGE: Record<Level, number[]> = {
+  easy: [28, 32],
+  medium: [38, 44],
+  hard: [48, 52],
+  expert: [58, 64],
+};

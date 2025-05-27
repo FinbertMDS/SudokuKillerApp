@@ -586,15 +586,16 @@ const styles = StyleSheet.create({
   noteText: {
     top: 1,
     left: 2,
-    fontSize: 9,
-    width: 10,
+    fontSize: 8,
+    width: 9,
     textAlign: 'center' as const,
+    fontWeight: '600' as const,
   },
   cageText: {
     position: 'absolute' as const,
     top: -1,
     left: 1,
-    fontSize: 10,
+    fontSize: 9,
     fontWeight: '600',
   },
 });

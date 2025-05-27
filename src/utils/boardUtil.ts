@@ -1,8 +1,11 @@
 // boardUtil.ts
 
-import {generateKillerSudoku} from 'killer-sudoku-generator';
+import {
+  generateKillerSudoku,
+  overrideNumberOfCellsToRemove,
+} from 'killer-sudoku-generator';
 import {Cage, CellValue, InitGame, Level} from '../types';
-import {BOARD_SIZE} from './constants';
+import {BOARD_SIZE, CELLS_TO_REMOVE_RANGE} from './constants';
 
 /**
  * Chuyển string thành mảng 2 chiều theo số cột nhất định (thường là 9 với Sudoku).
@@ -232,7 +235,18 @@ export function removeNoteFromPeers(
   return updatedNotes;
 }
 
+const randomBetween = (min: number, max: number) => {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
+const setRandomCellsToRemoveForLevel = (level: Level) => {
+  const [min, max] = CELLS_TO_REMOVE_RANGE[level];
+  const randomNumber = randomBetween(min, max);
+  overrideNumberOfCellsToRemove(level, randomNumber);
+};
+
 export const generateBoard = (level: Level, id: string) => {
+  setRandomCellsToRemoveForLevel(level);
   const sudoku = generateKillerSudoku(level);
 
   const initGame = {
