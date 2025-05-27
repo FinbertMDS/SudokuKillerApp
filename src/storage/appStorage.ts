@@ -1,6 +1,7 @@
 import {AppSettings, DailyBackgrounds} from '../types';
 import {
   STORAGE_KEY_BACKGROUNDS,
+  STORAGE_KEY_HAS_PLAYED,
   STORAGE_KEY_LANG_KEY_DEFAULT,
   STORAGE_KEY_LANG_KEY_PREFERRED,
   STORAGE_KEY_SETTINGS,
@@ -53,6 +54,25 @@ const clearBackgrounds = () => {
   storage.delete(STORAGE_KEY_BACKGROUNDS);
 };
 
+// STORAGE_KEY_HAS_PLAYED
+const getHasPlayed = (): boolean => {
+  return storage.getBoolean(STORAGE_KEY_HAS_PLAYED) || false;
+};
+const setHasPlayed = (value: boolean) => {
+  storage.set(STORAGE_KEY_HAS_PLAYED, value);
+};
+const clearHasPlayed = () => {
+  storage.delete(STORAGE_KEY_HAS_PLAYED);
+};
+
+const clearAll = () => {
+  clearLangKeyDefault();
+  clearLangKeyPreferred();
+  clearSettings();
+  clearBackgrounds();
+  clearHasPlayed();
+};
+
 export const appStorage = {
   getLangKeyDefault,
   saveLangKeyDefault,
@@ -66,4 +86,8 @@ export const appStorage = {
   getBackgrounds,
   setBackgrounds,
   clearBackgrounds,
+  getHasPlayed,
+  setHasPlayed,
+  clearHasPlayed,
+  clearAll,
 };
