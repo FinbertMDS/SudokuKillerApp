@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -31,7 +31,7 @@ const InfoPanel = ({
 }: InfoPanelProps) => {
   const {theme} = useTheme();
   const {t} = useTranslation();
-  const {seconds, stopTimer} = useGameTimer(isPlaying, {
+  const {getSeconds, stopTimer} = useGameTimer(isPlaying, {
     maxTimePlayed: MAX_TIMEPLAYED,
     onLimitReached: async () => {
       stopTimer();
@@ -52,11 +52,17 @@ const InfoPanel = ({
       );
     },
   });
+  const [tick, setTick] = useState(0);
 
   useEffect(() => {
-    secondsRef.current = seconds;
+    const interval = setInterval(() => {
+      secondsRef.current = getSeconds();
+      setTick(prev => prev + 1);
+    }, 1000);
+
+    return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [seconds]);
+  }, []);
 
   return (
     <View style={[styles.container, {backgroundColor: theme.background}]}>
@@ -81,8 +87,8 @@ const InfoPanel = ({
       {settings.timer && (
         <View style={styles.infoBlock}>
           <Text style={[styles.title, {color: theme.text}]}>{t('time')}</Text>
-          <Text style={[styles.value, styles.timeValue, {color: theme.text}]}>
-            {formatTime(seconds)}
+          <Text style={[styles.value, {color: theme.text}]}>
+            {tick > 0 ? formatTime(getSeconds()) : '-'}
           </Text>
         </View>
       )}
@@ -116,9 +122,6 @@ const styles = StyleSheet.create({
   value: {
     fontSize: 16,
     fontWeight: 'bold' as const,
-  },
-  timeValue: {
-    minWidth: 50,
   },
 });
 

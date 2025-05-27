@@ -159,6 +159,8 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     position: 'relative',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   hintBadge: {
     position: 'absolute',
