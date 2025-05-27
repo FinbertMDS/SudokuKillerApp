@@ -552,6 +552,48 @@ const BoardScreen = () => {
   });
   const insets = useSafeAreaInsets();
 
+  useEffect(() => {
+    if (limitMistakeReached && !isLoadedRewarded && !isClosedRewarded) {
+      Alert.alert(
+        t('mistakeWarning.title'),
+        t('mistakeWarning.messageNotAd', {max: MAX_MISTAKES}),
+        [
+          {
+            text: t('ok'),
+            onPress: () => {
+              handleLimitMistakeReached();
+            },
+          },
+        ],
+        {
+          cancelable: false,
+        },
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [limitMistakeReached, isLoadedRewarded]);
+
+  useEffect(() => {
+    if (limitHintReached && !isLoadedRewarded && !isClosedRewarded) {
+      Alert.alert(
+        t('hintWarning.title'),
+        t('hintWarning.messageNotAd'),
+        [
+          {
+            text: t('ok'),
+            onPress: () => {
+              handleLimitHintReached(true);
+            },
+          },
+        ],
+        {
+          cancelable: false,
+        },
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [limitHintReached, isLoadedRewarded]);
+
   if (showHowToPlay) {
     return (
       <HowToPlay
@@ -642,7 +684,7 @@ const BoardScreen = () => {
           onResume={() => handleResume()}
         />
       )}
-      {limitMistakeReached && (
+      {limitMistakeReached && isLoadedRewarded && (
         <ConfirmDialog
           title={t('mistakeWarning.title')}
           message={t('mistakeWarning.message', {max: MAX_MISTAKES})}
@@ -656,7 +698,7 @@ const BoardScreen = () => {
           }}
         />
       )}
-      {limitHintReached && (
+      {limitHintReached && isLoadedRewarded && (
         <ConfirmDialog
           title={t('hintWarning.title')}
           message={t('hintWarning.message', {max: MAX_HINTS})}
