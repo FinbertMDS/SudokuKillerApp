@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {
   Dimensions,
   StyleSheet,
@@ -22,15 +22,24 @@ const NumberPad = ({board, settings, onSelectNumber}: NumberPadProps) => {
   const counts = useNumberCounts(board, settings);
 
   // Tính toán kích thước button dựa trên width màn hình
-  const screenWidth = Dimensions.get('window').width;
-  const containerPadding = 8; // padding left/right của container
-  const availableWidth = screenWidth - containerPadding * 2; // width khả dụng
-  const buttonWidth = availableWidth / 9; // chia đều cho 9 button
-  const buttonHeight = buttonWidth + 20; // height = width + padding top/bottom 10px
+  const {buttonWidth, buttonHeight} = useMemo(() => {
+    const screenWidth = Dimensions.get('window').width;
+    const containerPadding = 8; // padding left/right của container
+    const availableWidth = screenWidth - containerPadding * 2; // width khả dụng
+    const width = availableWidth / 9; // chia đều cho 9 button
+    const height = width + 20; // height = width + padding top/bottom 10px
+    return {buttonWidth: width, buttonHeight: height};
+  }, []);
+
+  // Tạo mảng số từ 1-9 một lần duy nhất
+  const numbers = useMemo(
+    () => Array.from({length: BOARD_SIZE}, (_, i) => i + 1),
+    [],
+  );
 
   return (
     <View style={[styles.container, {backgroundColor: theme.background}]}>
-      {Array.from({length: BOARD_SIZE}, (_, i) => i + 1).map(num => (
+      {numbers.map(num => (
         <TouchableOpacity
           key={num}
           style={[
@@ -70,4 +79,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default NumberPad;
+export default React.memo(NumberPad);

@@ -145,9 +145,9 @@ const styles = StyleSheet.create({
     marginTop: 96,
   },
   title: {
-    fontSize: 22,
+    fontSize: 32,
     textAlign: 'center',
-    lineHeight: 66,
+    lineHeight: 48,
   },
   footer: {
     marginBottom: 96,
