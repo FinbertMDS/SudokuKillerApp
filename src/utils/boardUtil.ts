@@ -204,45 +204,41 @@ export function removeNoteFromPeers(
   col: number,
   value: number,
 ): string[][][] {
+  // Clone notes array
   const updatedNotes = notes.map(rowNotes =>
     rowNotes.map(cellNotes => [...cellNotes]),
   );
 
   const valueStr = value.toString();
 
-  const peers = new Set<string>();
-
-  // Same row
-  for (let c = 0; c < 9; c++) {
-    if (c !== col) {
-      peers.add(`${row},${c}`);
-    }
-  }
-
-  // Same column
-  for (let r = 0; r < 9; r++) {
-    if (r !== row) {
-      peers.add(`${r},${col}`);
-    }
-  }
-
-  // Same box
+  // Get all peers in same row, column and box
   const boxStartRow = Math.floor(row / 3) * 3;
   const boxStartCol = Math.floor(col / 3) * 3;
-  for (let r = boxStartRow; r < boxStartRow + 3; r++) {
-    for (let c = boxStartCol; c < boxStartCol + 3; c++) {
-      if (r !== row || c !== col) {
-        peers.add(`${r},${c}`);
+
+  // Update notes for all peers
+  for (let r = 0; r < 9; r++) {
+    for (let c = 0; c < 9; c++) {
+      // Skip if same cell
+      if (r === row && c === col) {
+        continue;
+      }
+
+      // Check if peer is in same row, column or box
+      const inSameRow = r === row;
+      const inSameCol = c === col;
+      const inSameBox =
+        r >= boxStartRow &&
+        r < boxStartRow + 3 &&
+        c >= boxStartCol &&
+        c < boxStartCol + 3;
+
+      if (inSameRow || inSameCol || inSameBox) {
+        updatedNotes[r][c] = updatedNotes[r][c].filter(n => n !== valueStr);
       }
     }
   }
 
-  for (const key of peers) {
-    const [r, c] = key.split(',').map(Number);
-    updatedNotes[r][c] = updatedNotes[r][c].filter(n => n !== valueStr);
-  }
-
-  // Remove notes from current cell
+  // Clear notes for current cell
   updatedNotes[row][col] = [];
 
   return updatedNotes;
