@@ -127,8 +127,8 @@ export const AD_REQUEST_OPTIONS: RequestOptions = {
 };
 
 export const CELLS_TO_REMOVE_RANGE: Record<Level, number[]> = {
-  easy: [28, 32],
-  medium: [38, 44],
-  hard: [48, 52],
-  expert: [58, 64],
+  easy: [30, 34],
+  medium: [40, 46],
+  hard: [50, 54],
+  expert: [60, 65],
 };

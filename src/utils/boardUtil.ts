@@ -76,11 +76,24 @@ export const checkBoardIsSolved = (
     return false;
   }
 
-  return board.every(
-    (row, rowIndex) =>
-      row.length === solvedBoard[rowIndex].length &&
-      row.every((cell, colIndex) => cell === solvedBoard[rowIndex][colIndex]),
-  );
+  const boardLength = board.length;
+  for (let i = 0; i < boardLength; i++) {
+    const row = board[i];
+    const solvedRow = solvedBoard[i];
+
+    if (row.length !== solvedRow.length) {
+      return false;
+    }
+
+    const rowLength = row.length;
+    for (let j = 0; j < rowLength; j++) {
+      if (row[j] !== solvedRow[j]) {
+        return false;
+      }
+    }
+  }
+
+  return true;
 };
 
 export function sortAreasCells(areas: Cage[]): Cage[] {

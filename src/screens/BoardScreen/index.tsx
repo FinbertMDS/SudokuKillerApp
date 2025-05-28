@@ -481,6 +481,10 @@ const BoardScreen = () => {
       }
       setNotes(newNotes);
     } else {
+      const currentValue = board[row][col];
+      if (currentValue === num) {
+        return;
+      }
       const correctValue = solvedBoard[row][col];
       if (settings.mistakeLimit && num !== correctValue) {
         if (mistakes >= MAX_MISTAKES) {
