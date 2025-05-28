@@ -110,93 +110,58 @@ export function sortAreasCells(areas: Cage[]): Cage[] {
   }));
 }
 
-export function getAdjacentCellsInSameCage(
+export const getAdjacentCellsInSameCage = (
   row: number,
   col: number,
   cages: Cage[],
-) {
-  // Danh sách các vị trí xung quanh: trên, dưới, trái, phải
-  const adjacentCells = [
-    {direction: 'top', row: row - 1, col: col},
-    {direction: 'bottom', row: row + 1, col: col},
-    {direction: 'left', row: row, col: col - 1},
-    {direction: 'right', row: row, col: col + 1},
-  ];
+) => {
+  const cage = cages.find(c =>
+    c.cells.some(cell => cell[0] === row && cell[1] === col),
+  );
 
-  const result = {
-    top: false,
-    bottom: false,
-    left: false,
-    right: false,
-    topleft: false,
-    topright: false,
-    bottomleft: false,
-    bottomright: false,
-  };
-
-  // Duyệt qua tất cả các cage để tìm các ô xung quanh thuộc cùng *cage*
-  for (let cage of cages) {
-    let currentCell = [row, col];
-
-    // Kiểm tra nếu ô hiện tại có trong cage
-    if (
-      cage.cells.some(
-        cell => JSON.stringify(cell) === JSON.stringify(currentCell),
-      )
-    ) {
-      // Duyệt qua các ô xung quanh
-      for (let adj of adjacentCells) {
-        // Kiểm tra nếu ô xung quanh có trong cùng một cage
-        if (
-          cage.cells.some(
-            cell => JSON.stringify(cell) === JSON.stringify([adj.row, adj.col]),
-          )
-        ) {
-          result[adj.direction as keyof typeof result] = true; // Gán true cho ô xung quanh nếu thuộc cùng cage
-        }
-        // Kiểm tra nếu ô ở phía trên bên trái có trong cùng một cage
-        if (
-          adj.direction === 'top' &&
-          cage.cells.some(
-            cell => JSON.stringify(cell) === JSON.stringify([row - 1, col - 1]),
-          )
-        ) {
-          result.topleft = true; // Gán true cho ô trên bên trái nếu thuộc cùng cage
-        }
-        // Kiểm tra nếu ô ở phía trên bên phải có trong cùng một cage
-        if (
-          adj.direction === 'top' &&
-          cage.cells.some(
-            cell => JSON.stringify(cell) === JSON.stringify([row - 1, col + 1]),
-          )
-        ) {
-          result.topright = true; // Gán true cho ô trên bên phải nếu thuộc cùng cage
-        }
-        // Kiểm tra nếu ô ở phía dưới bên trái có trong cùng một cage
-        if (
-          adj.direction === 'bottom' &&
-          cage.cells.some(
-            cell => JSON.stringify(cell) === JSON.stringify([row + 1, col - 1]),
-          )
-        ) {
-          result.bottomleft = true; // Gán true cho ô dưới bên trái nếu thuộc cùng cage
-        }
-        // Kiểm tra nếu ô ở phía dưới bên phải có trong cùng một cage
-        if (
-          adj.direction === 'bottom' &&
-          cage.cells.some(
-            cell => JSON.stringify(cell) === JSON.stringify([row + 1, col + 1]),
-          )
-        ) {
-          result.bottomright = true; // Gán true cho ô dưới bên phải nếu thuộc cùng cage
-        }
-      }
-      break; // Nếu đã tìm được cage, không cần duyệt qua các cage khác nữa
-    }
+  if (!cage) {
+    return {
+      top: false,
+      bottom: false,
+      left: false,
+      right: false,
+      topleft: false,
+      topright: false,
+      bottomleft: false,
+      bottomright: false,
+    };
   }
 
-  return result;
-}
+  const top = cage.cells.some(cell => cell[0] === row - 1 && cell[1] === col);
+  const bottom = cage.cells.some(
+    cell => cell[0] === row + 1 && cell[1] === col,
+  );
+  const left = cage.cells.some(cell => cell[0] === row && cell[1] === col - 1);
+  const right = cage.cells.some(cell => cell[0] === row && cell[1] === col + 1);
+  const topleft = cage.cells.some(
+    cell => cell[0] === row - 1 && cell[1] === col - 1,
+  );
+  const topright = cage.cells.some(
+    cell => cell[0] === row - 1 && cell[1] === col + 1,
+  );
+  const bottomleft = cage.cells.some(
+    cell => cell[0] === row + 1 && cell[1] === col - 1,
+  );
+  const bottomright = cage.cells.some(
+    cell => cell[0] === row + 1 && cell[1] === col + 1,
+  );
+
+  return {
+    top,
+    bottom,
+    left,
+    right,
+    topleft,
+    topright,
+    bottomleft,
+    bottomright,
+  };
+};
 
 export function removeNoteFromPeers(
   notes: string[][][],
