@@ -31,13 +31,14 @@ const MainScreen = () => {
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [hasSavedGame, setHasSavedGame] = useState(false);
   const {backgroundUrl, loadBackgrounds} = useDailyBackground(mode);
-  const {quote} = useDailyQuote();
+  const {quote, loadQuote} = useDailyQuote();
 
   // Sau khi navigation.goBack() sẽ gọi hàm này
   useFocusEffect(
     useCallback(() => {
       checkSavedGame();
       loadBackgrounds();
+      loadQuote();
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []),
   );

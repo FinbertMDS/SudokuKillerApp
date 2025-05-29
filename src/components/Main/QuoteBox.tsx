@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
   container: {
     marginHorizontal: 16,
     marginTop: 16,
-    padding: 16,
+    padding: 10,
     borderRadius: 16,
     shadowColor: '#000',
     shadowOpacity: 0.1,
