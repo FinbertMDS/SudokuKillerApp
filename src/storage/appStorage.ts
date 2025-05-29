@@ -1,9 +1,10 @@
-import {AppSettings, DailyBackgrounds} from '../types';
+import {AppSettings, DailyBackgrounds, DailyQuotes} from '../types';
 import {
   STORAGE_KEY_BACKGROUNDS,
   STORAGE_KEY_HAS_PLAYED,
   STORAGE_KEY_LANG_KEY_DEFAULT,
   STORAGE_KEY_LANG_KEY_PREFERRED,
+  STORAGE_KEY_QUOTES,
   STORAGE_KEY_SETTINGS,
 } from '../utils/constants';
 import {storage} from './mmkv';
@@ -54,6 +55,18 @@ const clearBackgrounds = () => {
   storage.delete(STORAGE_KEY_BACKGROUNDS);
 };
 
+// STORAGE_KEY_QUOTES
+const getQuotes = (): DailyQuotes | null => {
+  const json = storage.getString(STORAGE_KEY_QUOTES);
+  return json ? JSON.parse(json) : null;
+};
+const setQuotes = (data: DailyQuotes) => {
+  storage.set(STORAGE_KEY_QUOTES, JSON.stringify(data));
+};
+const clearQuotes = () => {
+  storage.delete(STORAGE_KEY_QUOTES);
+};
+
 // STORAGE_KEY_HAS_PLAYED
 const getHasPlayed = (): boolean => {
   return storage.getBoolean(STORAGE_KEY_HAS_PLAYED) || false;
@@ -70,6 +83,7 @@ const clearAll = () => {
   clearLangKeyPreferred();
   clearSettings();
   clearBackgrounds();
+  clearQuotes();
   clearHasPlayed();
 };
 
@@ -86,6 +100,9 @@ export const appStorage = {
   getBackgrounds,
   setBackgrounds,
   clearBackgrounds,
+  getQuotes,
+  setQuotes,
+  clearQuotes,
   getHasPlayed,
   setHasPlayed,
   clearHasPlayed,

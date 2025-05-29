@@ -14,10 +14,12 @@ import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import uuid from 'react-native-uuid';
 import Header from '../../components/commons/Header';
 import NewGameMenu from '../../components/Main/NewGameMenu';
+import {QuoteBox} from '../../components/Main/QuoteBox';
 import {useTheme} from '../../context/ThemeContext';
 import {CORE_EVENTS} from '../../events';
 import eventBus from '../../events/eventBus';
 import {useDailyBackground} from '../../hooks/useDailyBackground';
+import {useDailyQuote} from '../../hooks/useDailyQuote';
 import {BoardService} from '../../services/BoardService';
 import {Level, RootStackParamList} from '../../types/index';
 import {SCREENS} from '../../utils/constants';
@@ -29,6 +31,7 @@ const MainScreen = () => {
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [hasSavedGame, setHasSavedGame] = useState(false);
   const {backgroundUrl, loadBackgrounds} = useDailyBackground(mode);
+  const {quote} = useDailyQuote();
 
   // Sau khi navigation.goBack() sẽ gọi hàm này
   useFocusEffect(
@@ -90,6 +93,7 @@ const MainScreen = () => {
         showSettings={true}
         showTheme={true}
       />
+      {quote && <QuoteBox q={quote.q} a={quote.a} />}
       <View style={styles.middle}>
         <Text style={[styles.title, {color: theme.text}]}>
           {t('welcomeTitle', {appName: t('appName')})}
@@ -142,12 +146,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 96,
   },
   title: {
     fontSize: 32,
     textAlign: 'center',
     lineHeight: 48,
+    fontWeight: '500',
+    textShadowColor: 'rgba(0, 0, 0, 0.25)',
+    textShadowOffset: {width: 0, height: 2},
+    textShadowRadius: 4,
   },
   footer: {
     marginBottom: 96,

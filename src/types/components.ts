@@ -39,6 +39,13 @@ export type DailyBackgrounds = {
   date?: string;
 };
 
+export type DailyQuotes = {
+  q: string;
+  a: string;
+  h: string;
+  date?: string;
+};
+
 export type ActionButtonProps = {
   id: string;
   label: string;
