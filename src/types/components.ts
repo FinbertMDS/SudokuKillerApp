@@ -9,10 +9,15 @@ export type RootStackParamList = {
   HowToPlay: undefined;
   AboutGame: undefined;
   Licenses: undefined;
+  SkWebView: SkWebViewParamProps;
 };
 
 export type BoardScreenRouteProp = RouteProp<RootStackParamList, 'Board'>;
 export type SettingsScreenRouteProp = RouteProp<RootStackParamList, 'Settings'>;
+export type SkWebViewScreenRouteProp = RouteProp<
+  RootStackParamList,
+  'SkWebView'
+>;
 
 export type BoardParamProps = {
   id: string;
@@ -23,6 +28,14 @@ export type BoardParamProps = {
 export type SettingsParamProps = {
   showAdvancedSettings?: boolean;
 };
+
+export type SkWebViewParamProps = {
+  title: string;
+  type: SkWebViewType;
+  needPadding?: boolean;
+};
+
+export type SkWebViewType = 'licenses' | 'privacy' | 'terms';
 
 export type OptionMenuItem = {
   icon: string;

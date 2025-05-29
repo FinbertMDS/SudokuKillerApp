@@ -4,7 +4,7 @@ import DeviceInfo from 'react-native-device-info';
 export const appConfig = {
   iosAppId: '6746165333',
   androidPackageName: DeviceInfo.getBundleId(),
-  developerMail: 'ngovanhuy.jp@gmail.com',
+  developerMail: 'finbertngo@gmail.com',
   version: DeviceInfo.getVersion(),
   buildNumber: DeviceInfo.getBuildNumber(),
   getStoreUrl: () =>

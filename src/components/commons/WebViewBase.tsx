@@ -1,19 +1,22 @@
 import React from 'react';
-import {useTranslation} from 'react-i18next';
-import {Platform, StyleSheet} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {WebView} from 'react-native-webview';
-import Header from '../../components/commons/Header';
 import {useTheme} from '../../context/ThemeContext';
+import Header from './Header';
 
-export default function Licenses() {
+type WebViewBaseProps = {
+  title: string;
+  source: any;
+  needPadding?: boolean;
+};
+
+export default function WebViewBase({
+  title,
+  source,
+  needPadding = false,
+}: WebViewBaseProps) {
   const {theme, mode} = useTheme();
-  const {t} = useTranslation();
-
-  const licensesSource =
-    Platform.OS === 'android'
-      ? {uri: 'file:///android_asset/licenses.html'}
-      : require('../../../assets/htmls/licenses.html');
 
   const darkModeStyle = `
       (function() {
@@ -41,16 +44,17 @@ export default function Licenses() {
       edges={['top', 'bottom']}
       style={[styles.container, {backgroundColor: theme.background}]}>
       <Header
-        title={t('licenses')}
+        title={title}
         showBack={true}
         showSettings={false}
         showTheme={false}
       />
       <WebView
         originWhitelist={['*']}
-        source={licensesSource}
+        source={source}
         injectedJavaScript={mode === 'dark' ? darkModeStyle : ''}
         onMessage={_ => {}}
+        style={needPadding ? styles.content : {}}
       />
     </SafeAreaView>
   );
@@ -59,5 +63,8 @@ export default function Licenses() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  content: {
+    marginHorizontal: 16,
   },
 });

@@ -9,9 +9,9 @@ import BottomTabs from './navigation/BottomTabs';
 import AboutGame from './screens/AboutGame';
 import BoardScreen from './screens/BoardScreen';
 import {HowToPlayScreen} from './screens/HowToPlayScreen';
-import LicensesScreen from './screens/LicensesScreen';
 import {OptionsScreen} from './screens/OptionsScreen';
 import {SettingsScreen} from './screens/SettingsScreen';
+import SkWebViewScreen from './screens/SkWebViewScreen';
 import {RootStackParamList} from './types/index';
 import {SCREENS} from './utils/constants';
 
@@ -54,8 +54,8 @@ const App = () => {
             options={{headerShown: false}}
           />
           <Stack.Screen
-            name={SCREENS.LICENSES}
-            component={LicensesScreen}
+            name={SCREENS.SK_WEBVIEW}
+            component={SkWebViewScreen}
             options={{headerShown: false}}
           />
         </Stack.Navigator>
