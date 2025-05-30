@@ -50,7 +50,7 @@ ad unit ID: killer-sudoku-ios-interstitial
 ca-app-pub-4776985253905766/9006985221
 
 ad unit ID: killer-sudoku-ios-reward
-ca-app-pub-4776985253905766/7829634920
+ca-app-pub-4776985253905766/1244394325
 
 ----
 android
