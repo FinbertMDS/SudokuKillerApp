@@ -47,6 +47,7 @@ const GameStackedBarChart = ({
           height={250}
           chartConfig={{
             ...chartConfig,
+            barPercentage: 0.7,
           }}
           style={styles.chart}
           hideLegend={false}

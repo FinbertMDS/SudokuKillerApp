@@ -75,7 +75,6 @@ const styles = StyleSheet.create({
   },
   chart: {
     borderRadius: 12,
-    marginLeft: -10,
   },
 });
 
