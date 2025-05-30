@@ -1,5 +1,10 @@
 import {storage} from '.';
-import {DailyStats, GameLogEntry, GameStatsCache} from '../types';
+import {
+  DailyStats,
+  GameLogEntry,
+  GameLogEntryV2,
+  GameStatsCache,
+} from '../types';
 import {
   STORAGE_KEY_DAILY_STATS,
   STORAGE_KEY_GAME_LOGS,
@@ -12,6 +17,14 @@ const saveGameLogs = (logs: GameLogEntry[]) =>
   storage.set(STORAGE_KEY_GAME_LOGS, JSON.stringify(logs));
 
 const getGameLogs = (): GameLogEntry[] => {
+  const json = storage.getString(STORAGE_KEY_GAME_LOGS);
+  return json ? JSON.parse(json) : [];
+};
+
+const saveGameLogsV2 = (logs: GameLogEntryV2[]) =>
+  storage.set(STORAGE_KEY_GAME_LOGS, JSON.stringify(logs));
+
+const getGameLogsV2 = (): GameLogEntryV2[] => {
   const json = storage.getString(STORAGE_KEY_GAME_LOGS);
   return json ? JSON.parse(json) : [];
 };
@@ -51,6 +64,8 @@ const clearStatsData = () => {
 export const statsStorage = {
   saveGameLogs,
   getGameLogs,
+  saveGameLogsV2,
+  getGameLogsV2,
   saveStatsCache,
   getStatsCache,
   saveDailyStats,

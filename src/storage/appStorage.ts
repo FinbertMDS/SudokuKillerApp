@@ -4,6 +4,7 @@ import {
   STORAGE_KEY_HAS_PLAYED,
   STORAGE_KEY_LANG_KEY_DEFAULT,
   STORAGE_KEY_LANG_KEY_PREFERRED,
+  STORAGE_KEY_MIGRATION_VERSION,
   STORAGE_KEY_QUOTES,
   STORAGE_KEY_SETTINGS,
 } from '../utils/constants';
@@ -78,6 +79,14 @@ const clearHasPlayed = () => {
   storage.delete(STORAGE_KEY_HAS_PLAYED);
 };
 
+// STORAGE_KEY_MIGRATION_VERSION
+const getMigrationVersion = (): number => {
+  return storage.getNumber(STORAGE_KEY_MIGRATION_VERSION) || 0;
+};
+const setMigrationVersion = (version: number) => {
+  storage.set(STORAGE_KEY_MIGRATION_VERSION, version);
+};
+
 const clearAll = () => {
   clearLangKeyDefault();
   clearLangKeyPreferred();
@@ -107,4 +116,6 @@ export const appStorage = {
   setHasPlayed,
   clearHasPlayed,
   clearAll,
+  getMigrationVersion,
+  setMigrationVersion,
 };

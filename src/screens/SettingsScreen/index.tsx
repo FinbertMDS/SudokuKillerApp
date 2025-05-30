@@ -19,6 +19,7 @@ import eventBus from '../../events/eventBus';
 import LanguageSwitcher from '../../i18n/LanguageSwitcher';
 import {SettingsService} from '../../services/SettingsService';
 import {
+  AppSettings,
   RootStackParamList,
   SettingsParamProps,
   SettingsScreenRouteProp,
@@ -53,7 +54,7 @@ export const SettingsScreen = () => {
         ...prev,
         [key]: value,
       });
-      eventBus.emit(CORE_EVENTS.settingsUpdated, updated);
+      eventBus.emit(CORE_EVENTS.settingsUpdated, updated as AppSettings);
       return updated;
     });
   };

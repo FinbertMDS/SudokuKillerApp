@@ -1,7 +1,7 @@
 // src/App.tsx
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {ThemeProvider} from './context/ThemeContext';
 import {setupEventListeners} from './events';
 import './i18n/i18n';
@@ -12,6 +12,7 @@ import {HowToPlayScreen} from './screens/HowToPlayScreen';
 import {OptionsScreen} from './screens/OptionsScreen';
 import {SettingsScreen} from './screens/SettingsScreen';
 import SkWebViewScreen from './screens/SkWebViewScreen';
+import {runMigrationsIfNeeded} from './storage/runMigrationsIfNeeded';
 import {RootStackParamList} from './types/index';
 import {SCREENS} from './utils/constants';
 
@@ -19,6 +20,10 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 setupEventListeners();
 
 const App = () => {
+  useEffect(() => {
+    runMigrationsIfNeeded();
+  }, []);
+
   return (
     <ThemeProvider>
       <NavigationContainer>
