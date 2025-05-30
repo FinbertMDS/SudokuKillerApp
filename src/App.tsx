@@ -4,7 +4,9 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React, {useEffect} from 'react';
 import {ThemeProvider} from './context/ThemeContext';
 import {setupEventListeners} from './events';
+import {useAppPause} from './hooks/useAppPause';
 import './i18n/i18n';
+import {autoDetectLanguage} from './i18n/i18n';
 import BottomTabs from './navigation/BottomTabs';
 import AboutGame from './screens/AboutGame';
 import BoardScreen from './screens/BoardScreen';
@@ -23,6 +25,15 @@ const App = () => {
   useEffect(() => {
     runMigrationsIfNeeded();
   }, []);
+
+  useAppPause(
+    () => {},
+    () => {
+      setTimeout(() => {
+        autoDetectLanguage();
+      }, 200);
+    },
+  );
 
   return (
     <ThemeProvider>

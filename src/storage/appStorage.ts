@@ -12,79 +12,133 @@ import {storage} from './mmkv';
 
 // STORAGE_KEY_LANG_KEY_DEFAULT
 const getLangKeyDefault = (): string | null => {
-  return storage.getString(STORAGE_KEY_LANG_KEY_DEFAULT) || null;
+  try {
+    return storage.getString(STORAGE_KEY_LANG_KEY_DEFAULT) || null;
+  } catch (_) {
+    return null;
+  }
 };
 const saveLangKeyDefault = (key: string) => {
-  storage.set(STORAGE_KEY_LANG_KEY_DEFAULT, key);
+  try {
+    storage.set(STORAGE_KEY_LANG_KEY_DEFAULT, key);
+  } catch (_) {}
 };
 const clearLangKeyDefault = () => {
-  storage.delete(STORAGE_KEY_LANG_KEY_DEFAULT);
+  try {
+    storage.delete(STORAGE_KEY_LANG_KEY_DEFAULT);
+  } catch (_) {}
 };
 
 // STORAGE_KEY_LANG_KEY_PREFERRED
 const getLangKeyPreferred = (): string | null => {
-  return storage.getString(STORAGE_KEY_LANG_KEY_PREFERRED) || null;
+  try {
+    return storage.getString(STORAGE_KEY_LANG_KEY_PREFERRED) || null;
+  } catch (_) {
+    return null;
+  }
 };
 const saveLangKeyPreferred = (key: string) => {
-  storage.set(STORAGE_KEY_LANG_KEY_PREFERRED, key);
+  try {
+    storage.set(STORAGE_KEY_LANG_KEY_PREFERRED, key);
+  } catch (_) {}
 };
 const clearLangKeyPreferred = () => {
-  storage.delete(STORAGE_KEY_LANG_KEY_PREFERRED);
+  try {
+    storage.delete(STORAGE_KEY_LANG_KEY_PREFERRED);
+  } catch (_) {}
 };
 
 // STORAGE_KEY_SETTINGS
 const getSettings = (): AppSettings | null => {
-  const json = storage.getString(STORAGE_KEY_SETTINGS);
-  return json ? JSON.parse(json) : null;
+  try {
+    const json = storage.getString(STORAGE_KEY_SETTINGS);
+    return json ? JSON.parse(json) : null;
+  } catch (_) {
+    return null;
+  }
 };
 const setSettings = (data: AppSettings) => {
-  storage.set(STORAGE_KEY_SETTINGS, JSON.stringify(data));
+  try {
+    storage.set(STORAGE_KEY_SETTINGS, JSON.stringify(data));
+  } catch (_) {}
 };
 const clearSettings = () => {
-  storage.delete(STORAGE_KEY_SETTINGS);
+  try {
+    storage.delete(STORAGE_KEY_SETTINGS);
+  } catch (_) {}
 };
 
 // STORAGE_KEY_BACKGROUNDS
 const getBackgrounds = (): DailyBackgrounds | null => {
-  const json = storage.getString(STORAGE_KEY_BACKGROUNDS);
-  return json ? JSON.parse(json) : null;
+  try {
+    const json = storage.getString(STORAGE_KEY_BACKGROUNDS);
+    return json ? JSON.parse(json) : null;
+  } catch (_) {
+    return null;
+  }
 };
 const setBackgrounds = (data: DailyBackgrounds) => {
-  storage.set(STORAGE_KEY_BACKGROUNDS, JSON.stringify(data));
+  try {
+    storage.set(STORAGE_KEY_BACKGROUNDS, JSON.stringify(data));
+  } catch (_) {}
 };
 const clearBackgrounds = () => {
-  storage.delete(STORAGE_KEY_BACKGROUNDS);
+  try {
+    storage.delete(STORAGE_KEY_BACKGROUNDS);
+  } catch (_) {}
 };
 
 // STORAGE_KEY_QUOTES
 const getQuotes = (): DailyQuotes | null => {
-  const json = storage.getString(STORAGE_KEY_QUOTES);
-  return json ? JSON.parse(json) : null;
+  try {
+    const json = storage.getString(STORAGE_KEY_QUOTES);
+    return json ? JSON.parse(json) : null;
+  } catch (_) {
+    return null;
+  }
 };
 const setQuotes = (data: DailyQuotes) => {
-  storage.set(STORAGE_KEY_QUOTES, JSON.stringify(data));
+  try {
+    storage.set(STORAGE_KEY_QUOTES, JSON.stringify(data));
+  } catch (_) {}
 };
 const clearQuotes = () => {
-  storage.delete(STORAGE_KEY_QUOTES);
+  try {
+    storage.delete(STORAGE_KEY_QUOTES);
+  } catch (_) {}
 };
 
 // STORAGE_KEY_HAS_PLAYED
 const getHasPlayed = (): boolean => {
-  return storage.getBoolean(STORAGE_KEY_HAS_PLAYED) || false;
+  try {
+    return storage.getBoolean(STORAGE_KEY_HAS_PLAYED) || false;
+  } catch (_) {
+    return false;
+  }
 };
 const setHasPlayed = (value: boolean) => {
-  storage.set(STORAGE_KEY_HAS_PLAYED, value);
+  try {
+    storage.set(STORAGE_KEY_HAS_PLAYED, value);
+  } catch (_) {}
 };
 const clearHasPlayed = () => {
-  storage.delete(STORAGE_KEY_HAS_PLAYED);
+  try {
+    storage.delete(STORAGE_KEY_HAS_PLAYED);
+  } catch (_) {}
 };
 
 // STORAGE_KEY_MIGRATION_VERSION
 const getMigrationVersion = (): number => {
-  return storage.getNumber(STORAGE_KEY_MIGRATION_VERSION) || 0;
+  try {
+    return storage.getNumber(STORAGE_KEY_MIGRATION_VERSION) || 0;
+  } catch (_) {
+    return 0;
+  }
 };
 const setMigrationVersion = (version: number) => {
-  storage.set(STORAGE_KEY_MIGRATION_VERSION, version);
+  try {
+    storage.set(STORAGE_KEY_MIGRATION_VERSION, version);
+  } catch (_) {}
 };
 
 const clearAll = () => {
