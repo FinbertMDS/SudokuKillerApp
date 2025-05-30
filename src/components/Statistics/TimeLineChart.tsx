@@ -47,7 +47,11 @@ const TimeLineChart = ({dailyStats, chartConfig}: TimeLineChartProps) => {
           width={chartWidth}
           height={220}
           fromZero
-          chartConfig={chartConfig}
+          chartConfig={{
+            ...chartConfig,
+            propsForLabels: {x: -10},
+          }}
+          xLabelsOffset={-10}
           style={styles.chart}
           bezier
         />
@@ -70,6 +74,7 @@ const styles = StyleSheet.create({
   },
   chart: {
     borderRadius: 12,
+    marginLeft: -10,
   },
 });
 
