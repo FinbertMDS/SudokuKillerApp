@@ -85,7 +85,7 @@ export function getDailyStatsFromLogs(
   });
 
   const sorted = Array.from(map.entries()).sort(([a], [b]) =>
-    a.localeCompare(b),
+    b.localeCompare(a),
   );
 
   return sorted.map(([date, {games, totalTimeSeconds}]) => ({
@@ -153,7 +153,7 @@ export function convertToStackedData(
   });
 
   const sorted = Array.from(dateMap.entries()).sort(([a], [b]) =>
-    a.localeCompare(b),
+    b.localeCompare(a),
   );
 
   return {

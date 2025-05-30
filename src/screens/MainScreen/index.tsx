@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 128,
+    marginTop: 96,
   },
   title: {
     fontSize: 22,
@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
     lineHeight: 66,
   },
   footer: {
-    marginBottom: 128,
+    marginBottom: 96,
     paddingHorizontal: 20,
     alignItems: 'center',
   },
