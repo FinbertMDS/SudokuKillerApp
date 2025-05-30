@@ -18,6 +18,7 @@ import {QuoteBox} from '../../components/Main/QuoteBox';
 import {useTheme} from '../../context/ThemeContext';
 import {CORE_EVENTS} from '../../events';
 import eventBus from '../../events/eventBus';
+import {InitGameCoreEvent} from '../../events/types';
 import {useDailyBackground} from '../../hooks/useDailyBackground';
 import {useDailyQuote} from '../../hooks/useDailyQuote';
 import {BoardService} from '../../services/BoardService';
@@ -51,7 +52,7 @@ const MainScreen = () => {
   const handleNewGame = async (level: Level) => {
     await BoardService.clear();
     const id = uuid.v4().toString();
-    eventBus.emit(CORE_EVENTS.initGame, {level, id});
+    eventBus.emit(CORE_EVENTS.initGame, {level, id} as InitGameCoreEvent);
     navigation.navigate(SCREENS.BOARD, {
       id,
       level,

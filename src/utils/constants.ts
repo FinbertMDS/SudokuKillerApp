@@ -43,6 +43,7 @@ export const STORAGE_KEY_SETTINGS = 'settings';
 export const STORAGE_KEY_BACKGROUNDS = 'backgrounds';
 export const STORAGE_KEY_HAS_PLAYED = 'hasPlayed';
 export const STORAGE_KEY_QUOTES = 'quotes';
+export const STORAGE_KEY_MIGRATION_VERSION = 'migrationVersion';
 
 export const CHART_WIDTH = 60;
 export const CHART2_WIDTH = 70;

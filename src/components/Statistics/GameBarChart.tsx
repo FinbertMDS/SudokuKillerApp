@@ -47,9 +47,13 @@ const GameBarChart = ({dailyStats, chartConfig}: GameBarChartProps) => {
           width={chartWidth}
           height={220}
           fromZero
-          chartConfig={chartConfig}
+          chartConfig={{
+            ...chartConfig,
+            barPercentage: 0.7,
+          }}
           style={styles.chart}
           showValuesOnTopOfBars
+          yLabelsOffset={32}
           yAxisLabel={''}
           yAxisSuffix={''}
         />

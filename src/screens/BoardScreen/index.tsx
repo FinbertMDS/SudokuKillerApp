@@ -31,6 +31,7 @@ import {HowToPlay} from '../../components/HowToPlay';
 import {useTheme} from '../../context/ThemeContext';
 import {CORE_EVENTS} from '../../events';
 import eventBus from '../../events/eventBus';
+import {GameEndedCoreEvent} from '../../events/types';
 import {useAppPause} from '../../hooks/useAppPause';
 import {useHintCounter} from '../../hooks/useHintCounter';
 import {useMistakeCounter} from '../../hooks/useMistakeCounter';
@@ -403,7 +404,7 @@ const BoardScreen = () => {
               timePlayed: secondsRef.current,
               mistakes: totalMistakes,
               hintCount: _totalHintCountUsed,
-            });
+            } as GameEndedCoreEvent);
             await BoardService.clear();
             navigation.goBack();
           },
