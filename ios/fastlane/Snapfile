@@ -2,11 +2,8 @@
 
 # A list of devices you want to take the screenshots from
 devices([
-  # "iPhone 16 Pro Max",
-  "iPhone 16 Pro",
-  # "iPhone SE (3rd generation)",
-  # "iPad Pro 13-inch (M4)",
-  # "iPad Pro 11-inch (M4)"
+  "iPhone 16 Pro Max",
+  "iPad Pro (12.9-inch) (6th generation)",
 ])
 
 
@@ -20,6 +17,7 @@ languages(
 
 # The name of the scheme which contains the UI Tests
 scheme("SudokuKillerApp")
+configuration("Release")
 
 # Where should the resulting screenshots be stored?
 output_directory("./screenshots")

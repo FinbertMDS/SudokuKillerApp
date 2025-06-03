@@ -31,7 +31,7 @@ final class SudokuKillerAppUITests: XCTestCase {
         }
         setupSnapshot(app)
         app.launch()
-        sleep(5)
+        sleep(2)
 
         // screenshot Main screen
         snapshot("01_MainScreen_LightMode")
@@ -80,12 +80,12 @@ final class SudokuKillerAppUITests: XCTestCase {
         newGameButton.tap()
 
         sleep(1)
-        let newGameButtonMaster = app.descendants(matching: .any)["NewGameButton-expert"]
+        let newGameButtonMaster = app.descendants(matching: .any)["NewGameButton-easy"]
         XCTAssertTrue(newGameButtonMaster.waitForExistence(timeout: 2))
         newGameButtonMaster.tap()
 
         // Click 3 times on the how to play next button
-        sleep(1)
+        sleep(5)
         for _ in 0..<3 {
             let howToPlayNextButton = app.descendants(matching: .any)["HowToPlayNextButton"]
             XCTAssertTrue(howToPlayNextButton.waitForExistence(timeout: 2))

@@ -1,4 +1,5 @@
-import {GameLogEntry} from '../../types';
+import {GameStatsManager} from '../../services/GameStatsManager';
+import {GameLogEntry, TimeRange} from '../../types';
 import {statsStorage} from '../statsStorage';
 
 const gameLog = [
@@ -104,8 +105,19 @@ const gameLog = [
   },
 ] as GameLogEntry[];
 
-const saveMockGameLogs = () => {
-  statsStorage.saveGameLogs(gameLog);
+const saveMockGameLogs = async () => {
+  const oldLogs = statsStorage.getGameLogs();
+  if (oldLogs.length > 0) {
+    return;
+  }
+  console.log('mock game logs', gameLog);
+  await GameStatsManager.saveLogs(gameLog);
+  const affectedRanges: TimeRange[] = ['today', 'week', 'month', 'year', 'all'];
+
+  const allLogs = await GameStatsManager.getLogs();
+  await GameStatsManager.updateStatsWithAllCache(allLogs, affectedRanges);
+
+  statsStorage.setLastStatsCacheUpdate();
 };
 
 export const statsMock = {

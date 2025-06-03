@@ -3,6 +3,11 @@ import {appStorage} from './appStorage';
 export const CURRENT_MIGRATION_VERSION = 0;
 
 export async function runMigrationsIfNeeded() {
+  // if (IS_UI_TESTING === 'true') {
+  //   console.log('[MIGRATION] Mock game logs for UI testing');
+  //   statsMock.saveMockGameLogs();
+  // }
+
   const storedVersion = appStorage.getMigrationVersion() ?? 0;
 
   if (storedVersion >= CURRENT_MIGRATION_VERSION) {
