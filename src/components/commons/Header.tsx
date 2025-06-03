@@ -63,7 +63,11 @@ const Header = ({
           <View style={[styles.side, styles.right]}>
             {showCustom && custom ? <>{custom}</> : null}
             {showTheme && (
-              <TouchableOpacity onPress={toggleTheme} style={styles.iconButton}>
+              <TouchableOpacity
+                accessibilityLabel="ThemeButton"
+                testID="ThemeButton"
+                onPress={toggleTheme}
+                style={styles.iconButton}>
                 <Icon
                   name={mode === 'light' ? 'weather-night' : 'weather-sunny'}
                   size={24}
@@ -73,6 +77,8 @@ const Header = ({
             )}
             {showSettings && (
               <TouchableOpacity
+                accessibilityLabel="SettingsButton"
+                testID="SettingsButton"
                 onPress={onSettings ? onSettings : defaultOnSettings}
                 style={styles.iconButton}>
                 <Icon name="cog-outline" size={24} color={theme.primary} />

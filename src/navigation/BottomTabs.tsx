@@ -36,6 +36,7 @@ const BottomTabs = () => {
         headerShown: false,
         tabBarActiveTintColor: theme.primary,
         tabBarInactiveTintColor: theme.text,
+        tabBarButtonTestID: `${route.name}TabButton`,
       })}>
       <Tab.Screen
         name={SCREENS.MAIN}

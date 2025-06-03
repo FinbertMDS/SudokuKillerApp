@@ -1,3 +1,4 @@
+import {IS_UI_TESTING} from '@env';
 import React, {useCallback, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
@@ -79,7 +80,7 @@ const ActionButtons = ({
         onPress: handleHint,
       },
     ];
-    if (__DEV__) {
+    if (__DEV__ && IS_UI_TESTING !== 'true') {
       allButtons.push({
         id: 'solve',
         label: t('solve'),

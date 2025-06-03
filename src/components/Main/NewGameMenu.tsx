@@ -31,6 +31,7 @@ const NewGameMenu: React.FC<NewGameMenuProps> = ({handleNewGame}) => {
             borderColor: theme.buttonBorder,
           },
         ]}
+        accessibilityLabel="NewGameButton"
         onPress={() => setVisible(true)}>
         <Text style={[styles.buttonText, {color: theme.buttonText}]}>
           {t('newGame')}
@@ -60,6 +61,8 @@ const NewGameMenu: React.FC<NewGameMenuProps> = ({handleNewGame}) => {
                       },
                       index === 0 && styles.firstOption,
                     ]}
+                    accessibilityLabel={`NewGameButton-${level}`}
+                    testID={`NewGameButton-${level}`}
                     onPress={() => {
                       setVisible(false);
                       handleNewGame(level);

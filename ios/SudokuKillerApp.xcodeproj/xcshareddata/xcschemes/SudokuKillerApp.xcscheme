@@ -38,6 +38,17 @@
                ReferencedContainer = "container:SudokuKillerApp.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "374B56AB2DEE8CA3002D859F"
+               BuildableName = "SudokuKillerAppUITests.xctest"
+               BlueprintName = "SudokuKillerAppUITests"
+               ReferencedContainer = "container:SudokuKillerApp.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

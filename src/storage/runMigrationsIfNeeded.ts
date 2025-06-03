@@ -1,7 +1,6 @@
 import {appStorage} from './appStorage';
-import {migrateGameLogs} from './migrations/gameLogs';
 
-export const CURRENT_MIGRATION_VERSION = 1;
+export const CURRENT_MIGRATION_VERSION = 0;
 
 export async function runMigrationsIfNeeded() {
   const storedVersion = appStorage.getMigrationVersion() ?? 0;
@@ -16,9 +15,9 @@ export async function runMigrationsIfNeeded() {
   );
 
   // Các bước migrate theo version
-  if (storedVersion < 1) {
-    await migrateGameLogs();
-  }
+  // if (storedVersion < 1) {
+  // await migrateGameLogs();
+  // }
 
   // Cập nhật version sau khi migrate xong
   appStorage.setMigrationVersion(CURRENT_MIGRATION_VERSION);

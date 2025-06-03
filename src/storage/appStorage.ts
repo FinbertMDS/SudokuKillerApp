@@ -145,7 +145,6 @@ const clearAll = () => {
   clearLangKeyDefault();
   clearLangKeyPreferred();
   clearSettings();
-  clearBackgrounds();
   clearQuotes();
   clearHasPlayed();
 };
