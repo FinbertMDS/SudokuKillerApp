@@ -1,11 +1,13 @@
 import React, {useMemo} from 'react';
 import {
   Dimensions,
+  LayoutChangeEvent,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
+import DeviceInfo from 'react-native-device-info';
 import {useTheme} from '../../context/ThemeContext';
 import {useNumberCounts} from '../../hooks/useNumberCounts';
 import {AppSettings, CellValue} from '../../types';
@@ -15,9 +17,15 @@ type NumberPadProps = {
   board: CellValue[][];
   settings: AppSettings;
   onSelectNumber: (num: number) => void;
+  onLayout?: (event: LayoutChangeEvent) => void;
 };
 
-const NumberPad = ({board, settings, onSelectNumber}: NumberPadProps) => {
+const NumberPad = ({
+  board,
+  settings,
+  onSelectNumber,
+  onLayout,
+}: NumberPadProps) => {
   const {theme} = useTheme();
   const counts = useNumberCounts(board, settings);
 
@@ -38,7 +46,9 @@ const NumberPad = ({board, settings, onSelectNumber}: NumberPadProps) => {
   );
 
   return (
-    <View style={[styles.container, {backgroundColor: theme.background}]}>
+    <View
+      style={[styles.container, {backgroundColor: theme.background}]}
+      onLayout={onLayout}>
       {numbers.map(num => (
         <TouchableOpacity
           key={num}
@@ -75,7 +85,7 @@ const styles = StyleSheet.create({
     alignItems: 'center' as const,
   },
   text: {
-    fontSize: 32,
+    fontSize: DeviceInfo.isTablet() ? 70 : 32,
   },
 });
 

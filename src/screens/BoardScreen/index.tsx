@@ -77,6 +77,13 @@ const BoardScreen = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
 
+  const [headerHeight, setHeaderHeight] = useState(0);
+  const [infoPanelHeight, setInfoPanelHeight] = useState(0);
+  const [actionButtonsHeight, setActionButtonsHeight] = useState(0);
+  const [numberPadHeight, setNumberPadHeight] = useState(0);
+  const [bannerHeight, setBannerHeight] = useState(0);
+  const [reservedHeight, setReservedHeight] = useState(0);
+
   const [initialBoard, setInitialBoard] = useState<CellValue[][]>(
     createEmptyGrid<CellValue>(),
   );
@@ -599,6 +606,23 @@ const BoardScreen = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [limitHintReached, isLoadedRewarded]);
 
+  useEffect(() => {
+    const _reservedHeight =
+      headerHeight +
+      infoPanelHeight +
+      actionButtonsHeight +
+      numberPadHeight +
+      bannerHeight +
+      64;
+    setReservedHeight(_reservedHeight);
+  }, [
+    headerHeight,
+    infoPanelHeight,
+    actionButtonsHeight,
+    numberPadHeight,
+    bannerHeight,
+  ]);
+
   if (showHowToPlay) {
     return (
       <SafeAreaView
@@ -637,6 +661,7 @@ const BoardScreen = () => {
           showTheme={true}
           onBack={handleBackPress}
           onSettings={handleGoToSettings}
+          onLayout={e => setHeaderHeight(e.nativeEvent.layout.height)}
         />
         <InfoPanel
           isPlaying={isPlaying}
@@ -647,6 +672,7 @@ const BoardScreen = () => {
           settings={settings}
           onPause={handlePause}
           onLimitTimeReached={handleLimitTimeReached}
+          onLayout={e => setInfoPanelHeight(e.nativeEvent.layout.height)}
         />
         <Grid
           board={board}
@@ -655,6 +681,7 @@ const BoardScreen = () => {
           solvedBoard={solvedBoard}
           selectedCell={selectedCell}
           settings={settings}
+          reservedHeight={reservedHeight}
           onPress={handleCellPress}
         />
         <ActionButtons
@@ -665,11 +692,13 @@ const BoardScreen = () => {
           onErase={handleErase}
           onHint={handleHint}
           onSolve={handleSolve}
+          onLayout={e => setActionButtonsHeight(e.nativeEvent.layout.height)}
         />
         <NumberPad
           board={board}
           settings={settings}
           onSelectNumber={handleNumberPress}
+          onLayout={e => setNumberPadHeight(e.nativeEvent.layout.height)}
         />
         <View
           style={[
@@ -678,7 +707,8 @@ const BoardScreen = () => {
               bottom: insets.bottom,
               backgroundColor: theme.background,
             },
-          ]}>
+          ]}
+          onLayout={e => setBannerHeight(e.nativeEvent.layout.height)}>
           <BannerAd
             ref={bannerRef}
             unitId={bannerId}

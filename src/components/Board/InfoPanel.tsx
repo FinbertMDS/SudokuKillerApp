@@ -1,6 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Alert,
+  LayoutChangeEvent,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import DeviceInfo from 'react-native-device-info';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useTheme} from '../../context/ThemeContext';
 import {useGameTimer} from '../../hooks/useGameTimer';
@@ -17,6 +25,7 @@ type InfoPanelProps = {
   settings: AppSettings;
   onPause: () => void;
   onLimitTimeReached: () => Promise<void>;
+  onLayout?: (event: LayoutChangeEvent) => void;
 };
 
 const InfoPanel = ({
@@ -28,6 +37,7 @@ const InfoPanel = ({
   settings,
   onPause,
   onLimitTimeReached,
+  onLayout,
 }: InfoPanelProps) => {
   const {theme} = useTheme();
   const {t} = useTranslation();
@@ -65,7 +75,9 @@ const InfoPanel = ({
   }, []);
 
   return (
-    <View style={[styles.container, {backgroundColor: theme.background}]}>
+    <View
+      style={[styles.container, {backgroundColor: theme.background}]}
+      onLayout={onLayout}>
       <View style={styles.infoBlock}>
         <Text style={[styles.title, {color: theme.text}]}>{t('level')}</Text>
         <Text style={[styles.value, {color: theme.text}]}>
@@ -117,10 +129,10 @@ const styles = StyleSheet.create({
     minWidth: 70,
   },
   title: {
-    fontSize: 14,
+    fontSize: DeviceInfo.isTablet() ? 20 : 14,
   },
   value: {
-    fontSize: 16,
+    fontSize: DeviceInfo.isTablet() ? 22 : 16,
     fontWeight: 'bold' as const,
   },
 });

@@ -262,3 +262,12 @@ export const isColFilled = (
   }
   return true; // Nếu tất cả ô trong cột đều khác 0, coi như đã filled
 };
+
+export function getFontSizesFromCellSize(cellSize: number) {
+  return {
+    cellText: Math.floor(cellSize * 0.55), // ví dụ: 40 → 22
+    noteText: Math.floor(cellSize * 0.18), // ví dụ: 40 → 7.2
+    cageText: Math.floor(cellSize * 0.22), // ví dụ: 40 → 8.8
+    noteWidth: Math.floor(cellSize / 3.5), // dùng cho width của noteText
+  };
+}
