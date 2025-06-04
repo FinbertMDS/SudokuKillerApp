@@ -31,6 +31,14 @@ Runs all the tests
 
 Submit a new internal
 
+### android alpha
+
+```sh
+[bundle exec] fastlane android alpha
+```
+
+Submit a new alpha
+
 ----
 
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.
