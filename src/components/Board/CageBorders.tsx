@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
+import {Dimensions, StyleSheet} from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import Svg, {Line} from 'react-native-svg';
 import {useTheme} from '../../context/ThemeContext';
@@ -16,7 +16,8 @@ const CAGE_PADDING = DeviceInfo.isTablet() ? 5 : 3;
 const CageBorders = ({cages}: CageBordersProps) => {
   const {theme} = useTheme();
 
-  const cellSize = DeviceInfo.isTablet() ? 60 : 40;
+  const {height} = Dimensions.get('window');
+  const cellSize = DeviceInfo.isTablet() && height > 950 ? 60 : 40;
 
   const renderCageBorders = () => {
     // Map từ (row,col) => cage index

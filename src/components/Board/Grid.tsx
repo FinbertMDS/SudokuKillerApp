@@ -1,5 +1,11 @@
 import React, {useCallback, useEffect, useRef} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Dimensions,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import Animated, {
   useAnimatedStyle,
@@ -47,7 +53,8 @@ const Grid = ({
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const colScales = Array.from({length: BOARD_SIZE}, () => useSharedValue(1));
 
-  const cellSize = DeviceInfo.isTablet() ? 60 : 40;
+  const {height} = Dimensions.get('window');
+  const cellSize = DeviceInfo.isTablet() && height > 950 ? 60 : 40;
 
   const {cellText, noteText, cageText, noteWidth} =
     getFontSizesFromCellSize(cellSize);

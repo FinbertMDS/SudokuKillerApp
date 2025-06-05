@@ -10,13 +10,17 @@ import {
   Text,
   View,
 } from 'react-native';
+import DeviceInfo from 'react-native-device-info';
 import {useTheme} from '../../context/ThemeContext';
 import {GameStats, Level} from '../../types';
 import {getLevelColor} from '../../utils/colorUtil';
 import {LEVELS} from '../../utils/constants';
 import {formatTime} from '../../utils/dateUtil';
 
-const SCREEN_WIDTH = Dimensions.get('window').width;
+let SCREEN_WIDTH = Dimensions.get('window').width;
+if (DeviceInfo.isTablet()) {
+  SCREEN_WIDTH = Math.min(SCREEN_WIDTH, Dimensions.get('window').height);
+}
 
 type LevelStatsProps = {
   stats: Record<Level, GameStats> | null;
