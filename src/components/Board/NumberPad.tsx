@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import DeviceInfo from 'react-native-device-info';
 import {useTheme} from '../../context/ThemeContext';
 import {useNumberCounts} from '../../hooks/useNumberCounts';
 import {AppSettings, CellValue} from '../../types';
@@ -24,10 +25,10 @@ const NumberPad = ({board, settings, onSelectNumber}: NumberPadProps) => {
   // Tính toán kích thước button dựa trên width màn hình
   const {buttonWidth, buttonHeight} = useMemo(() => {
     const screenWidth = Dimensions.get('window').width;
-    const containerPadding = 8; // padding left/right của container
+    const containerPadding = DeviceInfo.isTablet() ? 250 : 8; // padding left/right của container
     const availableWidth = screenWidth - containerPadding * 2; // width khả dụng
     const width = availableWidth / 9; // chia đều cho 9 button
-    const height = width + 20; // height = width + padding top/bottom 10px
+    const height = width + (DeviceInfo.isTablet() ? 0 : 20); // height = width + padding top/bottom 10px
     return {buttonWidth: width, buttonHeight: height};
   }, []);
 
@@ -66,7 +67,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center' as const,
     width: '100%' as const,
     alignItems: 'center' as const,
-    marginTop: 30,
+    marginTop: DeviceInfo.isTablet() ? 10 : 30,
     paddingHorizontal: 32,
   },
   button: {
@@ -75,7 +76,7 @@ const styles = StyleSheet.create({
     alignItems: 'center' as const,
   },
   text: {
-    fontSize: 32,
+    fontSize: DeviceInfo.isTablet() ? 48 : 32,
   },
 });
 

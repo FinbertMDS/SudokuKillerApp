@@ -1,17 +1,22 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
+import DeviceInfo from 'react-native-device-info';
 import Svg, {Line} from 'react-native-svg';
 import {useTheme} from '../../context/ThemeContext';
 import {Cage} from '../../types';
 import {getAdjacentCellsInSameCage} from '../../utils/boardUtil';
-import {BOARD_SIZE, CAGE_PADDING, CELL_SIZE} from '../../utils/constants';
+import {BOARD_SIZE} from '../../utils/constants';
 
 type CageBordersProps = {
   cages: Cage[];
 };
 
+const CAGE_PADDING = DeviceInfo.isTablet() ? 5 : 3;
+
 const CageBorders = ({cages}: CageBordersProps) => {
   const {theme} = useTheme();
+
+  const cellSize = DeviceInfo.isTablet() ? 60 : 40;
 
   const renderCageBorders = () => {
     // Map từ (row,col) => cage index
@@ -47,12 +52,11 @@ const CageBorders = ({cages}: CageBordersProps) => {
             lines.push(
               <Line
                 key={`right-${r}-${c}`}
-                x1={(c + 1) * CELL_SIZE - CAGE_PADDING}
-                y1={r * CELL_SIZE + (adjacentCells.top ? 0 : CAGE_PADDING)}
-                x2={(c + 1) * CELL_SIZE - CAGE_PADDING}
+                x1={(c + 1) * cellSize - CAGE_PADDING}
+                y1={r * cellSize + (adjacentCells.top ? 0 : CAGE_PADDING)}
+                x2={(c + 1) * cellSize - CAGE_PADDING}
                 y2={
-                  (r + 1) * CELL_SIZE -
-                  (adjacentCells.bottom ? 0 : CAGE_PADDING)
+                  (r + 1) * cellSize - (adjacentCells.bottom ? 0 : CAGE_PADDING)
                 }
                 stroke={theme.secondary}
                 strokeWidth={1}
@@ -70,12 +74,12 @@ const CageBorders = ({cages}: CageBordersProps) => {
             lines.push(
               <Line
                 key={`bottom-${r}-${c}`}
-                x1={c * CELL_SIZE + (adjacentCells.left ? 0 : CAGE_PADDING)}
-                y1={(r + 1) * CELL_SIZE - CAGE_PADDING}
+                x1={c * cellSize + (adjacentCells.left ? 0 : CAGE_PADDING)}
+                y1={(r + 1) * cellSize - CAGE_PADDING}
                 x2={
-                  (c + 1) * CELL_SIZE - (adjacentCells.right ? 0 : CAGE_PADDING)
+                  (c + 1) * cellSize - (adjacentCells.right ? 0 : CAGE_PADDING)
                 }
-                y2={(r + 1) * CELL_SIZE - CAGE_PADDING}
+                y2={(r + 1) * cellSize - CAGE_PADDING}
                 stroke={theme.secondary}
                 strokeWidth={1}
                 strokeDasharray="2,2"
@@ -90,15 +94,15 @@ const CageBorders = ({cages}: CageBordersProps) => {
           lines.push(
             <Line
               key={`left-${r}-${c}`}
-              x1={c * CELL_SIZE + CAGE_PADDING}
+              x1={c * cellSize + CAGE_PADDING}
               y1={
-                r * CELL_SIZE +
+                r * cellSize +
                 (isCageFirst ? cagePaddingFirstBottom : 0) +
                 (adjacentCells.top ? 0 : CAGE_PADDING)
               }
-              x2={c * CELL_SIZE + CAGE_PADDING}
+              x2={c * cellSize + CAGE_PADDING}
               y2={
-                (r + 1) * CELL_SIZE - (adjacentCells.bottom ? 0 : CAGE_PADDING)
+                (r + 1) * cellSize - (adjacentCells.bottom ? 0 : CAGE_PADDING)
               }
               stroke={theme.secondary}
               strokeWidth={1}
@@ -114,7 +118,7 @@ const CageBorders = ({cages}: CageBordersProps) => {
             <Line
               key={`top-${r}-${c}`}
               x1={
-                c * CELL_SIZE +
+                c * cellSize +
                 (isCageFirst ? cagePaddingFirstRight : 0) +
                 (adjacentCells.left
                   ? adjacentCells.right
@@ -122,11 +126,9 @@ const CageBorders = ({cages}: CageBordersProps) => {
                     : 0
                   : CAGE_PADDING)
               }
-              y1={r * CELL_SIZE + CAGE_PADDING}
-              x2={
-                (c + 1) * CELL_SIZE - (adjacentCells.right ? 0 : CAGE_PADDING)
-              }
-              y2={r * CELL_SIZE + CAGE_PADDING}
+              y1={r * cellSize + CAGE_PADDING}
+              x2={(c + 1) * cellSize - (adjacentCells.right ? 0 : CAGE_PADDING)}
+              y2={r * cellSize + CAGE_PADDING}
               stroke={theme.secondary}
               strokeWidth={1}
               strokeDasharray="2,2"
@@ -140,10 +142,10 @@ const CageBorders = ({cages}: CageBordersProps) => {
           lines.push(
             <Line
               key={`top-left-corner-${r}-${c}`}
-              x1={c * CELL_SIZE}
-              y1={r * CELL_SIZE + CAGE_PADDING}
-              x2={c * CELL_SIZE + CAGE_PADDING}
-              y2={r * CELL_SIZE + CAGE_PADDING}
+              x1={c * cellSize}
+              y1={r * cellSize + CAGE_PADDING}
+              x2={c * cellSize + CAGE_PADDING}
+              y2={r * cellSize + CAGE_PADDING}
               stroke={theme.secondary}
               strokeWidth={1}
               strokeDasharray="2,2"
@@ -151,10 +153,10 @@ const CageBorders = ({cages}: CageBordersProps) => {
             />,
             <Line
               key={`top-left-corner-${r}-${c}-2`}
-              x1={c * CELL_SIZE + CAGE_PADDING}
-              y1={r * CELL_SIZE}
-              x2={c * CELL_SIZE + CAGE_PADDING}
-              y2={r * CELL_SIZE + CAGE_PADDING}
+              x1={c * cellSize + CAGE_PADDING}
+              y1={r * cellSize}
+              x2={c * cellSize + CAGE_PADDING}
+              y2={r * cellSize + CAGE_PADDING}
               stroke={theme.secondary}
               strokeWidth={1}
               strokeDasharray="2,2"
@@ -172,10 +174,10 @@ const CageBorders = ({cages}: CageBordersProps) => {
           lines.push(
             <Line
               key={`top-right-corner-${r}-${c}`}
-              x1={(c + 1) * CELL_SIZE - CAGE_PADDING}
-              y1={r * CELL_SIZE + CAGE_PADDING}
-              x2={(c + 1) * CELL_SIZE - CAGE_PADDING}
-              y2={r * CELL_SIZE + CAGE_PADDING}
+              x1={(c + 1) * cellSize - CAGE_PADDING}
+              y1={r * cellSize + CAGE_PADDING}
+              x2={(c + 1) * cellSize - CAGE_PADDING}
+              y2={r * cellSize + CAGE_PADDING}
               stroke={theme.secondary}
               strokeWidth={1}
               strokeDasharray="2,2"
@@ -183,10 +185,10 @@ const CageBorders = ({cages}: CageBordersProps) => {
             />,
             <Line
               key={`top-right-corner-${r}-${c}-2`}
-              x1={(c + 1) * CELL_SIZE - CAGE_PADDING}
-              y1={r * CELL_SIZE}
-              x2={(c + 1) * CELL_SIZE - CAGE_PADDING}
-              y2={r * CELL_SIZE + CAGE_PADDING}
+              x1={(c + 1) * cellSize - CAGE_PADDING}
+              y1={r * cellSize}
+              x2={(c + 1) * cellSize - CAGE_PADDING}
+              y2={r * cellSize + CAGE_PADDING}
               stroke={theme.secondary}
               strokeWidth={1}
               strokeDasharray="2,2"
@@ -203,10 +205,10 @@ const CageBorders = ({cages}: CageBordersProps) => {
           lines.push(
             <Line
               key={`bottom-left-corner-${r}-${c}`}
-              x1={c * CELL_SIZE}
-              y1={(r + 1) * CELL_SIZE - CAGE_PADDING}
-              x2={c * CELL_SIZE + CAGE_PADDING}
-              y2={(r + 1) * CELL_SIZE - CAGE_PADDING}
+              x1={c * cellSize}
+              y1={(r + 1) * cellSize - CAGE_PADDING}
+              x2={c * cellSize + CAGE_PADDING}
+              y2={(r + 1) * cellSize - CAGE_PADDING}
               stroke={theme.secondary}
               strokeWidth={1}
               strokeDasharray="2,2"
@@ -214,10 +216,10 @@ const CageBorders = ({cages}: CageBordersProps) => {
             />,
             <Line
               key={`bottom-left-corner-${r}-${c}-2`}
-              x1={c * CELL_SIZE + CAGE_PADDING}
-              y1={(r + 1) * CELL_SIZE}
-              x2={c * CELL_SIZE + CAGE_PADDING}
-              y2={(r + 1) * CELL_SIZE - CAGE_PADDING}
+              x1={c * cellSize + CAGE_PADDING}
+              y1={(r + 1) * cellSize}
+              x2={c * cellSize + CAGE_PADDING}
+              y2={(r + 1) * cellSize - CAGE_PADDING}
               stroke={theme.secondary}
               strokeWidth={1}
               strokeDasharray="2,2"
@@ -234,10 +236,10 @@ const CageBorders = ({cages}: CageBordersProps) => {
           lines.push(
             <Line
               key={`bottom-right-corner-${r}-${c}`}
-              x1={(c + 1) * CELL_SIZE - CAGE_PADDING}
-              y1={(r + 1) * CELL_SIZE - CAGE_PADDING}
-              x2={(c + 1) * CELL_SIZE - CAGE_PADDING}
-              y2={(r + 1) * CELL_SIZE - CAGE_PADDING}
+              x1={(c + 1) * cellSize - CAGE_PADDING}
+              y1={(r + 1) * cellSize - CAGE_PADDING}
+              x2={(c + 1) * cellSize - CAGE_PADDING}
+              y2={(r + 1) * cellSize - CAGE_PADDING}
               stroke={theme.secondary}
               strokeWidth={1}
               strokeDasharray="2,2"
@@ -245,10 +247,10 @@ const CageBorders = ({cages}: CageBordersProps) => {
             />,
             <Line
               key={`bottom-right-corner-${r}-${c}-2`}
-              x1={(c + 1) * CELL_SIZE - CAGE_PADDING}
-              y1={(r + 1) * CELL_SIZE}
-              x2={(c + 1) * CELL_SIZE - CAGE_PADDING}
-              y2={(r + 1) * CELL_SIZE - CAGE_PADDING}
+              x1={(c + 1) * cellSize - CAGE_PADDING}
+              y1={(r + 1) * cellSize}
+              x2={(c + 1) * cellSize - CAGE_PADDING}
+              y2={(r + 1) * cellSize - CAGE_PADDING}
               stroke={theme.secondary}
               strokeWidth={1}
               strokeDasharray="2,2"
@@ -264,8 +266,8 @@ const CageBorders = ({cages}: CageBordersProps) => {
 
   return (
     <Svg
-      width={CELL_SIZE * BOARD_SIZE}
-      height={CELL_SIZE * BOARD_SIZE}
+      width={cellSize * BOARD_SIZE}
+      height={cellSize * BOARD_SIZE}
       style={styles.cageBordersSvg}
       pointerEvents="none">
       {renderCageBorders()}

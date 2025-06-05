@@ -1,6 +1,7 @@
 import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import DeviceInfo from 'react-native-device-info';
 import Modal from 'react-native-modal';
 import {useTheme} from '../../context/ThemeContext';
 import {AppSettings, Level} from '../../types';
@@ -85,13 +86,13 @@ const PauseModal = ({
 
 const styles = StyleSheet.create({
   modalBox: {
-    padding: 20,
+    padding: DeviceInfo.isTablet() ? 40 : 20,
     borderRadius: 13,
     alignItems: 'center',
     justifyContent: 'center',
   },
   modalHeader: {
-    fontSize: 22,
+    fontSize: DeviceInfo.isTablet() ? 28 : 22,
     fontWeight: 'bold',
     marginBottom: 20,
   },
@@ -105,11 +106,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   infoTitle: {
-    fontSize: 14,
+    fontSize: DeviceInfo.isTablet() ? 22 : 14,
     color: '#888',
   },
   infoValue: {
-    fontSize: 16,
+    fontSize: DeviceInfo.isTablet() ? 24 : 16,
     fontWeight: 'bold',
   },
   resumeButton: {
@@ -118,7 +119,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
   },
   resumeButtonText: {
-    fontSize: 16,
+    fontSize: DeviceInfo.isTablet() ? 24 : 16,
     fontWeight: 'bold',
   },
 });

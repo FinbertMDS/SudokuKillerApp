@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import DeviceInfo from 'react-native-device-info';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useTheme} from '../../context/ThemeContext';
 import {useGameTimer} from '../../hooks/useGameTimer';
@@ -117,10 +118,10 @@ const styles = StyleSheet.create({
     minWidth: 70,
   },
   title: {
-    fontSize: 14,
+    fontSize: DeviceInfo.isTablet() ? 20 : 14,
   },
   value: {
-    fontSize: 16,
+    fontSize: DeviceInfo.isTablet() ? 22 : 16,
     fontWeight: 'bold' as const,
   },
 });

@@ -1,7 +1,8 @@
 import {IS_UI_TESTING} from '@env';
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import DeviceInfo from 'react-native-device-info';
 import {default as Icon} from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useTheme} from '../../context/ThemeContext';
 import {ActionButtonProps} from '../../types/components';
@@ -50,7 +51,7 @@ const ActionButtons = ({
     onSolve();
   }, [onSolve]);
 
-  const buttons = useMemo(() => {
+  const buttons = React.useMemo(() => {
     let allButtons: ActionButtonProps[] = [
       {
         id: 'undo',
@@ -114,7 +115,7 @@ const ActionButtons = ({
                   ? btn.icon[1]
                   : btn.icon[0]
               }
-              size={24}
+              size={DeviceInfo.isTablet() ? 36 : 24}
               color={
                 btn.icon.length > 0 && btn.iconChangeFlag
                   ? theme.buttonBlue
@@ -152,7 +153,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row' as const,
     justifyContent: 'space-around' as const,
     width: '100%' as const,
-    marginTop: 30,
+    marginTop: DeviceInfo.isTablet() ? 10 : 30,
   },
   actionButton: {
     alignItems: 'center' as const,
@@ -179,9 +180,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   label: {
-    fontSize: 12,
-    marginTop: 4,
+    fontSize: DeviceInfo.isTablet() ? 18 : 12,
+    marginTop: DeviceInfo.isTablet() ? 10 : 4,
   },
 });
 
-export default ActionButtons;
+export default React.memo(ActionButtons);
