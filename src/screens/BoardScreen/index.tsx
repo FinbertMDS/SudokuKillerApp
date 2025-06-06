@@ -601,10 +601,17 @@ const BoardScreen = () => {
 
   if (showHowToPlay) {
     return (
-      <HowToPlay
-        headerTitle={t('appName')}
-        onClose={handleAfterCheckHasPlayed}
-      />
+      <SafeAreaView
+        edges={['top', 'bottom']}
+        style={[styles.container, {backgroundColor: theme.background}]}>
+        <Header
+          title={t('appName')}
+          showBack={true}
+          showSettings={false}
+          showTheme={false}
+        />
+        <HowToPlay onClose={handleAfterCheckHasPlayed} />
+      </SafeAreaView>
     );
   }
 

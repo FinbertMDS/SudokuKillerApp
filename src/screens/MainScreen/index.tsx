@@ -1,4 +1,5 @@
 // src/screens/MainScreen/index.tsx
+import {IS_UI_TESTING} from '@env';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React, {useCallback, useState} from 'react';
@@ -120,7 +121,7 @@ const MainScreen = () => {
 
         <NewGameMenu handleNewGame={handleNewGame} />
 
-        {__DEV__ && (
+        {__DEV__ && IS_UI_TESTING !== 'true' && (
           <TouchableOpacity
             style={[
               styles.button,

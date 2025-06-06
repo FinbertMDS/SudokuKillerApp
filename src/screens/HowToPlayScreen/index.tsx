@@ -2,18 +2,36 @@ import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
+import {StyleSheet} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import Header from '../../components/commons/Header';
 import {HowToPlay} from '../../components/HowToPlay';
+import {useTheme} from '../../context/ThemeContext';
 import {RootStackParamList} from '../../types';
 
 export const HowToPlayScreen = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {t} = useTranslation();
+  const {theme} = useTheme();
 
   return (
-    <HowToPlay
-      headerTitle={t('howToPlay.title')}
-      onClose={() => navigation.goBack()}
-    />
+    <SafeAreaView
+      edges={['top', 'bottom']}
+      style={[styles.container, {backgroundColor: theme.background}]}>
+      <Header
+        title={t('howToPlay.title')}
+        showBack={true}
+        showSettings={false}
+        showTheme={false}
+      />
+      <HowToPlay onClose={() => navigation.goBack()} />
+    </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});

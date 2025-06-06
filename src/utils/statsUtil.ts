@@ -1,13 +1,7 @@
 import {format, parseISO} from 'date-fns';
 import {TFunction} from 'i18next';
 import {ColorSchemeName} from 'react-native';
-import {
-  DailyStats,
-  GameLogEntryV2,
-  GameStats,
-  Level,
-  TimeRange,
-} from '../types';
+import {DailyStats, GameLogEntry, GameStats, Level, TimeRange} from '../types';
 import {getLevelColor, levelColors} from './colorUtil';
 import {DAILY_STATS_DATE_FORMAT, LEVELS} from './constants';
 import {formatShortChartDate, isInTimeRange} from './dateUtil';
@@ -23,7 +17,7 @@ export function createEmptyStats(): GameStats {
 }
 
 export function getStatsFromLogs(
-  logs: GameLogEntryV2[],
+  logs: GameLogEntry[],
   filter: TimeRange,
 ): Record<Level, GameStats> {
   const statsByLevel: Record<Level, GameStats> = {
@@ -66,7 +60,7 @@ export function getStatsFromLogs(
 }
 
 export function getDailyStatsFromLogs(
-  logs: GameLogEntryV2[],
+  logs: GameLogEntry[],
   filter: TimeRange,
 ): DailyStats[] {
   if (logs.length === 0) {
@@ -102,7 +96,7 @@ export function getDailyStatsFromLogs(
 }
 
 export function convertToPieData(
-  logs: GameLogEntryV2[],
+  logs: GameLogEntry[],
   scheme: ColorSchemeName = 'light',
   t: TFunction,
   filter: TimeRange,
@@ -137,7 +131,7 @@ export function convertToPieData(
 }
 
 export function convertToStackedData(
-  logs: GameLogEntryV2[],
+  logs: GameLogEntry[],
   scheme: ColorSchemeName = 'light',
   t: TFunction,
   filter: TimeRange,
