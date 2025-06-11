@@ -37,7 +37,6 @@ Release bug
 - thống kê: phân bổ ván theo mức độ: stackedbar nếu ko có data thì cũng hiển thị no data
 - thống kê: khi scroll xuống dưới thì 2 chip bên trên vẫn phải có padding
 
-
 ------
 
 app ID
@@ -76,3 +75,19 @@ npx react-native bundle \
   --entry-file index.js \
   --bundle-output ios/main.jsbundle \
   --assets-dest ios
+
+
+---------------
+tăng verion trong app.json
+
+chạy lệnh dưới thì tự đổi trong android và ios
+> npx react-native-version --never-amend
+> npx react-native-version --never-amend --version 1.0.1
+
+với fastlane thì tự động tăng version code bằng 
+> android_set_version_code
+
+
+----------------
+sau khi đổi biến .env cần reset cache
+npx react-native start --reset-cache
