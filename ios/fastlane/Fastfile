@@ -34,7 +34,10 @@ platform :ios do
       key_filepath: "./fastlane/AuthKey_SF87XC2GQA.p8",
       in_house: false
     )
-    # increment_build_number(xcodeproj: "SudokuKillerApp.xcodeproj")
+    increment_version_number(
+      bump_type: "patch" # hoặc "minor", "major"
+    )
+    increment_build_number(xcodeproj: "SudokuKillerApp.xcodeproj")
     build_app(workspace: "SudokuKillerApp.xcworkspace", scheme: "SudokuKillerApp")
     upload_to_testflight(
       skip_waiting_for_build_processing: true

@@ -44,8 +44,47 @@ platform :android do
     # You can also use other beta testing services here
   end
 
+  lane :bump_version_name do |options|
+    # Lấy version hiện tại từ build.gradle
+    current_version = android_get_version_name(
+      gradle_file: "app/build.gradle"
+    )
+    UI.message("Current versionName: #{current_version}")
+  
+    # Parse version thành 3 phần
+    segments = current_version.split('.').map(&:to_i)
+    type = options[:type] || 'patch'
+  
+    case type
+    when 'major'
+      segments[0] += 1
+      segments[1] = 0
+      segments[2] = 0
+    when 'minor'
+      segments[1] += 1
+      segments[2] = 0
+    when 'patch'
+      segments[2] += 1
+    else
+      UI.user_error!("Unknown version bump type: #{type}")
+    end
+  
+    new_version = segments.join('.')
+    UI.message("New versionName: #{new_version}")
+  
+    # Cập nhật versionName
+    android_set_version_name(
+      version_name: new_version,
+      gradle_file: "app/build.gradle"
+    )
+  
+    UI.success("Updated versionName to #{new_version}")
+  end
+  
+
   desc "Submit a new alpha"
   lane :alpha do
+    bump_version_name(type: 'patch')
     android_set_version_code
     gradle(task: "bundleRelease")
     

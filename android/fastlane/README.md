@@ -31,6 +31,14 @@ Runs all the tests
 
 Submit a new internal
 
+### android bump_version_name
+
+```sh
+[bundle exec] fastlane android bump_version_name
+```
+
+
+
 ### android alpha
 
 ```sh
