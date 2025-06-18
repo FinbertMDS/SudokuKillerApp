@@ -60,7 +60,7 @@ platform :android do
   
   desc "Submit a new internal"
   lane :internal do
-    bump_version_name(type: 'patch')
+    # bump_version_name(type: 'patch')
     android_set_version_code
     gradle(task: "bundleRelease")
     
