@@ -599,6 +599,16 @@ const BoardScreen = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [limitHintReached, isLoadedRewarded]);
 
+  if (isLoading) {
+    return (
+      <SafeAreaView
+        edges={['top']}
+        style={[styles.loadingContainer, {backgroundColor: theme.background}]}>
+        <ActivityIndicator size="large" color={theme.primary} />
+      </SafeAreaView>
+    );
+  }
+
   if (showHowToPlay) {
     return (
       <SafeAreaView
@@ -611,16 +621,6 @@ const BoardScreen = () => {
           showTheme={false}
         />
         <HowToPlay onClose={handleAfterCheckHasPlayed} />
-      </SafeAreaView>
-    );
-  }
-
-  if (isLoading) {
-    return (
-      <SafeAreaView
-        edges={['top']}
-        style={[styles.loadingContainer, {backgroundColor: theme.background}]}>
-        <ActivityIndicator size="large" color={theme.primary} />
       </SafeAreaView>
     );
   }

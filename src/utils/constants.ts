@@ -1,7 +1,7 @@
 import {RequestOptions} from 'react-native-google-mobile-ads';
-import {AppSettings, Level} from '../types';
+import {AppSettings} from '../types';
 
-export const LEVELS = ['easy', 'medium', 'hard', 'expert'] as Level[];
+export * from './buildConstants';
 
 export const SCREENS = {
   HOME_TABS: 'HomeTabs',
@@ -16,9 +16,6 @@ export const SCREENS = {
 } as const;
 
 export const BOARD_SIZE = 9;
-export const MAX_TIMEPLAYED = 3 * 60 * 60; // in seconds
-export const MAX_MISTAKES = 5;
-export const MAX_HINTS = 5;
 
 export const ANIMATION_DURATION = 300; // in ms
 export const ANIMATION_TYPE = {
@@ -46,12 +43,6 @@ export const STORAGE_KEY_MIGRATION_VERSION = 'migrationVersion';
 export const CHART_WIDTH = 60;
 export const CHART2_WIDTH = 70;
 
-export const LANGUAGES = [
-  {code: 'en', label: 'English'},
-  {code: 'vi', label: 'Tiếng Việt'},
-  {code: 'ja', label: '日本語'},
-];
-
 export const DEFAULT_SETTINGS: AppSettings = {
   // sounds: true,
   // autoLock: false,
@@ -72,17 +63,23 @@ export const DAILY_STATS_DATE_FORMAT = 'yyyy-MM-dd';
 
 // Unsplash
 export const UNSPLASH_KEYWORDS_LIGHT = [
-  'minimal pastel gradient',
-  'soft abstract light',
-  'white texture background',
-  'pastel background',
+  'soft white background',
+  'clean light texture',
+  'minimal white pastel',
+  'smooth cream background',
+  'white paper texture',
+  'light marble surface',
+  'beige soft abstract',
 ];
 
 export const UNSPLASH_KEYWORDS_DARK = [
-  'dark gradient abstract',
-  'black minimal background',
-  'moody blurred background',
-  'dark blurry night',
+  'dark matte texture',
+  'black soft gradient',
+  'minimal dark blur',
+  'deep grey abstract',
+  'night soft background',
+  'charcoal surface texture',
+  'dark fabric background',
 ];
 
 export const AD_REQUEST_OPTIONS: RequestOptions = {
@@ -126,9 +123,5 @@ export const AD_REQUEST_OPTIONS: RequestOptions = {
   ],
 };
 
-export const CELLS_TO_REMOVE_RANGE: Record<Level, number[]> = {
-  easy: [30, 34],
-  medium: [40, 46],
-  hard: [50, 54],
-  expert: [60, 65],
-};
+export const UNSPLASH_UTM = '?utm_source=sudoku-killer&utm_medium=referral';
+export const UNSPLASH_URL = 'https://unsplash.com/';

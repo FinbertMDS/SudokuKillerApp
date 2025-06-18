@@ -3,8 +3,8 @@ import {
   AD_UNIT_BANNER_IOS,
   AD_UNIT_INTERSTITIAL_ANDROID,
   AD_UNIT_INTERSTITIAL_IOS,
-  AD_UNIT_REWARDED_ANDROID,
-  AD_UNIT_REWARDED_IOS,
+  AD_UNIT_REWARDED_2_ANDROID,
+  AD_UNIT_REWARDED_2_IOS,
 } from '@env';
 import {Platform} from 'react-native';
 import {TestIds} from 'react-native-google-mobile-ads';
@@ -20,13 +20,13 @@ const DEV_AD_UNITS: Record<AdType, string> = {
 const PROD_AD_UNITS_IOS: Record<AdType, string> = {
   banner: AD_UNIT_BANNER_IOS,
   interstitial: AD_UNIT_INTERSTITIAL_IOS,
-  rewarded: AD_UNIT_REWARDED_IOS,
+  rewarded: AD_UNIT_REWARDED_2_IOS,
 };
 
 const PROD_AD_UNITS_ANDROID: Record<AdType, string> = {
   banner: AD_UNIT_BANNER_ANDROID,
   interstitial: AD_UNIT_INTERSTITIAL_ANDROID,
-  rewarded: AD_UNIT_REWARDED_ANDROID,
+  rewarded: AD_UNIT_REWARDED_2_ANDROID,
 };
 
 export function getAdUnit(type: AdType): string {
