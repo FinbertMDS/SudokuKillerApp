@@ -112,6 +112,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around' as const,
     alignItems: 'center' as const,
     marginTop: 20,
+    marginBottom: 20,
   },
   infoBlock: {
     alignItems: 'center' as const,

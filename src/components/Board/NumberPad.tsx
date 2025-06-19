@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center' as const,
     width: '100%' as const,
     alignItems: 'center' as const,
-    marginTop: DeviceInfo.isTablet() ? 10 : 20,
+    marginBottom: DeviceInfo.isTablet() ? 10 : 20,
     paddingHorizontal: 32,
   },
   button: {

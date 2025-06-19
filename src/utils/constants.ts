@@ -85,14 +85,6 @@ export const UNSPLASH_KEYWORDS_DARK = [
 export const AD_REQUEST_OPTIONS: RequestOptions = {
   requestNonPersonalizedAdsOnly: true,
   keywords: [
-    // Sudoku
-    'puzzle',
-    'brain',
-    'logic',
-    'math',
-    'killer sudoku',
-    'sudoku',
-    'mental training',
     // Education
     'education',
     'learning',

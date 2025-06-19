@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row' as const,
     justifyContent: 'space-around' as const,
     width: '100%' as const,
-    marginTop: DeviceInfo.isTablet() ? 10 : 30,
+    marginBottom: DeviceInfo.isTablet() ? 10 : 20,
   },
   actionButton: {
     alignItems: 'center' as const,

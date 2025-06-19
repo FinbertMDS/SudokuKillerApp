@@ -17,7 +17,7 @@ import {
   BannerAd,
   BannerAdSize,
   useForeground,
-  useRewardedAd,
+  useInterstitialAd,
 } from 'react-native-google-mobile-ads';
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import ActionButtons from '../../components/Board/ActionButtons';
@@ -184,7 +184,7 @@ const BoardScreen = () => {
     isClosed: isClosedRewarded,
     load: loadRewarded,
     show: showRewarded,
-  } = useRewardedAd(getAdUnit('rewarded'), AD_REQUEST_OPTIONS);
+  } = useInterstitialAd(getAdUnit('interstitial'), AD_REQUEST_OPTIONS);
   useEffect(() => {
     loadRewarded();
   }, [loadRewarded]);
@@ -702,6 +702,7 @@ const BoardScreen = () => {
           message={t('mistakeWarning.message', {max: MAX_MISTAKES})}
           cancelText={t('ad.cancel')}
           confirmText={t('ad.confirm')}
+          disableBackdropClose={true}
           onCancel={() => {
             handleLimitMistakeReached();
           }}
@@ -716,6 +717,7 @@ const BoardScreen = () => {
           message={t('hintWarning.message', {max: MAX_HINTS})}
           cancelText={t('ad.cancel')}
           confirmText={t('ad.confirm')}
+          disableBackdropClose={true}
           onCancel={() => {
             handleLimitHintReached(true);
           }}
