@@ -556,6 +556,7 @@ const BoardScreen = () => {
     Platform.OS === 'ios' && bannerRef.current?.load();
   });
   const insets = useSafeAreaInsets();
+  const bannerHeight = 70;
 
   useEffect(() => {
     if (limitMistakeReached && !isLoadedRewarded && !isClosedRewarded) {
@@ -638,43 +639,53 @@ const BoardScreen = () => {
           onBack={handleBackPress}
           onSettings={handleGoToSettings}
         />
-        <InfoPanel
-          isPlaying={isPlaying}
-          level={level}
-          mistakes={mistakes}
-          secondsRef={secondsRef}
-          isPaused={isPaused}
-          settings={settings}
-          onPause={handlePause}
-          onLimitTimeReached={handleLimitTimeReached}
-        />
-        <Grid
-          board={board}
-          cages={cages}
-          notes={notes}
-          solvedBoard={solvedBoard}
-          selectedCell={selectedCell}
-          settings={settings}
-          onPress={handleCellPress}
-        />
-        <ActionButtons
-          noteMode={noteMode}
-          hintCount={hintCount}
-          onNote={setNoteMode}
-          onUndo={handleUndo}
-          onErase={handleErase}
-          onHint={handleHint}
-          onSolve={handleSolve}
-        />
-        <NumberPad
-          board={board}
-          settings={settings}
-          onSelectNumber={handleNumberPress}
-        />
+        <View
+          style={[
+            styles.contentContainerNoAd,
+            {
+              paddingTop: insets.top,
+              paddingBottom: insets.bottom + bannerHeight,
+            },
+          ]}>
+          <InfoPanel
+            isPlaying={isPlaying}
+            level={level}
+            mistakes={mistakes}
+            secondsRef={secondsRef}
+            isPaused={isPaused}
+            settings={settings}
+            onPause={handlePause}
+            onLimitTimeReached={handleLimitTimeReached}
+          />
+          <Grid
+            board={board}
+            cages={cages}
+            notes={notes}
+            solvedBoard={solvedBoard}
+            selectedCell={selectedCell}
+            settings={settings}
+            onPress={handleCellPress}
+          />
+          <ActionButtons
+            noteMode={noteMode}
+            hintCount={hintCount}
+            onNote={setNoteMode}
+            onUndo={handleUndo}
+            onErase={handleErase}
+            onHint={handleHint}
+            onSolve={handleSolve}
+          />
+          <NumberPad
+            board={board}
+            settings={settings}
+            onSelectNumber={handleNumberPress}
+          />
+        </View>
         <View
           style={[
             styles.adContainer,
             {
+              height: bannerHeight,
               bottom: insets.bottom,
               backgroundColor: theme.background,
             },
@@ -733,7 +744,11 @@ const BoardScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // alignItems: 'center',
+  },
+  contentContainerNoAd: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   loadingContainer: {
     flex: 1,
