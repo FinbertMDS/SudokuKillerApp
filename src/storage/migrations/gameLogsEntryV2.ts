@@ -8,13 +8,19 @@ export async function migrateGameLogsEntryV2() {
   console.log('[MIGRATION] Migrating game logs entry v2...');
   await PlayerService.createDefaultPlayerIfNeeded();
   const rawLogs = statsStorage.getGameLogs();
-  const migrated = rawLogs.map(
-    entry =>
-      ({
+  const migrated = rawLogs.map(entry => {
+    if (
+      entry.playerId === undefined ||
+      entry.playerId === null ||
+      entry.playerId === ''
+    ) {
+      return {
         ...entry,
         playerId: DEFAULT_PLAYER_ID,
-      } as GameLogEntryV2),
-  );
+      } as GameLogEntryV2;
+    }
+    return entry;
+  });
   statsStorage.saveGameLogsV2(migrated);
 
   // update last stats cache update user id

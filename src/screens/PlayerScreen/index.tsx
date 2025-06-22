@@ -40,6 +40,7 @@ export const PlayerScreen = () => {
 
   const handleSelect = (id: string) => {
     switchPlayer(id);
+    eventBus.emit(CORE_EVENTS.switchPlayer, id);
     navigation.goBack();
   };
   const handleEdit = (_player: PlayerProfile) => {

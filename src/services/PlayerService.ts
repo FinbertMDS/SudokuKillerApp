@@ -20,14 +20,16 @@ export const PlayerService = {
   async migrateDataFromDefaultPlayerToNewPlayer(
     newPlayerId: string,
   ): Promise<void> {
-    const rawLogs = statsStorage.getGameLogsV2ByPlayerId(DEFAULT_PLAYER_ID);
-    const migrated = rawLogs.map(
-      entry =>
-        ({
+    const rawLogs = statsStorage.getGameLogsV2();
+    const migrated = rawLogs.map(entry => {
+      if (entry.playerId === DEFAULT_PLAYER_ID) {
+        return {
           ...entry,
           playerId: newPlayerId,
-        } as GameLogEntryV2),
-    );
+        } as GameLogEntryV2;
+      }
+      return entry;
+    });
     statsStorage.saveGameLogsV2(migrated);
 
     // move total games from default player to new player
