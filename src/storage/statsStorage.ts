@@ -1,26 +1,35 @@
 import {storage} from '.';
-import {DailyStats, GameLogEntry, GameStatsCache} from '../types';
+import {DailyStats, GameLogEntryV2, GameStatsCache} from '../types';
 import {
   STORAGE_KEY_DAILY_STATS,
   STORAGE_KEY_GAME_LOGS,
   STORAGE_KEY_GAME_STATS_CACHE,
   STORAGE_KEY_LAST_STATS_CACHE_UPDATE,
+  STORAGE_KEY_LAST_STATS_CACHE_UPDATE_USER_ID,
 } from '../utils/constants';
 import {getTodayDateString} from '../utils/dateUtil';
 
-const saveGameLogs = (logs: GameLogEntry[]) => {
+const saveGameLogs = (logs: GameLogEntryV2[]) => {
   try {
     storage.set(STORAGE_KEY_GAME_LOGS, JSON.stringify(logs));
   } catch (_) {}
 };
 
-const getGameLogs = (): GameLogEntry[] => {
+const getGameLogs = (): GameLogEntryV2[] => {
   try {
     const json = storage.getString(STORAGE_KEY_GAME_LOGS);
     return json ? JSON.parse(json) : [];
   } catch (_) {
     return [];
   }
+};
+
+const saveGameLogsV2 = (logs: GameLogEntryV2[]) =>
+  storage.set(STORAGE_KEY_GAME_LOGS, JSON.stringify(logs));
+
+const getGameLogsV2 = (): GameLogEntryV2[] => {
+  const json = storage.getString(STORAGE_KEY_GAME_LOGS);
+  return json ? JSON.parse(json) : [];
 };
 
 const saveStatsCache = (cache: GameStatsCache) => {
@@ -68,6 +77,22 @@ const getLastStatsCacheUpdate = (): string | null => {
   }
 };
 
+const setLastStatsCacheUpdateUserId = (userId: string) => {
+  try {
+    storage.set(STORAGE_KEY_LAST_STATS_CACHE_UPDATE_USER_ID, userId);
+  } catch (_) {}
+};
+
+const getLastStatsCacheUpdateUserId = (): string | null => {
+  try {
+    return (
+      storage.getString(STORAGE_KEY_LAST_STATS_CACHE_UPDATE_USER_ID) || null
+    );
+  } catch (_) {
+    return null;
+  }
+};
+
 const clearStatsData = () => {
   try {
     storage.delete(STORAGE_KEY_DAILY_STATS);
@@ -80,11 +105,15 @@ const clearStatsData = () => {
 export const statsStorage = {
   saveGameLogs,
   getGameLogs,
+  saveGameLogsV2,
+  getGameLogsV2,
   saveStatsCache,
   getStatsCache,
   saveDailyStats,
   getDailyStats,
   setLastStatsCacheUpdate,
   getLastStatsCacheUpdate,
+  setLastStatsCacheUpdateUserId,
+  getLastStatsCacheUpdateUserId,
   clearStatsData,
 };

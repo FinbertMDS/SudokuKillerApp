@@ -30,6 +30,8 @@ export const STORAGE_KEY_INIT_GAME = 'initGame';
 export const STORAGE_KEY_SAVED_GAME = 'savedGame';
 export const STORAGE_KEY_GAME_STATS_CACHE = 'gameStatsCache';
 export const STORAGE_KEY_LAST_STATS_CACHE_UPDATE = 'lastStatsCacheUpdate';
+export const STORAGE_KEY_LAST_STATS_CACHE_UPDATE_USER_ID =
+  'lastStatsCacheUpdateUserId';
 export const STORAGE_KEY_GAME_LOGS = 'gameLogs';
 export const STORAGE_KEY_DAILY_STATS = 'dailyStats';
 export const STORAGE_KEY_LANG_KEY_DEFAULT = 'defaultLanguage';
@@ -39,6 +41,8 @@ export const STORAGE_KEY_BACKGROUNDS = 'backgrounds';
 export const STORAGE_KEY_HAS_PLAYED = 'hasPlayed';
 export const STORAGE_KEY_QUOTES = 'quotes';
 export const STORAGE_KEY_MIGRATION_VERSION = 'migrationVersion';
+export const STORAGE_KEY_PLAYERS = 'players';
+export const STORAGE_KEY_CURRENT_PLAYER_ID = 'currentPlayerId';
 
 export const CHART_WIDTH = 60;
 export const CHART2_WIDTH = 70;
@@ -117,3 +121,5 @@ export const AD_REQUEST_OPTIONS: RequestOptions = {
 
 export const UNSPLASH_UTM = '?utm_source=sudoku-killer&utm_medium=referral';
 export const UNSPLASH_URL = 'https://unsplash.com/';
+
+export const DEFAULT_PLAYER_ID = '00000000-0000-4000-8000-000000000000'; // hoặc uuidv4() cố định
