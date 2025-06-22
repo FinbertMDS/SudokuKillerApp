@@ -2,7 +2,7 @@ import React, {useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import DeviceInfo from 'react-native-device-info';
-import {default as Icon} from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useTheme} from '../../context/ThemeContext';
 import {ActionButtonProps} from '../../types/components';
 import {IS_UI_TESTING} from '../../utils/constants';

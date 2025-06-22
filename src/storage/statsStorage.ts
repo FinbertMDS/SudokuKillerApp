@@ -32,6 +32,17 @@ const getGameLogsV2 = (): GameLogEntryV2[] => {
   return json ? JSON.parse(json) : [];
 };
 
+const getGameLogsV2ByPlayerId = (playerId: string): GameLogEntryV2[] => {
+  const logs = getGameLogsV2();
+  return logs.filter(log => log.playerId === playerId);
+};
+
+const deleteGameLogsV2ByPlayerId = (playerId: string) => {
+  const logs = getGameLogsV2();
+  const updated = logs.filter(log => log.playerId !== playerId);
+  saveGameLogsV2(updated);
+};
+
 const saveStatsCache = (cache: GameStatsCache) => {
   try {
     storage.set(STORAGE_KEY_GAME_STATS_CACHE, JSON.stringify(cache));
@@ -107,6 +118,8 @@ export const statsStorage = {
   getGameLogs,
   saveGameLogsV2,
   getGameLogsV2,
+  getGameLogsV2ByPlayerId,
+  deleteGameLogsV2ByPlayerId,
   saveStatsCache,
   getStatsCache,
   saveDailyStats,

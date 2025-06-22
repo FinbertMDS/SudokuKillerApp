@@ -1,5 +1,6 @@
 import {CORE_EVENTS} from '..';
 import {GameStatsManager} from '../../services/GameStatsManager';
+import {PlayerService} from '../../services/PlayerService';
 import eventBus from '../eventBus';
 import {GameEndedCoreEvent, StatisticsUpdatedCoreEvent} from '../types';
 
@@ -11,4 +12,5 @@ export const handleGameEnded = async (payload: GameEndedCoreEvent) => {
       logs: [newEntry],
     } as StatisticsUpdatedCoreEvent);
   });
+  await PlayerService.incrementPlayerTotalGames();
 };

@@ -1,6 +1,7 @@
 // StatisticsScreen.tsx
 
-import {useFocusEffect} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
@@ -13,15 +14,22 @@ import TimeFilterDropdown from '../../components/Statistics/TimeFilterDropdown';
 import {useTheme} from '../../context/ThemeContext';
 import {useAppPause} from '../../hooks/useAppPause';
 import {useEnsureStatsCache} from '../../hooks/useEnsureStatsCache';
-import {usePlayerProfile} from '../../hooks/usePlayerProfile';
 import {GameStatsManager} from '../../services/GameStatsManager';
-import {GameLogEntryV2, GameStats, Level, TimeFilter} from '../../types';
-import {DEFAULT_PLAYER_ID} from '../../utils/constants';
+import {PlayerService} from '../../services/PlayerService';
+import {
+  GameLogEntryV2,
+  GameStats,
+  Level,
+  RootStackParamList,
+  TimeFilter,
+} from '../../types';
+import {DEFAULT_PLAYER_ID, SCREENS} from '../../utils/constants';
 
 const StatisticsScreen = () => {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {theme} = useTheme();
   const {t} = useTranslation();
-  const {player} = usePlayerProfile();
   const [stats, setStats] = useState<Record<Level, GameStats> | null>(null);
   const [logs, setLogs] = useState<GameLogEntryV2[]>([]);
   const [activeTab, setActiveTab] = useState<'level' | 'chart'>('level');
@@ -56,7 +64,10 @@ const StatisticsScreen = () => {
   }, [filter]);
 
   async function loadData() {
-    const loadedLogs = await GameStatsManager.getLogs();
+    const player = await PlayerService.getCurrentPlayer();
+    const loadedLogs = await GameStatsManager.getLogsByPlayerId(
+      player?.id ?? DEFAULT_PLAYER_ID,
+    );
     setLogs(loadedLogs);
     const loadedStats = await GameStatsManager.getStatsWithCache(
       loadedLogs,
@@ -75,7 +86,12 @@ const StatisticsScreen = () => {
         showBack={false}
         showSettings={true}
         showTheme={true}
+        showSwitchPlayer={true}
+        onSwitchPlayer={() => {
+          navigation.navigate(SCREENS.PLAYERS);
+        }}
         showCustom={true}
+        customIconCount={1}
         custom={
           <TouchableOpacity
             onPress={() => setShowDropdown(true)}
@@ -159,7 +175,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   iconButton: {
-    marginLeft: 20,
+    width: 30,
+    paddingHorizontal: 3,
   },
   tabRow: {
     flexDirection: 'row' as const,
@@ -169,7 +186,6 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 20,
-    backgroundColor: '#1e293b',
     marginHorizontal: 6,
   },
   chipText: {

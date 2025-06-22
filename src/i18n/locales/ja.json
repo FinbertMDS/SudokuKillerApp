@@ -51,7 +51,6 @@
 
   "levelStats": "レベル統計",
   "chartsStats": "チャート統計",
-  "chartsStats.noticeUtc": "統計はUTC基準。UTC{{utcOffset}}では{{offset}}以降に更新されます。",
 
   "options": "オプション",
   "settings": "設定",
@@ -146,5 +145,10 @@
   "gamesCount": "🕹️ {{count}} ゲーム",
   "deletePlayerTitle": "プレイヤーを削除しますか？",
   "deletePlayerMessage": "このプレイヤーを削除しますか？",
-  "deleteBtn": "削除"
+  "deleteBtn": "削除",
+  "defaultPlayer": "(デフォルト)",
+  "editPlayerTitle": "プレイヤーを編集",
+  "saveBtn": "保存",
+  "cannotDeletePlayerTitle": "プレイヤーを削除できません",
+  "cannotDeletePlayerMessage": "デフォルトのプレイヤーは削除できません"
 }

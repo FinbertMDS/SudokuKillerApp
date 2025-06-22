@@ -51,7 +51,6 @@
 
   "levelStats": "Thống kê mức độ",
   "chartsStats": "Biểu đồ thống kê",
-  "chartsStats.noticeUtc": "Thống kê theo giờ UTC. Ở UTC{{utcOffset}}, dữ liệu ngày mới có sau {{offset}}.",
 
   "options": "Tùy chọn",
   "settings": "Cài đặt",
@@ -146,5 +145,10 @@
   "gamesCount": "🕹️ {{count}} trận",
   "deletePlayerTitle": "Xoá người chơi?",
   "deletePlayerMessage": "Bạn có chắc muốn xoá người chơi này?",
-  "deleteBtn": "Xoá"
+  "deleteBtn": "Xoá",
+  "defaultPlayer": "(Mặc định)",
+  "editPlayerTitle": "Sửa người chơi",
+  "saveBtn": "Lưu",
+  "cannotDeletePlayerTitle": "Không thể xoá người chơi",
+  "cannotDeletePlayerMessage": "Bạn không thể xoá người chơi mặc định"
 }

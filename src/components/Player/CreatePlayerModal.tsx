@@ -1,5 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   Keyboard,
@@ -13,28 +12,27 @@ import {
   View,
 } from 'react-native';
 import {useTheme} from '../../context/ThemeContext';
-import {usePlayerProfile} from '../../hooks/usePlayerProfile';
-import {PlayerProfile} from '../../types/player';
-import {createNewPlayer} from '../../utils/playerUtil';
 
-const CreatePlayerModal = ({onClose}: {onClose: () => void}) => {
-  const [name, setName] = useState('');
-  const {createPlayer, switchPlayer} = usePlayerProfile();
+type CreatePlayerModalProps = {
+  onClose: () => void;
+  onSubmit: (mode: 'create' | 'edit', name: string) => void;
+  mode: 'create' | 'edit';
+  initialName?: string;
+};
+
+const CreatePlayerModal = ({
+  onClose,
+  onSubmit,
+  mode,
+  initialName,
+}: CreatePlayerModalProps) => {
+  const [name, setName] = useState(initialName ?? '');
   const {t} = useTranslation();
   const {theme} = useTheme();
-  const navigation = useNavigation();
-  const handleCreate = () => {
-    if (!name.trim()) {
-      return;
-    }
 
-    const newPlayer: PlayerProfile = createNewPlayer(name);
-
-    createPlayer(newPlayer);
-    switchPlayer(newPlayer.id);
-    navigation.goBack();
-    onClose();
-  };
+  useEffect(() => {
+    setName(initialName ?? '');
+  }, [initialName]);
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -43,7 +41,7 @@ const CreatePlayerModal = ({onClose}: {onClose: () => void}) => {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <View style={[styles.modal, {backgroundColor: theme.modalBg}]}>
           <Text style={[styles.title, {color: theme.text}]}>
-            {t('playerNameLabel')}
+            {mode === 'create' ? t('playerNameLabel') : t('editPlayerTitle')}
           </Text>
           <TextInput
             style={[
@@ -69,9 +67,12 @@ const CreatePlayerModal = ({onClose}: {onClose: () => void}) => {
 
             <TouchableOpacity
               style={[styles.createButton, {backgroundColor: theme.buttonBlue}]}
-              onPress={handleCreate}>
+              onPress={() => {
+                onClose();
+                onSubmit(mode, name);
+              }}>
               <Text style={[styles.createText, {color: theme.text}]}>
-                {t('createBtn')}
+                {mode === 'create' ? t('createBtn') : t('saveBtn')}
               </Text>
             </TouchableOpacity>
           </View>

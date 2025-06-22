@@ -1,4 +1,7 @@
-import {playerProfileStorage} from '../storage';
+import {playerProfileStorage, statsStorage} from '../storage';
+import {GameLogEntryV2} from '../types';
+import {PlayerProfile} from '../types/player';
+import {DEFAULT_PLAYER_ID} from '../utils/constants';
 import {createDefaultPlayer} from '../utils/playerUtil';
 
 export const PlayerService = {
@@ -11,7 +14,64 @@ export const PlayerService = {
     }
   },
 
+  async migrateDataFromDefaultPlayerToNewPlayer(
+    newPlayerId: string,
+  ): Promise<void> {
+    const rawLogs = statsStorage.getGameLogsV2ByPlayerId(DEFAULT_PLAYER_ID);
+    const migrated = rawLogs.map(
+      entry =>
+        ({
+          ...entry,
+          playerId: newPlayerId,
+        } as GameLogEntryV2),
+    );
+    statsStorage.saveGameLogsV2(migrated);
+
+    // move total games from default player to new player
+    const defaultPlayer = playerProfileStorage.getPlayerById(DEFAULT_PLAYER_ID);
+    const newPlayer = playerProfileStorage.getPlayerById(newPlayerId);
+    if (defaultPlayer && newPlayer) {
+      newPlayer.totalGames = defaultPlayer.totalGames;
+      playerProfileStorage.updatePlayer(newPlayer);
+    }
+
+    // delete default player
+    const allPlayers = playerProfileStorage.getAllPlayers();
+    const updated = allPlayers.filter(
+      _player => _player.id !== DEFAULT_PLAYER_ID,
+    );
+    playerProfileStorage.savePlayers(updated);
+  },
+
   async clear(): Promise<void> {
     playerProfileStorage.clearAll();
+  },
+
+  async deletePlayer(playerId: string): Promise<void> {
+    if (playerId === DEFAULT_PLAYER_ID) {
+      return;
+    }
+    statsStorage.deleteGameLogsV2ByPlayerId(playerId);
+  },
+
+  async incrementPlayerTotalGames(): Promise<void> {
+    const player = playerProfileStorage.getCurrentPlayer();
+    if (!player) {
+      return;
+    }
+    player.totalGames++;
+    playerProfileStorage.updatePlayer(player);
+  },
+
+  async canDeletePlayer(playerId: string): Promise<boolean> {
+    if (playerId === DEFAULT_PLAYER_ID) {
+      return false;
+    }
+    const allPlayers = playerProfileStorage.getAllPlayers();
+    return allPlayers.length > 1 && allPlayers.some(p => p.id === playerId);
+  },
+
+  async getCurrentPlayer(): Promise<PlayerProfile | null> {
+    return playerProfileStorage.getCurrentPlayer();
   },
 };

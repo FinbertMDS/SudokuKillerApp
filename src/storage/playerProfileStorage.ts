@@ -30,6 +30,17 @@ const getCurrentPlayer = (): PlayerProfile | null => {
   return all.find(p => p.id === id) || null;
 };
 
+const getPlayerById = (id: string): PlayerProfile | null => {
+  const all = getAllPlayers();
+  return all.find(p => p.id === id) || null;
+};
+
+const updatePlayer = (player: PlayerProfile) => {
+  const all = getAllPlayers();
+  const updated = all.map(p => (p.id === player.id ? player : p));
+  savePlayers(updated);
+};
+
 const clearAll = () => {
   try {
     storage.delete(STORAGE_KEY_PLAYERS);
@@ -44,4 +55,6 @@ export const playerProfileStorage = {
   setCurrentPlayerId,
   getCurrentPlayer,
   clearAll,
+  getPlayerById,
+  updatePlayer,
 };

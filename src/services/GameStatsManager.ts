@@ -135,6 +135,15 @@ export const GameStatsManager = {
     return [];
   },
 
+  async getLogsByPlayerId(playerId: string): Promise<GameLogEntryV2[]> {
+    try {
+      return statsStorage.getGameLogsV2ByPlayerId(playerId);
+    } catch (error) {
+      console.error('Error loading logs:', error);
+    }
+    return [];
+  },
+
   /**
    * Saves a log entry to AsyncStorage.
    * If override is true, it will replace the existing log with the same ID.

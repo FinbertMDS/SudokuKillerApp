@@ -11,15 +11,19 @@ import {DEFAULT_PLAYER_ID} from '../../utils/constants';
 type PlayerCardProps = {
   player: PlayerProfile;
   isSelected: boolean;
+  canDelete: boolean;
   onPress: () => void;
   onDelete: (id: string) => void;
+  onEdit: (player: PlayerProfile) => void;
 };
 
 const PlayerCard = ({
   player,
   isSelected,
+  canDelete,
   onPress,
   onDelete,
+  onEdit,
 }: PlayerCardProps) => {
   const {t} = useTranslation();
   const {mode, theme} = useTheme();
@@ -61,9 +65,12 @@ const PlayerCard = ({
           {t('gamesCount', {count: player.totalGames})}
         </Text>
       </View>
-      {!isSelected && (
+      <TouchableOpacity style={styles.editBtn} onPress={() => onEdit(player)}>
+        <Ionicons name="pencil" size={20} color={theme.text} />
+      </TouchableOpacity>
+      {!isSelected && canDelete && (
         <TouchableOpacity onPress={() => onDelete(player.id)}>
-          <Ionicons name="trash" size={24} color={theme.danger} />
+          <Ionicons name="trash" size={20} color={theme.danger} />
         </TouchableOpacity>
       )}
       {isSelected && (
@@ -118,6 +125,9 @@ const styles = StyleSheet.create({
   checkText: {
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  editBtn: {
+    marginRight: 16,
   },
 });
 

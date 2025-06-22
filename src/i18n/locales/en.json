@@ -51,7 +51,6 @@
 
   "levelStats": "Level Stats",
   "chartsStats": "Charts Stats",
-  "chartsStats.noticeUtc": "Stats follow UTC. In UTC{{utcOffset}}, new day updates after {{offset}}",
 
   "options": "Options",
   "settings": "Settings",
@@ -147,5 +146,9 @@
   "deletePlayerTitle": "Delete Player?",
   "deletePlayerMessage": "Are you sure you want to delete this player?",
   "deleteBtn": "Delete",
-  "defaultPlayer": "(Default)"
+  "defaultPlayer": "(Default)",
+  "editPlayerTitle": "Edit Player",
+  "saveBtn": "Save",
+  "cannotDeletePlayerTitle": "Cannot Delete Player",
+  "cannotDeletePlayerMessage": "You cannot delete the default player"
 }

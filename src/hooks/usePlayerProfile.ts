@@ -7,8 +7,10 @@ export const usePlayerProfile = () => {
   const [allPlayers, setAllPlayers] = useState<PlayerProfile[]>([]);
 
   useEffect(() => {
-    setPlayer(playerProfileStorage.getCurrentPlayer());
-    setAllPlayers(playerProfileStorage.getAllPlayers());
+    const currentPlayer = playerProfileStorage.getCurrentPlayer();
+    setPlayer(currentPlayer);
+    const all = playerProfileStorage.getAllPlayers();
+    setAllPlayers(all);
   }, []);
 
   const switchPlayer = (id: string) => {
@@ -17,17 +19,28 @@ export const usePlayerProfile = () => {
   };
 
   const deletePlayer = (id: string) => {
-    const updated = allPlayers.filter(_player => _player.id !== id);
+    const all = playerProfileStorage.getAllPlayers();
+    const updated = all.filter(_player => _player.id !== id);
     playerProfileStorage.savePlayers(updated);
     setAllPlayers(updated);
   };
 
   const createPlayer = (profile: PlayerProfile) => {
-    const updated = [...playerProfileStorage.getAllPlayers(), profile];
+    const all = playerProfileStorage.getAllPlayers();
+    const updated = [...all, profile];
     playerProfileStorage.savePlayers(updated);
     setAllPlayers(updated);
     playerProfileStorage.setCurrentPlayerId(profile.id);
     setPlayer(profile);
+  };
+
+  const updatePlayerName = (id: string, name: string) => {
+    const all = playerProfileStorage.getAllPlayers();
+    const updated = all.map(_player =>
+      _player.id === id ? {..._player, name} : _player,
+    );
+    playerProfileStorage.savePlayers(updated);
+    setAllPlayers(updated);
   };
 
   const reloadPlayer = () => {
@@ -41,5 +54,6 @@ export const usePlayerProfile = () => {
     createPlayer,
     deletePlayer,
     reloadPlayer,
+    updatePlayerName,
   };
 };

@@ -11,7 +11,6 @@ import {
   convertToStackedData,
   getDailyStatsFromLogs,
 } from '../../utils/statsUtil';
-import ChartsStatsNotice from './ChartsStatsNotice';
 import GameBarChart from './GameBarChart';
 import GamePieChart from './GamePieChart';
 import GameStackedBarChart from './GameStackedBarChart';
@@ -48,7 +47,6 @@ const ChartsStats = ({logs, filter}: ChartsStatsProps) => {
         stackedData={stackedData}
         chartConfig={chartConfig}
       />
-      <ChartsStatsNotice />
     </ScrollView>
   );
 };
