@@ -12,4 +12,5 @@ export const CORE_EVENTS = {
   defaultPlayerUpdated: 'defaultPlayerUpdated',
   createPlayer: 'createPlayer',
   updatePlayerName: 'updatePlayerName',
+  switchPlayer: 'switchPlayer',
 } as const;

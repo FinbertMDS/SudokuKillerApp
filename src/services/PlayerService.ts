@@ -9,7 +9,8 @@ export const PlayerService = {
     const players = playerProfileStorage.getAllPlayers();
     if (players.length === 0) {
       const rawLogs = statsStorage.getGameLogs();
-      const totalGames = rawLogs.length;
+      // count total games from raw logs which completed
+      const totalGames = rawLogs.filter(log => log.completed).length;
       const player = createDefaultPlayer(totalGames);
       playerProfileStorage.savePlayers([player]);
       playerProfileStorage.setCurrentPlayerId(player.id);
@@ -75,5 +76,9 @@ export const PlayerService = {
 
   async getCurrentPlayer(): Promise<PlayerProfile | null> {
     return playerProfileStorage.getCurrentPlayer();
+  },
+
+  async handleSwitchPlayer(playerId: string): Promise<void> {
+    statsStorage.setLastStatsCacheUpdateUserId(playerId);
   },
 };
