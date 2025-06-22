@@ -12,7 +12,7 @@ export async function runMigrationsIfNeeded() {
   const storedVersion = appStorage.getMigrationVersion() ?? 0;
 
   if (storedVersion >= CURRENT_MIGRATION_VERSION) {
-    console.log('[MIGRATION] No migration needed');
+    console.log('[MIGRATION] No migration needed: v =', storedVersion);
     return;
   }
 
