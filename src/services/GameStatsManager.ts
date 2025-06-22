@@ -74,6 +74,13 @@ export const GameStatsManager = {
     }
   },
 
+  async updateStatsDone(): Promise<void> {
+    statsStorage.setLastStatsCacheUpdate();
+    statsStorage.setLastStatsCacheUpdateUserId(
+      playerProfileStorage.getCurrentPlayerId(),
+    );
+  },
+
   async updateStatsWithCache(
     logs: GameLogEntryV2[],
     updatedLogs: GameLogEntryV2[],

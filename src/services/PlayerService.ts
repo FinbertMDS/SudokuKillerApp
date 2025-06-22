@@ -78,7 +78,7 @@ export const PlayerService = {
     return playerProfileStorage.getCurrentPlayer();
   },
 
-  async handleSwitchPlayer(playerId: string): Promise<void> {
-    statsStorage.setLastStatsCacheUpdateUserId(playerId);
+  async getCurrentPlayerId(): Promise<string> {
+    return playerProfileStorage.getCurrentPlayerId();
   },
 };
