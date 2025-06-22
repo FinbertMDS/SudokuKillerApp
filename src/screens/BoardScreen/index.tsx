@@ -17,7 +17,7 @@ import {
   BannerAd,
   BannerAdSize,
   useForeground,
-  useInterstitialAd,
+  useRewardedAd,
 } from 'react-native-google-mobile-ads';
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import ActionButtons from '../../components/Board/ActionButtons';
@@ -184,7 +184,7 @@ const BoardScreen = () => {
     isClosed: isClosedRewarded,
     load: loadRewarded,
     show: showRewarded,
-  } = useInterstitialAd(getAdUnit('interstitial'), AD_REQUEST_OPTIONS);
+  } = useRewardedAd(getAdUnit('rewarded'), AD_REQUEST_OPTIONS);
   useEffect(() => {
     loadRewarded();
   }, [loadRewarded]);
@@ -556,7 +556,6 @@ const BoardScreen = () => {
     Platform.OS === 'ios' && bannerRef.current?.load();
   });
   const insets = useSafeAreaInsets();
-  const bannerHeight = 70;
 
   useEffect(() => {
     if (limitMistakeReached && !isLoadedRewarded && !isClosedRewarded) {
@@ -600,16 +599,6 @@ const BoardScreen = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [limitHintReached, isLoadedRewarded]);
 
-  if (isLoading) {
-    return (
-      <SafeAreaView
-        edges={['top']}
-        style={[styles.loadingContainer, {backgroundColor: theme.background}]}>
-        <ActivityIndicator size="large" color={theme.primary} />
-      </SafeAreaView>
-    );
-  }
-
   if (showHowToPlay) {
     return (
       <SafeAreaView
@@ -622,6 +611,16 @@ const BoardScreen = () => {
           showTheme={false}
         />
         <HowToPlay onClose={handleAfterCheckHasPlayed} />
+      </SafeAreaView>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <SafeAreaView
+        edges={['top']}
+        style={[styles.loadingContainer, {backgroundColor: theme.background}]}>
+        <ActivityIndicator size="large" color={theme.primary} />
       </SafeAreaView>
     );
   }
@@ -639,53 +638,43 @@ const BoardScreen = () => {
           onBack={handleBackPress}
           onSettings={handleGoToSettings}
         />
-        <View
-          style={[
-            styles.contentContainerNoAd,
-            {
-              paddingTop: insets.top,
-              paddingBottom: insets.bottom + bannerHeight,
-            },
-          ]}>
-          <InfoPanel
-            isPlaying={isPlaying}
-            level={level}
-            mistakes={mistakes}
-            secondsRef={secondsRef}
-            isPaused={isPaused}
-            settings={settings}
-            onPause={handlePause}
-            onLimitTimeReached={handleLimitTimeReached}
-          />
-          <Grid
-            board={board}
-            cages={cages}
-            notes={notes}
-            solvedBoard={solvedBoard}
-            selectedCell={selectedCell}
-            settings={settings}
-            onPress={handleCellPress}
-          />
-          <ActionButtons
-            noteMode={noteMode}
-            hintCount={hintCount}
-            onNote={setNoteMode}
-            onUndo={handleUndo}
-            onErase={handleErase}
-            onHint={handleHint}
-            onSolve={handleSolve}
-          />
-          <NumberPad
-            board={board}
-            settings={settings}
-            onSelectNumber={handleNumberPress}
-          />
-        </View>
+        <InfoPanel
+          isPlaying={isPlaying}
+          level={level}
+          mistakes={mistakes}
+          secondsRef={secondsRef}
+          isPaused={isPaused}
+          settings={settings}
+          onPause={handlePause}
+          onLimitTimeReached={handleLimitTimeReached}
+        />
+        <Grid
+          board={board}
+          cages={cages}
+          notes={notes}
+          solvedBoard={solvedBoard}
+          selectedCell={selectedCell}
+          settings={settings}
+          onPress={handleCellPress}
+        />
+        <ActionButtons
+          noteMode={noteMode}
+          hintCount={hintCount}
+          onNote={setNoteMode}
+          onUndo={handleUndo}
+          onErase={handleErase}
+          onHint={handleHint}
+          onSolve={handleSolve}
+        />
+        <NumberPad
+          board={board}
+          settings={settings}
+          onSelectNumber={handleNumberPress}
+        />
         <View
           style={[
             styles.adContainer,
             {
-              height: bannerHeight,
               bottom: insets.bottom,
               backgroundColor: theme.background,
             },
@@ -713,7 +702,6 @@ const BoardScreen = () => {
           message={t('mistakeWarning.message', {max: MAX_MISTAKES})}
           cancelText={t('ad.cancel')}
           confirmText={t('ad.confirm')}
-          disableBackdropClose={true}
           onCancel={() => {
             handleLimitMistakeReached();
           }}
@@ -728,7 +716,6 @@ const BoardScreen = () => {
           message={t('hintWarning.message', {max: MAX_HINTS})}
           cancelText={t('ad.cancel')}
           confirmText={t('ad.confirm')}
-          disableBackdropClose={true}
           onCancel={() => {
             handleLimitHintReached(true);
           }}
@@ -744,11 +731,7 @@ const BoardScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  contentContainerNoAd: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    // alignItems: 'center',
   },
   loadingContainer: {
     flex: 1,

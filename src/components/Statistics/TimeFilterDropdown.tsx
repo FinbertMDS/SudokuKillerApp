@@ -11,17 +11,13 @@ import {
 import {useTheme} from '../../context/ThemeContext';
 import {TimeFilter} from '../../types';
 
-type TimeFilterDropdownProps = {
+interface Props {
   selected: TimeFilter;
   onClose: () => void;
   onSelect: (filter: TimeFilter) => void;
-};
+}
 
-const TimeFilterDropdown = ({
-  selected,
-  onSelect,
-  onClose,
-}: TimeFilterDropdownProps) => {
+const TimeFilterDropdown: React.FC<Props> = ({selected, onSelect, onClose}) => {
   const {theme} = useTheme();
   const {t} = useTranslation();
 

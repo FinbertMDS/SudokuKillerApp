@@ -140,23 +140,13 @@ const setMigrationVersion = (version: number) => {
     storage.set(STORAGE_KEY_MIGRATION_VERSION, version);
   } catch (_) {}
 };
-const clearMigrationVersion = () => {
-  try {
-    storage.delete(STORAGE_KEY_MIGRATION_VERSION);
-  } catch (_) {}
-};
 
 const clearAll = () => {
   clearLangKeyDefault();
   clearLangKeyPreferred();
   clearSettings();
-  clearHasPlayed();
-};
-
-const clearAllForDev = () => {
-  clearBackgrounds();
   clearQuotes();
-  clearMigrationVersion();
+  clearHasPlayed();
 };
 
 export const appStorage = {
@@ -181,6 +171,4 @@ export const appStorage = {
   clearAll,
   getMigrationVersion,
   setMigrationVersion,
-  clearMigrationVersion,
-  clearAllForDev,
 };

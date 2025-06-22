@@ -20,12 +20,6 @@ const getInitGame = (): InitGame | null => {
   }
 };
 
-const clearInitGame = () => {
-  try {
-    storage.delete(STORAGE_KEY_INIT_GAME);
-  } catch (_) {}
-};
-
 const saveSavedGame = (game: SavedGame) => {
   try {
     storage.set(STORAGE_KEY_SAVED_GAME, JSON.stringify(game));
@@ -41,23 +35,22 @@ const getSavedGame = (): SavedGame | null => {
   }
 };
 
+const clearGameData = () => {
+  try {
+    storage.delete(STORAGE_KEY_INIT_GAME);
+    storage.delete(STORAGE_KEY_SAVED_GAME);
+  } catch (_) {}
+};
+
 const clearSavedGameData = () => {
   try {
     storage.delete(STORAGE_KEY_SAVED_GAME);
   } catch (_) {}
 };
 
-const clearGameData = () => {
-  try {
-    clearInitGame();
-    clearSavedGameData();
-  } catch (_) {}
-};
-
 export const gameStorage = {
   saveInitGame,
   getInitGame,
-  clearInitGame,
   saveSavedGame,
   getSavedGame,
   clearGameData,

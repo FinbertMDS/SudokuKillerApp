@@ -4,20 +4,21 @@ import React, {useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {ScrollView} from 'react-native';
 import {useTheme} from '../../context/ThemeContext';
-import {GameLogEntryV2, TimeFilter} from '../../types';
+import {GameLogEntry, TimeFilter} from '../../types';
 import {getChartConfig} from '../../utils/colorUtil';
 import {
   convertToPieData,
   convertToStackedData,
   getDailyStatsFromLogs,
 } from '../../utils/statsUtil';
+import ChartsStatsNotice from './ChartsStatsNotice';
 import GameBarChart from './GameBarChart';
 import GamePieChart from './GamePieChart';
 import GameStackedBarChart from './GameStackedBarChart';
 import TimeLineChart from './TimeLineChart';
 
 type ChartsStatsProps = {
-  logs: GameLogEntryV2[];
+  logs: GameLogEntry[];
   filter: TimeFilter;
 };
 
@@ -47,6 +48,7 @@ const ChartsStats = ({logs, filter}: ChartsStatsProps) => {
         stackedData={stackedData}
         chartConfig={chartConfig}
       />
+      <ChartsStatsNotice />
     </ScrollView>
   );
 };

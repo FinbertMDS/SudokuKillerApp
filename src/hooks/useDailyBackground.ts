@@ -1,11 +1,10 @@
 import {useEffect, useMemo, useState} from 'react';
-import {UnsplashImageData} from '../types';
 import {getDailyBackgrounds} from '../utils/getDailyBackground';
 
 export const useDailyBackground = (mode: 'light' | 'dark') => {
   const [backgrounds, setBackgrounds] = useState<{
-    light: UnsplashImageData | null;
-    dark: UnsplashImageData | null;
+    light: string | null;
+    dark: string | null;
   }>({light: null, dark: null});
 
   const loadBackgrounds = async () => {
@@ -17,12 +16,12 @@ export const useDailyBackground = (mode: 'light' | 'dark') => {
     loadBackgrounds();
   }, []);
 
-  const background = useMemo(() => {
+  const backgroundUrl = useMemo(() => {
     return mode === 'dark' ? backgrounds.dark : backgrounds.light;
   }, [mode, backgrounds]);
 
   return {
-    background,
+    backgroundUrl,
     loadBackgrounds,
   };
 };

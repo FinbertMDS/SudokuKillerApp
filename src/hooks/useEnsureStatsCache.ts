@@ -2,7 +2,7 @@ import {useEffect} from 'react';
 
 // Giả định bạn có sẵn hàm này để lấy tất cả logs
 import {GameStatsManager} from '../services/GameStatsManager';
-import {PlayerService} from '../services/PlayerService';
+import {statsStorage} from '../storage';
 import {TimeRange} from '../types';
 
 export function useEnsureStatsCache() {
@@ -19,17 +19,10 @@ export function useEnsureStatsCache() {
           'all',
         ];
 
-        const playerId = await PlayerService.getCurrentPlayerId();
-        const allLogsByPlayerId = await GameStatsManager.getLogsByPlayerId(
-          playerId,
-        );
-        await GameStatsManager.updateStatsWithAllCache(
-          allLogsByPlayerId,
-          affectedRanges,
-          playerId,
-        );
+        const allLogs = await GameStatsManager.getLogs();
+        await GameStatsManager.updateStatsWithAllCache(allLogs, affectedRanges);
 
-        await GameStatsManager.updateStatsDone();
+        statsStorage.setLastStatsCacheUpdate();
       }
       return needsUpdate;
     } catch (err) {

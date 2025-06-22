@@ -1,11 +1,11 @@
 // src/screens/MainScreen/index.tsx
+import {IS_UI_TESTING} from '@env';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React, {useCallback, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ImageBackground,
-  Linking,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -22,17 +22,9 @@ import eventBus from '../../events/eventBus';
 import {InitGameCoreEvent} from '../../events/types';
 import {useDailyBackground} from '../../hooks/useDailyBackground';
 import {useDailyQuote} from '../../hooks/useDailyQuote';
-import {usePlayerProfile} from '../../hooks/usePlayerProfile';
 import {BoardService} from '../../services/BoardService';
-import {PlayerService} from '../../services/PlayerService';
 import {Level, RootStackParamList} from '../../types/index';
-import {
-  IS_UI_TESTING,
-  SCREENS,
-  SHOW_UNSPLASH_IMAGE_INFO,
-  UNSPLASH_URL,
-  UNSPLASH_UTM,
-} from '../../utils/constants';
+import {SCREENS} from '../../utils/constants';
 
 const MainScreen = () => {
   const {mode, theme} = useTheme();
@@ -40,14 +32,12 @@ const MainScreen = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [hasSavedGame, setHasSavedGame] = useState(false);
-  const {background, loadBackgrounds} = useDailyBackground(mode);
+  const {backgroundUrl, loadBackgrounds} = useDailyBackground(mode);
   const {quote, loadQuote} = useDailyQuote();
-  const {player, reloadPlayer} = usePlayerProfile();
 
   // Sau khi navigation.goBack() sẽ gọi hàm này
   useFocusEffect(
     useCallback(() => {
-      reloadPlayer();
       checkSavedGame();
       loadBackgrounds();
       loadQuote();
@@ -85,7 +75,6 @@ const MainScreen = () => {
   const handleClearStorage = async () => {
     eventBus.emit(CORE_EVENTS.clearStorage);
     BoardService.clear().then(checkSavedGame);
-    PlayerService.clear().then(reloadPlayer);
   };
   const insets = useSafeAreaInsets();
 
@@ -93,59 +82,25 @@ const MainScreen = () => {
     <SafeAreaView
       edges={['top']}
       style={[styles.container, {backgroundColor: theme.background}]}>
-      {background && background.url && (
+      {backgroundUrl && (
         <ImageBackground
-          source={{uri: background.url}}
+          source={{uri: backgroundUrl}}
           style={[StyleSheet.absoluteFillObject, {top: insets.top}]}
           resizeMode="cover"
-          blurRadius={2}>
-          {SHOW_UNSPLASH_IMAGE_INFO && (
-            <View style={styles.attributionContainer}>
-              <Text style={[styles.attributionText, {color: theme.text}]}>
-                Photo by{' '}
-                <Text
-                  style={[styles.linkText, {color: theme.secondary}]}
-                  onPress={() =>
-                    Linking.openURL(
-                      (background.photographerLink ?? UNSPLASH_URL) +
-                        UNSPLASH_UTM,
-                    )
-                  }>
-                  {background.photographerName}
-                </Text>{' '}
-                on{' '}
-                <Text
-                  style={[styles.linkText, {color: theme.secondary}]}
-                  onPress={() => Linking.openURL(UNSPLASH_URL + UNSPLASH_UTM)}>
-                  Unsplash
-                </Text>
-              </Text>
-            </View>
-          )}
-        </ImageBackground>
+          blurRadius={2}
+        />
       )}
       <Header
         title={t('appName')}
         showBack={false}
         showSettings={true}
         showTheme={true}
-        showSwitchPlayer={true}
-        onSwitchPlayer={() => {
-          navigation.navigate(SCREENS.PLAYERS);
-        }}
       />
       {quote && <QuoteBox q={quote.q} a={quote.a} />}
       <View style={styles.middle}>
         <Text style={[styles.title, {color: theme.text}]}>
           {t('welcomeTitle', {appName: t('appName')})}
         </Text>
-        {player && (
-          <Text style={[styles.title, {color: theme.text}]}>
-            {t('welcomeUser', {
-              playerName: player.name,
-            })}
-          </Text>
-        )}
       </View>
       <View style={[styles.footer]}>
         {hasSavedGame && (
@@ -166,7 +121,7 @@ const MainScreen = () => {
 
         <NewGameMenu handleNewGame={handleNewGame} />
 
-        {__DEV__ && !IS_UI_TESTING && (
+        {__DEV__ && IS_UI_TESTING !== 'true' && (
           <TouchableOpacity
             style={[
               styles.button,
@@ -189,17 +144,6 @@ const MainScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  attributionContainer: {
-    position: 'absolute',
-    bottom: 10,
-    left: 10,
-  },
-  attributionText: {
-    fontSize: 14,
-  },
-  linkText: {
-    textDecorationLine: 'underline',
   },
   middle: {
     flex: 1,
