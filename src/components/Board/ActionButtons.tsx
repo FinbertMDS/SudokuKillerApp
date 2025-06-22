@@ -1,11 +1,11 @@
+import {IS_UI_TESTING} from '@env';
 import React, {useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import DeviceInfo from 'react-native-device-info';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {default as Icon} from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useTheme} from '../../context/ThemeContext';
 import {ActionButtonProps} from '../../types/components';
-import {IS_UI_TESTING} from '../../utils/constants';
 
 type ActionButtonsProps = {
   noteMode: boolean;
@@ -81,7 +81,7 @@ const ActionButtons = ({
         onPress: handleHint,
       },
     ];
-    if (__DEV__ && !IS_UI_TESTING) {
+    if (__DEV__ && IS_UI_TESTING !== 'true') {
       allButtons.push({
         id: 'solve',
         label: t('solve'),
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row' as const,
     justifyContent: 'space-around' as const,
     width: '100%' as const,
-    marginBottom: DeviceInfo.isTablet() ? 10 : 20,
+    marginTop: DeviceInfo.isTablet() ? 10 : 30,
   },
   actionButton: {
     alignItems: 'center' as const,

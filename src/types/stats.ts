@@ -11,10 +11,6 @@ export interface GameLogEntry {
   hintCount?: number;
 }
 
-export type GameLogEntryV2 = GameLogEntry & {
-  playerId: string; // player ID (UUID)
-};
-
 export type TimeRange = 'today' | 'week' | 'month' | 'year' | 'all';
 
 export type GameStatsCache = {

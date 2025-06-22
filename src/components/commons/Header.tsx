@@ -2,7 +2,7 @@ import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {default as Icon} from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useTheme} from '../../context/ThemeContext';
 import {RootStackParamList} from '../../types';
 import {SCREENS} from '../../utils/constants';
@@ -13,12 +13,9 @@ type HeaderProps = {
   showSettings?: boolean;
   showTheme?: boolean;
   showCustom?: boolean;
-  customIconCount?: number;
   custom?: React.ReactNode;
   onBack?: () => void;
   onSettings?: () => void;
-  showSwitchPlayer?: boolean;
-  onSwitchPlayer?: () => void;
 };
 
 const Header = ({
@@ -27,12 +24,9 @@ const Header = ({
   showSettings = false,
   showTheme = true,
   showCustom = false,
-  customIconCount = 0,
   custom = undefined,
   onBack = undefined,
   onSettings = undefined,
-  showSwitchPlayer = false,
-  onSwitchPlayer = undefined,
 }: HeaderProps) => {
   const {theme, toggleTheme, mode} = useTheme();
   const navigation =
@@ -46,63 +40,24 @@ const Header = ({
     navigation.goBack();
   };
 
-  const getLeftSideCount = () => {
-    let count = 0;
-    if (showBack) {
-      count++;
-    }
-    if (showSwitchPlayer) {
-      count++;
-    }
-    return count;
-  };
-
-  const getRightSideCount = () => {
-    let count = 0;
-    if (showTheme) {
-      count++;
-    }
-    if (showSettings) {
-      count++;
-    }
-    if (customIconCount > 0) {
-      count += customIconCount;
-    }
-    return count;
-  };
-
   return (
     <View style={[styles.header, {backgroundColor: theme.background}]}>
-      {getLeftSideCount() > 0 && (
-        <View style={[styles.side, styles.left]}>
-          {showBack && (
-            <View style={styles.iconButton}>
-              <TouchableOpacity onPress={onBack ? onBack : defaultOnBack}>
-                <Icon name="chevron-left" size={28} color={theme.primary} />
-              </TouchableOpacity>
-            </View>
-          )}
-          {showSwitchPlayer && (
-            <View style={[styles.iconButton]}>
-              <TouchableOpacity onPress={onSwitchPlayer}>
-                <Icon name="account-switch" size={24} color={theme.primary} />
-              </TouchableOpacity>
-            </View>
-          )}
+      {showBack ? (
+        <View style={styles.side}>
+          <TouchableOpacity onPress={onBack ? onBack : defaultOnBack}>
+            <Icon name="chevron-left" size={28} color={theme.iconColor} />
+          </TouchableOpacity>
         </View>
+      ) : (
+        <View style={styles.side} />
       )}
-      {/* nếu số icon ít của bên trái ít hơn bên phải, thì thêm các icon trống để cân bằng giữa 2 bên. số icon trống được thêm bằng số icon bên phải trừ số icon bên trái */}
-      {getLeftSideCount() < getRightSideCount() &&
-        Array.from({length: getRightSideCount() - getLeftSideCount()}).map(
-          (_, index) => <View key={index} style={styles.iconButton} />,
-        )}
       {title && (
         <View style={styles.center}>
           <Text style={[styles.title, {color: theme.text}]}>{title}</Text>
         </View>
       )}
       {/* Right side */}
-      {getRightSideCount() > 0 && (
+      {showTheme || showSettings ? (
         <View style={[styles.side, styles.right]}>
           {showCustom && custom ? <>{custom}</> : null}
           {showTheme && (
@@ -128,12 +83,9 @@ const Header = ({
             </TouchableOpacity>
           )}
         </View>
-      )}
-      {/* nếu số icon ít của bên phải ít hơn bên trái, thì thêm các icon trống để cân bằng giữa 2 bên. số icon trống được thêm bằng số icon bên trái trừ số icon bên phải */}
-      {getRightSideCount() < getLeftSideCount() &&
-        Array.from({length: getLeftSideCount() - getRightSideCount()}).map(
-          (_, index) => <View key={index} style={styles.side} />,
-        )}
+      ) : showBack ? (
+        <View style={styles.side} />
+      ) : null}
     </View>
   );
 };
@@ -146,12 +98,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   side: {
+    width: 56,
     alignItems: 'center' as const,
     justifyContent: 'center' as const,
-  },
-  left: {
-    flexDirection: 'row' as const,
-    justifyContent: 'flex-start' as const,
   },
   right: {
     flexDirection: 'row' as const,
@@ -166,8 +115,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold' as const,
   },
   iconButton: {
-    width: 30,
-    paddingHorizontal: 3,
+    marginLeft: 20,
   },
 });
 

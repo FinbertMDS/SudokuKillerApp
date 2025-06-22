@@ -1,12 +1,10 @@
 import {GameStatsManager} from '../../services/GameStatsManager';
-import {GameLogEntryV2, TimeRange} from '../../types';
-import {DEFAULT_PLAYER_ID} from '../../utils/constants';
+import {GameLogEntry, TimeRange} from '../../types';
 import {statsStorage} from '../statsStorage';
 
 const gameLog = [
   {
     id: 'sample-uuid-1',
-    playerId: DEFAULT_PLAYER_ID,
     level: 'easy',
     completed: true,
     startTime: '2025-05-31T14:00:00Z',
@@ -17,7 +15,6 @@ const gameLog = [
   },
   {
     id: 'sample-uuid-2',
-    playerId: DEFAULT_PLAYER_ID,
     level: 'medium',
     completed: true,
     startTime: '2025-05-30T14:00:00Z',
@@ -28,7 +25,6 @@ const gameLog = [
   },
   {
     id: 'sample-uuid-3',
-    playerId: DEFAULT_PLAYER_ID,
     level: 'hard',
     completed: false,
     startTime: '2025-05-29T14:00:00Z',
@@ -39,7 +35,6 @@ const gameLog = [
   },
   {
     id: 'sample-uuid-4',
-    playerId: DEFAULT_PLAYER_ID,
     level: 'expert',
     completed: true,
     startTime: '2025-05-28T14:00:00Z',
@@ -50,7 +45,6 @@ const gameLog = [
   },
   {
     id: 'sample-uuid-5',
-    playerId: DEFAULT_PLAYER_ID,
     level: 'easy',
     completed: true,
     startTime: '2025-05-27T14:00:00Z',
@@ -61,7 +55,6 @@ const gameLog = [
   },
   {
     id: 'sample-uuid-6',
-    playerId: DEFAULT_PLAYER_ID,
     level: 'medium',
     completed: true,
     startTime: '2025-05-26T14:00:00Z',
@@ -72,7 +65,6 @@ const gameLog = [
   },
   {
     id: 'sample-uuid-7',
-    playerId: DEFAULT_PLAYER_ID,
     level: 'hard',
     completed: false,
     startTime: '2025-05-25T14:00:00Z',
@@ -83,7 +75,6 @@ const gameLog = [
   },
   {
     id: 'sample-uuid-8',
-    playerId: DEFAULT_PLAYER_ID,
     level: 'expert',
     completed: true,
     startTime: '2025-05-24T14:00:00Z',
@@ -94,7 +85,6 @@ const gameLog = [
   },
   {
     id: 'sample-uuid-9',
-    playerId: DEFAULT_PLAYER_ID,
     level: 'easy',
     completed: true,
     startTime: '2025-05-23T14:00:00Z',
@@ -105,7 +95,6 @@ const gameLog = [
   },
   {
     id: 'sample-uuid-10',
-    playerId: DEFAULT_PLAYER_ID,
     level: 'medium',
     completed: false,
     startTime: '2025-05-22T14:00:00Z',
@@ -114,7 +103,7 @@ const gameLog = [
     mistakes: 5,
     hintCount: 0,
   },
-] as GameLogEntryV2[];
+] as GameLogEntry[];
 
 const saveMockGameLogs = async () => {
   const oldLogs = statsStorage.getGameLogs();
@@ -126,11 +115,7 @@ const saveMockGameLogs = async () => {
   const affectedRanges: TimeRange[] = ['today', 'week', 'month', 'year', 'all'];
 
   const allLogs = await GameStatsManager.getLogs();
-  await GameStatsManager.updateStatsWithAllCache(
-    allLogs,
-    affectedRanges,
-    DEFAULT_PLAYER_ID,
-  );
+  await GameStatsManager.updateStatsWithAllCache(allLogs, affectedRanges);
 
   statsStorage.setLastStatsCacheUpdate();
 };

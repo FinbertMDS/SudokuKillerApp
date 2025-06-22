@@ -25,14 +25,9 @@ export const lightTheme = {
   overlayColor: '#FFFFFF',
   cellBorderColor: '#000000',
   settingItemBackground: '#DADADA',
-  buttonBlue: '#007AFF',
+  buttonBlue: '#60a5fa',
   selectedItemBackground: '#D0D0D0',
   itemBorderColor: '#E0E0E0',
-  modalBg: '#fff',
-  inputBorder: '#ccc',
-  placeholder: '#999',
-  cancelButtonBg: '#f2f2f2',
-  selectedCardBg: '#F0F8FF',
 };
 
 export const darkTheme = {
@@ -65,9 +60,4 @@ export const darkTheme = {
   buttonBlue: '#90CAF9',
   selectedItemBackground: '#333333',
   itemBorderColor: '#2E2E2E',
-  modalBg: '#2c2c2e',
-  inputBorder: '#555',
-  placeholder: '#888',
-  cancelButtonBg: '#3a3a3c',
-  selectedCardBg: '#0c1a2f',
 };

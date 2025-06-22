@@ -11,7 +11,7 @@ type CageBordersProps = {
   cages: Cage[];
 };
 
-const CAGE_PADDING = DeviceInfo.isTablet() ? 5 : 4;
+const CAGE_PADDING = DeviceInfo.isTablet() ? 5 : 3;
 
 const CageBorders = ({cages}: CageBordersProps) => {
   const {theme} = useTheme();

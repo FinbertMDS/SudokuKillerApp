@@ -313,7 +313,7 @@ const styles = StyleSheet.create({
   boardContainer: {
     width: '100%' as const,
     alignItems: 'center' as const,
-    marginBottom: 20,
+    marginTop: 30,
   },
   grid: {
     flexDirection: 'column' as const,

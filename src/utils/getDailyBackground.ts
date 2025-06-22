@@ -16,7 +16,7 @@ export const getDailyBackgrounds = async (): Promise<DailyBackgrounds> => {
     }
   }
 
-  const [lightData, darkData] = await Promise.all([
+  const [lightUrl, darkUrl] = await Promise.all([
     BackgroundService.fetchUnsplashImage(
       getRandomKeyword(UNSPLASH_KEYWORDS_LIGHT),
     ),
@@ -25,10 +25,10 @@ export const getDailyBackgrounds = async (): Promise<DailyBackgrounds> => {
     ),
   ]);
 
-  if (lightData && darkData) {
-    const result = {date: today, light: lightData, dark: darkData};
+  if (lightUrl && darkUrl) {
+    const result = {date: today, light: lightUrl, dark: darkUrl};
     await BackgroundService.save(result);
-    return {light: lightData, dark: darkData};
+    return {light: lightUrl, dark: darkUrl};
   } else {
     const oldCached = await BackgroundService.load();
     if (oldCached) {
