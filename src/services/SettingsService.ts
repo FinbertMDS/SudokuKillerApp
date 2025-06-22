@@ -44,6 +44,9 @@ export const SettingsService = {
   async clear(): Promise<void> {
     try {
       appStorage.clearAll();
+      if (!__DEV__) {
+        appStorage.clearAllForDev();
+      }
     } catch (err) {
       console.error('Failed to clear settings', err);
     }

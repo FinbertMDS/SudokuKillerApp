@@ -22,7 +22,9 @@ import eventBus from '../../events/eventBus';
 import {InitGameCoreEvent} from '../../events/types';
 import {useDailyBackground} from '../../hooks/useDailyBackground';
 import {useDailyQuote} from '../../hooks/useDailyQuote';
+import {usePlayerProfile} from '../../hooks/usePlayerProfile';
 import {BoardService} from '../../services/BoardService';
+import {PlayerService} from '../../services/PlayerService';
 import {Level, RootStackParamList} from '../../types/index';
 import {
   IS_UI_TESTING,
@@ -40,10 +42,12 @@ const MainScreen = () => {
   const [hasSavedGame, setHasSavedGame] = useState(false);
   const {background, loadBackgrounds} = useDailyBackground(mode);
   const {quote, loadQuote} = useDailyQuote();
+  const {player, reloadPlayer} = usePlayerProfile();
 
   // Sau khi navigation.goBack() sẽ gọi hàm này
   useFocusEffect(
     useCallback(() => {
+      reloadPlayer();
       checkSavedGame();
       loadBackgrounds();
       loadQuote();
@@ -81,6 +85,7 @@ const MainScreen = () => {
   const handleClearStorage = async () => {
     eventBus.emit(CORE_EVENTS.clearStorage);
     BoardService.clear().then(checkSavedGame);
+    PlayerService.clear().then(reloadPlayer);
   };
   const insets = useSafeAreaInsets();
 
@@ -124,12 +129,23 @@ const MainScreen = () => {
         showBack={false}
         showSettings={true}
         showTheme={true}
+        showSwitchPlayer={true}
+        onSwitchPlayer={() => {
+          navigation.navigate(SCREENS.PLAYERS);
+        }}
       />
       {quote && <QuoteBox q={quote.q} a={quote.a} />}
       <View style={styles.middle}>
         <Text style={[styles.title, {color: theme.text}]}>
           {t('welcomeTitle', {appName: t('appName')})}
         </Text>
+        {player && (
+          <Text style={[styles.title, {color: theme.text}]}>
+            {t('welcomeUser', {
+              playerName: player.name,
+            })}
+          </Text>
+        )}
       </View>
       <View style={[styles.footer]}>
         {hasSavedGame && (

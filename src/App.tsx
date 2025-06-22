@@ -12,6 +12,7 @@ import AboutGame from './screens/AboutGame';
 import BoardScreen from './screens/BoardScreen';
 import {HowToPlayScreen} from './screens/HowToPlayScreen';
 import {OptionsScreen} from './screens/OptionsScreen';
+import {PlayerScreen} from './screens/PlayerScreen';
 import {SettingsScreen} from './screens/SettingsScreen';
 import SkWebViewScreen from './screens/SkWebViewScreen';
 import {runMigrationsIfNeeded} from './storage/runMigrationsIfNeeded';
@@ -72,6 +73,11 @@ const App = () => {
           <Stack.Screen
             name={SCREENS.SK_WEBVIEW}
             component={SkWebViewScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name={SCREENS.PLAYERS}
+            component={PlayerScreen}
             options={{headerShown: false}}
           />
         </Stack.Navigator>
