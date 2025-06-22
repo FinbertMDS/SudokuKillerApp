@@ -16,6 +16,12 @@ const savePlayers = (players: PlayerProfile[]) => {
   storage.set(STORAGE_KEY_PLAYERS, JSON.stringify(players));
 };
 
+const clearPlayers = () => {
+  try {
+    storage.delete(STORAGE_KEY_PLAYERS);
+  } catch (_) {}
+};
+
 const getCurrentPlayerId = (): string => {
   const id = storage.getString(STORAGE_KEY_CURRENT_PLAYER_ID);
   return id || DEFAULT_PLAYER_ID;
@@ -23,6 +29,12 @@ const getCurrentPlayerId = (): string => {
 
 const setCurrentPlayerId = (id: string) =>
   storage.set(STORAGE_KEY_CURRENT_PLAYER_ID, id);
+
+const clearCurrentPlayerId = () => {
+  try {
+    storage.delete(STORAGE_KEY_CURRENT_PLAYER_ID);
+  } catch (_) {}
+};
 
 const getCurrentPlayer = (): PlayerProfile | null => {
   const id = getCurrentPlayerId();
@@ -43,8 +55,8 @@ const updatePlayer = (player: PlayerProfile) => {
 
 const clearAll = () => {
   try {
-    storage.delete(STORAGE_KEY_PLAYERS);
-    storage.delete(STORAGE_KEY_CURRENT_PLAYER_ID);
+    clearPlayers();
+    clearCurrentPlayerId();
   } catch (_) {}
 };
 
@@ -54,6 +66,8 @@ export const playerProfileStorage = {
   getCurrentPlayerId,
   setCurrentPlayerId,
   getCurrentPlayer,
+  clearCurrentPlayerId,
+  clearPlayers,
   clearAll,
   getPlayerById,
   updatePlayer,

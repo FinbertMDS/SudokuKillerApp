@@ -24,6 +24,12 @@ const getGameLogs = (): GameLogEntryV2[] => {
   }
 };
 
+const clearGameLogs = () => {
+  try {
+    storage.delete(STORAGE_KEY_GAME_LOGS);
+  } catch (_) {}
+};
+
 const saveGameLogsV2 = (logs: GameLogEntryV2[]) =>
   storage.set(STORAGE_KEY_GAME_LOGS, JSON.stringify(logs));
 
@@ -58,6 +64,12 @@ const getStatsCache = (): GameStatsCache => {
   }
 };
 
+const clearStatsCache = () => {
+  try {
+    storage.delete(STORAGE_KEY_GAME_STATS_CACHE);
+  } catch (_) {}
+};
+
 const saveDailyStats = (dailyStats: DailyStats[]) => {
   try {
     storage.set(STORAGE_KEY_DAILY_STATS, JSON.stringify(dailyStats));
@@ -73,6 +85,12 @@ const getDailyStats = (): DailyStats[] => {
   }
 };
 
+const clearDailyStats = () => {
+  try {
+    storage.delete(STORAGE_KEY_DAILY_STATS);
+  } catch (_) {}
+};
+
 const setLastStatsCacheUpdate = () => {
   const today = getTodayDateString();
   try {
@@ -86,6 +104,12 @@ const getLastStatsCacheUpdate = (): string | null => {
   } catch (_) {
     return null;
   }
+};
+
+const clearLastStatsCacheUpdate = () => {
+  try {
+    storage.delete(STORAGE_KEY_LAST_STATS_CACHE_UPDATE);
+  } catch (_) {}
 };
 
 const setLastStatsCacheUpdateUserId = (userId: string) => {
@@ -104,29 +128,41 @@ const getLastStatsCacheUpdateUserId = (): string | null => {
   }
 };
 
+const clearLastStatsCacheUpdateUserId = () => {
+  try {
+    storage.delete(STORAGE_KEY_LAST_STATS_CACHE_UPDATE_USER_ID);
+  } catch (_) {}
+};
+
 const clearStatsData = () => {
   try {
-    storage.delete(STORAGE_KEY_DAILY_STATS);
-    storage.delete(STORAGE_KEY_GAME_LOGS);
-    storage.delete(STORAGE_KEY_GAME_STATS_CACHE);
-    storage.delete(STORAGE_KEY_LAST_STATS_CACHE_UPDATE);
+    clearDailyStats();
+    clearGameLogs();
+    clearStatsCache();
+    clearLastStatsCacheUpdate();
+    clearLastStatsCacheUpdateUserId();
   } catch (_) {}
 };
 
 export const statsStorage = {
   saveGameLogs,
   getGameLogs,
+  clearGameLogs,
   saveGameLogsV2,
   getGameLogsV2,
   getGameLogsV2ByPlayerId,
   deleteGameLogsV2ByPlayerId,
   saveStatsCache,
   getStatsCache,
+  clearStatsCache,
   saveDailyStats,
   getDailyStats,
+  clearDailyStats,
   setLastStatsCacheUpdate,
   getLastStatsCacheUpdate,
+  clearLastStatsCacheUpdate,
   setLastStatsCacheUpdateUserId,
   getLastStatsCacheUpdateUserId,
+  clearLastStatsCacheUpdateUserId,
   clearStatsData,
 };
