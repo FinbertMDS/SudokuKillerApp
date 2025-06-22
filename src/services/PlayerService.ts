@@ -8,7 +8,9 @@ export const PlayerService = {
   async createDefaultPlayerIfNeeded(): Promise<void> {
     const players = playerProfileStorage.getAllPlayers();
     if (players.length === 0) {
-      const player = createDefaultPlayer();
+      const rawLogs = statsStorage.getGameLogs();
+      const totalGames = rawLogs.length;
+      const player = createDefaultPlayer(totalGames);
       playerProfileStorage.savePlayers([player]);
       playerProfileStorage.setCurrentPlayerId(player.id);
     }

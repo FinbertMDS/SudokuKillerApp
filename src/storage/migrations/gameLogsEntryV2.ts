@@ -1,10 +1,12 @@
 import {GameStatsManager} from '../../services/GameStatsManager';
+import {PlayerService} from '../../services/PlayerService';
 import {GameLogEntryV2, TimeRange} from '../../types/stats';
 import {DEFAULT_PLAYER_ID} from '../../utils/constants';
 import {statsStorage} from '../statsStorage';
 
 export async function migrateGameLogsEntryV2() {
   console.log('[MIGRATION] Migrating game logs entry v2...');
+  await PlayerService.createDefaultPlayerIfNeeded();
   const rawLogs = statsStorage.getGameLogs();
   const migrated = rawLogs.map(
     entry =>

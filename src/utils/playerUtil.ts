@@ -19,10 +19,10 @@ export const createNewPlayer = (name: string): PlayerProfile => ({
   totalGames: 0,
 });
 
-export const createDefaultPlayer = (): PlayerProfile => ({
+export const createDefaultPlayer = (totalGames: number): PlayerProfile => ({
   id: DEFAULT_PLAYER_ID,
   name: DEFAULT_PLAYER_NAME,
   avatarColor: getRandomColorKey(),
   createdAt: new Date().toISOString(),
-  totalGames: 0,
+  totalGames,
 });
