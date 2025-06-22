@@ -1,6 +1,7 @@
 import {BackgroundService} from '../../services/BackgroundService';
 import {BoardService} from '../../services/BoardService';
 import {GameStatsManager} from '../../services/GameStatsManager';
+import {PlayerService} from '../../services/PlayerService';
 import {SettingsService} from '../../services/SettingsService';
 
 export const handleClearStorage = async () => {
@@ -10,4 +11,6 @@ export const handleClearStorage = async () => {
   if (!__DEV__) {
     BackgroundService.clear();
   }
+  await PlayerService.clear();
+  await PlayerService.createDefaultPlayerIfNeeded();
 };

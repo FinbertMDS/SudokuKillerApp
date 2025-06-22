@@ -22,6 +22,7 @@ import eventBus from '../../events/eventBus';
 import {InitGameCoreEvent} from '../../events/types';
 import {useDailyBackground} from '../../hooks/useDailyBackground';
 import {useDailyQuote} from '../../hooks/useDailyQuote';
+import {usePlayerProfile} from '../../hooks/usePlayerProfile';
 import {BoardService} from '../../services/BoardService';
 import {Level, RootStackParamList} from '../../types/index';
 import {
@@ -40,10 +41,12 @@ const MainScreen = () => {
   const [hasSavedGame, setHasSavedGame] = useState(false);
   const {background, loadBackgrounds} = useDailyBackground(mode);
   const {quote, loadQuote} = useDailyQuote();
+  const {player, reloadPlayer} = usePlayerProfile();
 
   // Sau khi navigation.goBack() sẽ gọi hàm này
   useFocusEffect(
     useCallback(() => {
+      reloadPlayer();
       checkSavedGame();
       loadBackgrounds();
       loadQuote();
@@ -130,6 +133,13 @@ const MainScreen = () => {
         <Text style={[styles.title, {color: theme.text}]}>
           {t('welcomeTitle', {appName: t('appName')})}
         </Text>
+        {player && (
+          <Text style={[styles.title, {color: theme.text}]}>
+            {t('welcomeUser', {
+              playerName: player.name,
+            })}
+          </Text>
+        )}
       </View>
       <View style={[styles.footer]}>
         {hasSavedGame && (

@@ -30,10 +30,18 @@ const getCurrentPlayer = (): PlayerProfile | null => {
   return all.find(p => p.id === id) || null;
 };
 
+const clearAll = () => {
+  try {
+    storage.delete(STORAGE_KEY_PLAYERS);
+    storage.delete(STORAGE_KEY_CURRENT_PLAYER_ID);
+  } catch (_) {}
+};
+
 export const playerProfileStorage = {
   getAllPlayers,
   savePlayers,
   getCurrentPlayerId,
   setCurrentPlayerId,
   getCurrentPlayer,
+  clearAll,
 };

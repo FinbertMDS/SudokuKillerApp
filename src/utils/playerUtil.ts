@@ -1,6 +1,7 @@
 import uuid from 'react-native-uuid';
 import {PlayerProfile} from '../types/player';
-import {DEFAULT_PLAYER_ID} from './constants';
+import {getRandomColorKey} from './colorUtil';
+import {DEFAULT_PLAYER_ID, DEFAULT_PLAYER_NAME} from './constants';
 
 const generatePlayerId = () => {
   let id = uuid.v4().toString();
@@ -13,7 +14,15 @@ const generatePlayerId = () => {
 export const createNewPlayer = (name: string): PlayerProfile => ({
   id: generatePlayerId(),
   name,
-  avatarColor: '#000000', //getRandomColor(),
+  avatarColor: getRandomColorKey(),
+  createdAt: new Date().toISOString(),
+  totalGames: 0,
+});
+
+export const createDefaultPlayer = (): PlayerProfile => ({
+  id: DEFAULT_PLAYER_ID,
+  name: DEFAULT_PLAYER_NAME,
+  avatarColor: getRandomColorKey(),
   createdAt: new Date().toISOString(),
   totalGames: 0,
 });

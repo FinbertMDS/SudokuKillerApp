@@ -13,12 +13,15 @@ import TimeFilterDropdown from '../../components/Statistics/TimeFilterDropdown';
 import {useTheme} from '../../context/ThemeContext';
 import {useAppPause} from '../../hooks/useAppPause';
 import {useEnsureStatsCache} from '../../hooks/useEnsureStatsCache';
+import {usePlayerProfile} from '../../hooks/usePlayerProfile';
 import {GameStatsManager} from '../../services/GameStatsManager';
 import {GameLogEntryV2, GameStats, Level, TimeFilter} from '../../types';
+import {DEFAULT_PLAYER_ID} from '../../utils/constants';
 
 const StatisticsScreen = () => {
   const {theme} = useTheme();
   const {t} = useTranslation();
+  const {player} = usePlayerProfile();
   const [stats, setStats] = useState<Record<Level, GameStats> | null>(null);
   const [logs, setLogs] = useState<GameLogEntryV2[]>([]);
   const [activeTab, setActiveTab] = useState<'level' | 'chart'>('level');
@@ -58,6 +61,7 @@ const StatisticsScreen = () => {
     const loadedStats = await GameStatsManager.getStatsWithCache(
       loadedLogs,
       filter,
+      player?.id ?? DEFAULT_PLAYER_ID,
     );
     setStats(loadedStats);
   }

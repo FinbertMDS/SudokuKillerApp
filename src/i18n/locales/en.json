@@ -44,6 +44,7 @@
   "backToMain": "Back to Main Screen",
 
   "welcomeTitle": "🎯\nWelcome to\n{{appName}}",
+  "welcomeUser": "👋 {{playerName}}",
   "continueGame": "Continue Game",
   "newGame": "New Game",
   "clearStorage": "Clear Storage",
@@ -133,5 +134,18 @@
   "mistakeWarning.messageNotAd": "You've made more than {{max}} mistakes!",
   "hintWarning.title": "Out of Hints",
   "hintWarning.message": "You've used all your hints!\nWatch an ad to reset your hints and continue solving.",
-  "hintWarning.messageNotAd": "You've used all your hints!"
+  "hintWarning.messageNotAd": "You've used all your hints!",
+
+  "players": "Players",
+  "selectPlayerTitle": "Select Player",
+  "addPlayerBtn": "Add Player",
+  "playerNameLabel": "Player Name",
+  "playerNamePlaceholder": "Enter name...",
+  "cancelBtn": "Cancel",
+  "createBtn": "Create",
+  "gamesCount": "🕹️ {{count}} games",
+  "deletePlayerTitle": "Delete Player?",
+  "deletePlayerMessage": "Are you sure you want to delete this player?",
+  "deleteBtn": "Delete",
+  "defaultPlayer": "(Default)"
 }
