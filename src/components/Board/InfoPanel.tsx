@@ -111,7 +111,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row' as const,
     justifyContent: 'space-around' as const,
     alignItems: 'center' as const,
-    marginTop: 30,
+    marginTop: 20,
+    marginBottom: 20,
   },
   infoBlock: {
     alignItems: 'center' as const,

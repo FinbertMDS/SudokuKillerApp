@@ -23,14 +23,6 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 Runs all the tests
 
-### android internal
-
-```sh
-[bundle exec] fastlane android internal
-```
-
-Submit a new internal
-
 ### android bump_version_name
 
 ```sh
@@ -38,6 +30,14 @@ Submit a new internal
 ```
 
 
+
+### android internal
+
+```sh
+[bundle exec] fastlane android internal
+```
+
+Submit a new internal
 
 ### android alpha
 

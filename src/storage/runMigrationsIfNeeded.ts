@@ -1,9 +1,10 @@
 import {appStorage} from './appStorage';
+import {migrateGameLogsEntryV2} from './migrations/gameLogsEntryV2';
 
-export const CURRENT_MIGRATION_VERSION = 0;
+export const CURRENT_MIGRATION_VERSION = 1;
 
 export async function runMigrationsIfNeeded() {
-  // if (IS_UI_TESTING === 'true') {
+  // if (IS_UI_TESTING) {
   //   console.log('[MIGRATION] Mock game logs for UI testing');
   //   statsMock.saveMockGameLogs();
   // }
@@ -11,7 +12,7 @@ export async function runMigrationsIfNeeded() {
   const storedVersion = appStorage.getMigrationVersion() ?? 0;
 
   if (storedVersion >= CURRENT_MIGRATION_VERSION) {
-    console.log('[MIGRATION] No migration needed');
+    console.log('[MIGRATION] No migration needed: v =', storedVersion);
     return;
   }
 
@@ -20,9 +21,9 @@ export async function runMigrationsIfNeeded() {
   );
 
   // Các bước migrate theo version
-  // if (storedVersion < 1) {
-  // await migrateGameLogs();
-  // }
+  if (storedVersion < 1) {
+    await migrateGameLogsEntryV2();
+  }
 
   // Cập nhật version sau khi migrate xong
   appStorage.setMigrationVersion(CURRENT_MIGRATION_VERSION);

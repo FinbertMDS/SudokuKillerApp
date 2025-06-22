@@ -10,6 +10,7 @@ export type RootStackParamList = {
   AboutGame: undefined;
   Licenses: undefined;
   SkWebView: SkWebViewParamProps;
+  Players: undefined;
 };
 
 export type BoardScreenRouteProp = RouteProp<RootStackParamList, 'Board'>;
@@ -47,8 +48,8 @@ export type OptionMenuItem = {
 export type TimeFilter = 'all' | 'today' | 'week' | 'month' | 'year';
 
 export type DailyBackgrounds = {
-  light: string | null;
-  dark: string | null;
+  light: UnsplashImageData | null;
+  dark: UnsplashImageData | null;
   date?: string;
 };
 
@@ -67,4 +68,10 @@ export type ActionButtonProps = {
   showBadge?: boolean;
   badgeCount?: number;
   onPress?: () => void;
+};
+
+export type UnsplashImageData = {
+  url: string | null;
+  photographerName: string | null;
+  photographerLink: string | null;
 };

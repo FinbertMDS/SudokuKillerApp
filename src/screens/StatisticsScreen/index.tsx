@@ -1,6 +1,7 @@
 // StatisticsScreen.tsx
 
-import {useFocusEffect} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
@@ -14,13 +15,23 @@ import {useTheme} from '../../context/ThemeContext';
 import {useAppPause} from '../../hooks/useAppPause';
 import {useEnsureStatsCache} from '../../hooks/useEnsureStatsCache';
 import {GameStatsManager} from '../../services/GameStatsManager';
-import {GameLogEntry, GameStats, Level, TimeFilter} from '../../types';
+import {PlayerService} from '../../services/PlayerService';
+import {
+  GameLogEntryV2,
+  GameStats,
+  Level,
+  RootStackParamList,
+  TimeFilter,
+} from '../../types';
+import {DEFAULT_PLAYER_ID, SCREENS} from '../../utils/constants';
 
 const StatisticsScreen = () => {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {theme} = useTheme();
   const {t} = useTranslation();
   const [stats, setStats] = useState<Record<Level, GameStats> | null>(null);
-  const [logs, setLogs] = useState<GameLogEntry[]>([]);
+  const [logs, setLogs] = useState<GameLogEntryV2[]>([]);
   const [activeTab, setActiveTab] = useState<'level' | 'chart'>('level');
 
   const [filter, setFilter] = useState<TimeFilter>('all');
@@ -53,11 +64,15 @@ const StatisticsScreen = () => {
   }, [filter]);
 
   async function loadData() {
-    const loadedLogs = await GameStatsManager.getLogs();
+    const player = await PlayerService.getCurrentPlayer();
+    const loadedLogs = await GameStatsManager.getLogsByPlayerId(
+      player?.id ?? DEFAULT_PLAYER_ID,
+    );
     setLogs(loadedLogs);
     const loadedStats = await GameStatsManager.getStatsWithCache(
       loadedLogs,
       filter,
+      player?.id ?? DEFAULT_PLAYER_ID,
     );
     setStats(loadedStats);
   }
@@ -71,7 +86,12 @@ const StatisticsScreen = () => {
         showBack={false}
         showSettings={true}
         showTheme={true}
+        showSwitchPlayer={true}
+        onSwitchPlayer={() => {
+          navigation.navigate(SCREENS.PLAYERS);
+        }}
         showCustom={true}
+        customIconCount={1}
         custom={
           <TouchableOpacity
             onPress={() => setShowDropdown(true)}
@@ -155,7 +175,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   iconButton: {
-    marginLeft: 20,
+    width: 30,
+    paddingHorizontal: 3,
   },
   tabRow: {
     flexDirection: 'row' as const,
@@ -165,7 +186,6 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 20,
-    backgroundColor: '#1e293b',
     marginHorizontal: 6,
   },
   chipText: {
