@@ -13,6 +13,11 @@
 # Uncomment the line if you want fastlane to automatically update itself
 # update_fastlane
 
+def copy_env(env_name)
+  puts "🛠 Copying .env.#{env_name} to .env"
+  sh("cp ../../.env.#{env_name} ../../.env")
+end
+
 default_platform(:ios)
 
 platform :ios do
@@ -28,6 +33,7 @@ platform :ios do
 
   desc "Push a new beta build to TestFlight"
   lane :beta do
+    copy_env("production")
     app_store_connect_api_key(
       key_id: "SF87XC2GQA",
       issuer_id: "a43e1ea3-3ccd-4012-96d8-a1d3504f23c1",
