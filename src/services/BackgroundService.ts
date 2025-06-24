@@ -26,7 +26,7 @@ export const BackgroundService = {
     }
   },
 
-  async fetchUnsplashImage(query: string): Promise<string | null> {
+  async fetchUnsplashImage(query: string): Promise<UnsplashImageData | null> {
     try {
       const res = await axios.get('https://api.unsplash.com/photos/random', {
         params: {
@@ -37,7 +37,15 @@ export const BackgroundService = {
           Authorization: `Client-ID ${UNSPLASH_ACCESS_KEY}`,
         },
       });
-      return res.data?.urls?.regular ?? null;
+      if (!res || !res.data || !res.data.urls) {
+        return null;
+      }
+      // return res.data?.urls?.regular ?? null;
+      return {
+        url: res.data?.urls?.regular ?? null,
+        photographerName: res.data?.user?.name ?? null,
+        photographerLink: res.data?.user?.links?.html ?? null,
+      };
     } catch (err) {
       console.warn('Unsplash fetch failed:', query, err);
       return null;
