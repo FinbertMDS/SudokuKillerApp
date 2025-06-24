@@ -13,6 +13,11 @@
 # Uncomment the line if you want fastlane to automatically update itself
 # update_fastlane
 
+def copy_env(env_name)
+  puts "🛠 Copying .env.#{env_name} to .env"
+  sh("cp ../../.env.#{env_name} ../../.env")
+end
+
 default_platform(:android)
 
 platform :android do
@@ -81,9 +86,34 @@ platform :android do
     UI.success("Updated versionName to #{new_version}")
   end
   
+  desc "Submit a new internal"
+  lane :internal do
+    copy_env("production")
+    # bump_version_name(type: 'patch')
+    android_set_version_code
+    gradle(task: "bundleRelease")
+    
+    upload_to_play_store(
+      track: "internal",
+      aab: Actions.lane_context[SharedValues::GRADLE_AAB_OUTPUT_PATH],
+      skip_upload_apk: true,
+      skip_upload_metadata: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
+      skip_upload_changelogs: true,
+      release_status: "completed", # completed
+      rollout: "1",
+      json_key_data: ENV["PLAY_STORE_SERVICE_ACCOUNT_JSON"],
+      package_name: ENV["APP_PACKAGE_NAME"]
+    )
+  
+    # sh "your_script.sh"
+    # You can also use other beta testing services here
+  end
 
   desc "Submit a new alpha"
   lane :alpha do
+    copy_env("production")
     bump_version_name(type: 'patch')
     android_set_version_code
     gradle(task: "bundleRelease")

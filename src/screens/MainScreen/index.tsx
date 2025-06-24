@@ -101,6 +101,16 @@ const MainScreen = () => {
         <Text style={[styles.title, {color: theme.text}]}>
           {t('welcomeTitle', {appName: t('appName')})}
         </Text>
+        {player && (
+          <Text
+            numberOfLines={3}
+            ellipsizeMode="tail"
+            style={[styles.title, {color: theme.text}]}>
+            {t('welcomeUser', {
+              playerName: player.name,
+            })}
+          </Text>
+        )}
       </View>
       <View style={[styles.footer]}>
         {hasSavedGame && (
