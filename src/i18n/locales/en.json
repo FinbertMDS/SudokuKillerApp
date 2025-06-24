@@ -51,6 +51,7 @@
 
   "levelStats": "Level Stats",
   "chartsStats": "Charts Stats",
+  "gameHistoryTitle": "Game History",
 
   "options": "Options",
   "settings": "Settings",
@@ -150,5 +151,11 @@
   "editPlayerTitle": "Edit Player",
   "saveBtn": "Save",
   "cannotDeletePlayerTitle": "Cannot Delete Player",
-  "cannotDeletePlayerMessage": "You cannot delete the default player"
+  "cannotDeletePlayerMessage": "You cannot delete the default player",
+
+  "noGameHistory": "No game history",
+  "completed": "Completed",
+  "incomplete": "Incomplete",
+  "startTime": "Start",
+  "endTime": "End  "
 }
