@@ -79,4 +79,4 @@ yarn-error.log
 .env
 .env.*
 android/fastlane/play-store-key.json
-AuthKey_*.p8
+AuthKey*.p8
