@@ -39,6 +39,7 @@ jobs:
         run: |
           defaults write com.apple.dt.Xcode IDEFileSystemSynchronizedGroups -bool false
           defaults write com.apple.dt.Xcode IDEEnableFileSystemSynchronizedGroups -bool NO
+          defaults write com.apple.dt.Xcode IDEFileSystemSynchronizedGroupsEnabled -bool false
 
       - name: Install fastlane (global)
         run: |
