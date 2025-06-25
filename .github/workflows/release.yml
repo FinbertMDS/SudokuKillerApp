@@ -38,6 +38,7 @@ jobs:
       - name: Disable Synchronized Groups (fix Xcode 15.4 crash)
         run: |
           defaults write com.apple.dt.Xcode IDEFileSystemSynchronizedGroups -bool false
+          defaults write com.apple.dt.Xcode IDEEnableFileSystemSynchronizedGroups -bool NO
 
       - name: Run Fastlane beta_github (iOS)
         run: |
