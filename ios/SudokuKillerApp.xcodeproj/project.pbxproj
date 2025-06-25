@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		371487F22E0C488C002DFF6A /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 371487EF2E0C488C002DFF6A /* SnapshotHelper.swift */; };
+		371487F32E0C488C002DFF6A /* SudokuKillerAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 371487F02E0C488C002DFF6A /* SudokuKillerAppUITests.swift */; };
 		374B56BA2DEE8CF8002D859F /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 374B56B92DEE8CF8002D859F /* XCTest.framework */; platformFilter = ios; };
 		3766A4E72DEBB87A00DF01D9 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3766A4E52DEBB87A00DF01D9 /* InfoPlist.strings */; };
 		377E8C812DC3ACCB00A6794C /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 377E8C802DC3ACCB00A6794C /* Settings.bundle */; };
@@ -32,6 +34,8 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = SudokuKillerApp/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = SudokuKillerApp/Info.plist; sourceTree = "<group>"; };
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = SudokuKillerApp/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		371487EF2E0C488C002DFF6A /* SnapshotHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotHelper.swift; sourceTree = "<group>"; };
+		371487F02E0C488C002DFF6A /* SudokuKillerAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SudokuKillerAppUITests.swift; sourceTree = "<group>"; };
 		374B56AC2DEE8CA3002D859F /* SudokuKillerAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SudokuKillerAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		374B56B92DEE8CF8002D859F /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		3766A4E62DEBB87A00DF01D9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -48,20 +52,6 @@
 		A75B72DD40FFE21D5A7B794B /* Pods-SudokuKillerApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SudokuKillerApp.debug.xcconfig"; path = "Target Support Files/Pods-SudokuKillerApp/Pods-SudokuKillerApp.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		374B56AD2DEE8CA3002D859F /* SudokuKillerAppUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
-			explicitFileTypes = {
-			};
-			explicitFolders = (
-			);
-			path = SudokuKillerAppUITests;
-			sourceTree = "<group>";
-		};
-/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		13B07F8C1A680F5B00A75B9A /* Frameworks */ = {
@@ -106,6 +96,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		371487F12E0C488C002DFF6A /* SudokuKillerAppUITests */ = {
+			isa = PBXGroup;
+			children = (
+				371487EF2E0C488C002DFF6A /* SnapshotHelper.swift */,
+				371487F02E0C488C002DFF6A /* SudokuKillerAppUITests.swift */,
+			);
+			path = SudokuKillerAppUITests;
+			sourceTree = "<group>";
+		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
@@ -120,7 +119,7 @@
 				377E8C802DC3ACCB00A6794C /* Settings.bundle */,
 				13B07FAE1A68108700A75B9A /* SudokuKillerApp */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
-				374B56AD2DEE8CA3002D859F /* SudokuKillerAppUITests */,
+				371487F12E0C488C002DFF6A /* SudokuKillerAppUITests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
@@ -185,9 +184,6 @@
 			);
 			dependencies = (
 				374B56B32DEE8CA3002D859F /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				374B56AD2DEE8CA3002D859F /* SudokuKillerAppUITests */,
 			);
 			name = SudokuKillerAppUITests;
 			productName = SudokuKillerAppUITests;
@@ -356,6 +352,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				371487F22E0C488C002DFF6A /* SnapshotHelper.swift in Sources */,
+				371487F32E0C488C002DFF6A /* SudokuKillerAppUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
