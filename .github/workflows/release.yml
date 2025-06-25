@@ -19,8 +19,10 @@ jobs:
         with:
           ruby-version: '3.2'
 
-      - name: Update fastlane
+      - name: Set up Ruby & fastlane
         run: |
+          echo 'gem "fastlane"' >> Gemfile
+          bundle install
           bundle update fastlane
           bundle exec fastlane --version
 
