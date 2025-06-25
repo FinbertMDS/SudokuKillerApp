@@ -14,22 +14,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Select Xcode 15.3
-        run: sudo xcode-select -s /Applications/Xcode_15.3.app
-
-      - name: Disable Synchronized Groups (fix Xcode 15.4 crash)
-        run: |
-          defaults write com.apple.dt.Xcode IDEFileSystemSynchronizedGroups -bool false
-          defaults write com.apple.dt.Xcode IDEEnableFileSystemSynchronizedGroups -bool NO
-          defaults write com.apple.dt.Xcode IDEFileSystemSynchronizedGroupsEnabled -bool false
-
-      - name: Resolve Swift Packages
-        run: |
-          cd ios
-          xcodebuild -resolvePackageDependencies \
-            -workspace SudokuKillerApp.xcworkspace \
-            -scheme SudokuKillerApp
-
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -58,5 +42,6 @@ jobs:
 
       - name: Run Fastlane beta_github (iOS)
         run: |
+          defaults write com.apple.dt.Xcode IDEFileSystemSynchronizedGroupsEnabled -bool false
           cd ios
           fastlane beta_github
