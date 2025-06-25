@@ -25,6 +25,7 @@ jobs:
 
       - name: Resolve Swift Packages
         run: |
+          cd ios
           xcodebuild -resolvePackageDependencies \
             -workspace SudokuKillerApp.xcworkspace \
             -scheme SudokuKillerApp
