@@ -217,33 +217,34 @@ export const GameStatsManager = {
     return newEntry;
   },
 
-  async recordGameWin(payload: GameEndedCoreEvent) {
+  async recordGameEnd(payload: GameEndedCoreEvent) {
     // 👉 Record daily log
     const oldEntry = await this.getLog(payload.id);
     let newEntry: GameLogEntryV2;
     if (oldEntry) {
       newEntry = {
         ...oldEntry,
-        completed: true,
+        completed: payload.completed,
         endTime: new Date().toISOString(),
         durationSeconds: payload.timePlayed,
         mistakes: payload.mistakes,
         hintCount: payload.hintCount,
       };
+      await this.saveLog(newEntry, true);
     } else {
       newEntry = {
         id: uuid.v4().toString(),
         playerId: playerProfileStorage.getCurrentPlayerId(),
         level: payload.level,
-        completed: true,
+        completed: payload.completed,
         startTime: new Date().toISOString(),
         endTime: new Date().toISOString(),
         durationSeconds: payload.timePlayed,
         mistakes: payload.mistakes,
         hintCount: payload.hintCount,
       };
+      await this.saveLog(newEntry, false);
     }
-    await this.saveLog(newEntry, true);
     return newEntry;
   },
 

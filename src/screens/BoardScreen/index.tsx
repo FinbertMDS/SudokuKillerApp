@@ -231,6 +231,14 @@ const BoardScreen = () => {
 
   const handleLimitMistakeReached = async () => {
     await handleResetGame();
+    eventBus.emit(CORE_EVENTS.gameEnded, {
+      id: id,
+      level: level,
+      timePlayed: secondsRef.current,
+      mistakes: totalMistakes,
+      hintCount: totalHintCountUsed,
+      completed: false,
+    } as GameEndedCoreEvent);
     navigation.goBack();
   };
 
@@ -264,6 +272,14 @@ const BoardScreen = () => {
   const secondsRef = useRef(0);
   const handleLimitTimeReached = async () => {
     await handleResetGame();
+    eventBus.emit(CORE_EVENTS.gameEnded, {
+      id: id,
+      level: level,
+      timePlayed: secondsRef.current,
+      mistakes: totalMistakes,
+      hintCount: totalHintCountUsed,
+      completed: false,
+    } as GameEndedCoreEvent);
     navigation.goBack();
   };
   // ===========================================================
@@ -404,6 +420,7 @@ const BoardScreen = () => {
               timePlayed: secondsRef.current,
               mistakes: totalMistakes,
               hintCount: _totalHintCountUsed,
+              completed: true,
             } as GameEndedCoreEvent);
             await BoardService.clear();
             navigation.goBack();
