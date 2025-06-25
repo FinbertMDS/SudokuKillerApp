@@ -39,6 +39,30 @@ Take screenshots
 
 Push a new beta build to TestFlight
 
+### ios increment_build_number
+
+```sh
+[bundle exec] fastlane ios increment_build_number
+```
+
+Increment build number
+
+### ios increment_version_number
+
+```sh
+[bundle exec] fastlane ios increment_version_number
+```
+
+Increment version number
+
+### ios beta_github
+
+```sh
+[bundle exec] fastlane ios beta_github
+```
+
+Push a new beta build to TestFlight by Github Actions
+
 ----
 
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.

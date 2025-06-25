@@ -49,4 +49,35 @@ platform :ios do
       skip_waiting_for_build_processing: true
     )
   end
+
+  desc "Increment build number"
+  lane :increment_build_number do
+    increment_build_number(xcodeproj: "SudokuKillerApp.xcodeproj")
+  end
+
+  desc "Increment version number"
+  lane :increment_version_number do
+    increment_version_number(
+      bump_type: "patch" # hoặc "minor", "major"
+    )
+  end
+
+  desc "Push a new beta build to TestFlight by Github Actions"
+  lane :beta_github do
+    copy_env("production")
+    app_store_connect_api_key(
+      key_id: "SFP99U9WMY",
+      issuer_id: "a43e1ea3-3ccd-4012-96d8-a1d3504f23c1",
+      key_filepath: "./fastlane/AuthKey.p8",
+      in_house: false
+    )
+    # increment_version_number(
+    #   bump_type: "patch" # hoặc "minor", "major"
+    # )
+    # increment_build_number(xcodeproj: "SudokuKillerApp.xcodeproj")
+    build_app(workspace: "SudokuKillerApp.xcworkspace", scheme: "SudokuKillerApp")
+    upload_to_testflight(
+      skip_waiting_for_build_processing: true
+    )
+  end
 end
