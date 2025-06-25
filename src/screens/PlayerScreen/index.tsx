@@ -23,7 +23,7 @@ import {PlayerProfile} from '../../types/player';
 import {DEFAULT_PLAYER_ID} from '../../utils/constants';
 import {createNewPlayer} from '../../utils/playerUtil';
 
-export const PlayerScreen = () => {
+const PlayerScreen = () => {
   const {theme} = useTheme();
   const {t} = useTranslation();
   const {
@@ -232,3 +232,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
+
+export default PlayerScreen;

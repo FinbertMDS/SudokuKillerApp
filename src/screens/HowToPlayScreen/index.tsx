@@ -5,11 +5,11 @@ import {useTranslation} from 'react-i18next';
 import {StyleSheet} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Header from '../../components/commons/Header';
-import {HowToPlay} from '../../components/HowToPlay';
+import HowToPlay from '../../components/HowToPlay';
 import {useTheme} from '../../context/ThemeContext';
 import {RootStackParamList} from '../../types';
 
-export const HowToPlayScreen = () => {
+const HowToPlayScreen = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {t} = useTranslation();
@@ -35,3 +35,5 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
+
+export default HowToPlayScreen;

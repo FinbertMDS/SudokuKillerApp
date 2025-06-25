@@ -17,7 +17,7 @@ type HowToPlayProps = {
   onClose: () => void;
 };
 
-export const HowToPlay = ({onClose}: HowToPlayProps) => {
+const HowToPlay = ({onClose}: HowToPlayProps) => {
   const {width} = useWindowDimensions();
   const flatListRef = useRef<FlatList>(null);
   const [index, setIndex] = useState(0);
@@ -171,3 +171,5 @@ const styles = StyleSheet.create({
     alignItems: 'center' as const,
   },
 });
+
+export default HowToPlay;
