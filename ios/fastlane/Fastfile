@@ -64,7 +64,6 @@ platform :ios do
 
   desc "Push a new beta build to TestFlight by Github Actions"
   lane :beta_github do
-    copy_env("production")
     app_store_connect_api_key(
       key_id: "SFP99U9WMY",
       issuer_id: "a43e1ea3-3ccd-4012-96d8-a1d3504f23c1",
