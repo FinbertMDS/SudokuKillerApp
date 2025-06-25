@@ -26,7 +26,7 @@ import {
 } from '../../types';
 import {DEFAULT_SETTINGS, MAX_MISTAKES} from '../../utils/constants';
 
-export const SettingsScreen = () => {
+const SettingsScreen = () => {
   const {theme} = useTheme();
   const {t} = useTranslation();
   const route = useRoute<SettingsScreenRouteProp>();
@@ -198,3 +198,5 @@ const styles = StyleSheet.create({
     height: 16,
   },
 });
+
+export default SettingsScreen;
