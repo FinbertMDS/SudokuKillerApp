@@ -3,6 +3,7 @@ import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useTheme} from '../../context/ThemeContext';
 import {PlayerProfile} from '../../types/player';
 import {getAvatarColor, PlayerColorKey} from '../../utils/colorUtil';
@@ -66,7 +67,7 @@ const PlayerCard = ({
         </Text>
       </View>
       <TouchableOpacity style={[styles.button]} onPress={() => onEdit(player)}>
-        <Ionicons name="pencil" size={20} color={theme.text} />
+        <MaterialCommunityIcons name="pencil" size={20} color={theme.text} />
       </TouchableOpacity>
       {!isSelected && canDelete && (
         <TouchableOpacity
@@ -76,13 +77,10 @@ const PlayerCard = ({
         </TouchableOpacity>
       )}
       {isSelected && (
-        <View
-          style={[
-            styles.checkMark,
-            styles.button,
-            {backgroundColor: theme.buttonBlue},
-          ]}>
-          <Text style={[styles.checkText, {color: theme.text}]}>✓</Text>
+        <View style={styles.button}>
+          <View style={[styles.checkMark, {backgroundColor: theme.buttonBlue}]}>
+            <Text style={[styles.checkText, {color: theme.text}]}>✓</Text>
+          </View>
         </View>
       )}
     </TouchableOpacity>
@@ -125,13 +123,14 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   checkMark: {
-    borderRadius: 16,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
+    width: 22,
+    height: 22,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   checkText: {
     fontSize: 16,
-    fontWeight: 'bold',
   },
   button: {
     width: 32,
