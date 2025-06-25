@@ -20,7 +20,7 @@ import {useTheme} from '../../context/ThemeContext';
 import {OptionMenuItem, RootStackParamList} from '../../types';
 import {SCREENS} from '../../utils/constants';
 
-export const OptionsScreen = () => {
+const OptionsScreen = () => {
   const {theme} = useTheme();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -164,3 +164,5 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
 });
+
+export default OptionsScreen;

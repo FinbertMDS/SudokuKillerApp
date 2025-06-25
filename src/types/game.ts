@@ -1,3 +1,5 @@
+import {LEVELS} from '../utils/buildConstants';
+
 export type Cell = {
   row: number;
   col: number;
@@ -11,7 +13,8 @@ export interface Cage {
   cells: [number, number][];
 }
 
-export type Level = 'easy' | 'medium' | 'hard' | 'expert';
+export type Level = (typeof LEVELS)[number];
+
 export type GameInfo = {
   id: string;
   initialBoard: CellValue[][];

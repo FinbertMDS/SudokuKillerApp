@@ -15,7 +15,7 @@ import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import uuid from 'react-native-uuid';
 import Header from '../../components/commons/Header';
 import NewGameMenu from '../../components/Main/NewGameMenu';
-import {QuoteBox} from '../../components/Main/QuoteBox';
+import QuoteBox from '../../components/Main/QuoteBox';
 import {useTheme} from '../../context/ThemeContext';
 import {CORE_EVENTS} from '../../events';
 import eventBus from '../../events/eventBus';
@@ -140,7 +140,10 @@ const MainScreen = () => {
           {t('welcomeTitle', {appName: t('appName')})}
         </Text>
         {player && (
-          <Text style={[styles.title, {color: theme.text}]}>
+          <Text
+            numberOfLines={3}
+            ellipsizeMode="tail"
+            style={[styles.title, {color: theme.text}]}>
             {t('welcomeUser', {
               playerName: player.name,
             })}

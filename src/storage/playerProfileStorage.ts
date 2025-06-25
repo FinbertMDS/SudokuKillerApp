@@ -8,12 +8,18 @@ import {
 } from '../utils/constants';
 
 const getAllPlayers = (): PlayerProfile[] => {
-  const raw = storage.getString(STORAGE_KEY_PLAYERS);
-  return raw ? JSON.parse(raw) : [];
+  try {
+    const raw = storage.getString(STORAGE_KEY_PLAYERS);
+    return raw ? JSON.parse(raw) : [];
+  } catch (_) {
+    return [];
+  }
 };
 
 const savePlayers = (players: PlayerProfile[]) => {
-  storage.set(STORAGE_KEY_PLAYERS, JSON.stringify(players));
+  try {
+    storage.set(STORAGE_KEY_PLAYERS, JSON.stringify(players));
+  } catch (_) {}
 };
 
 const clearPlayers = () => {
@@ -23,12 +29,19 @@ const clearPlayers = () => {
 };
 
 const getCurrentPlayerId = (): string => {
-  const id = storage.getString(STORAGE_KEY_CURRENT_PLAYER_ID);
-  return id || DEFAULT_PLAYER_ID;
+  try {
+    const id = storage.getString(STORAGE_KEY_CURRENT_PLAYER_ID);
+    return id || DEFAULT_PLAYER_ID;
+  } catch (_) {
+    return DEFAULT_PLAYER_ID;
+  }
 };
 
-const setCurrentPlayerId = (id: string) =>
-  storage.set(STORAGE_KEY_CURRENT_PLAYER_ID, id);
+const setCurrentPlayerId = (id: string) => {
+  try {
+    storage.set(STORAGE_KEY_CURRENT_PLAYER_ID, id);
+  } catch (_) {}
+};
 
 const clearCurrentPlayerId = () => {
   try {
@@ -37,20 +50,30 @@ const clearCurrentPlayerId = () => {
 };
 
 const getCurrentPlayer = (): PlayerProfile | null => {
-  const id = getCurrentPlayerId();
-  const all = getAllPlayers();
-  return all.find(p => p.id === id) || null;
+  try {
+    const id = getCurrentPlayerId();
+    const all = getAllPlayers();
+    return all.find(p => p.id === id) || null;
+  } catch (_) {
+    return null;
+  }
 };
 
 const getPlayerById = (id: string): PlayerProfile | null => {
-  const all = getAllPlayers();
-  return all.find(p => p.id === id) || null;
+  try {
+    const all = getAllPlayers();
+    return all.find(p => p.id === id) || null;
+  } catch (_) {
+    return null;
+  }
 };
 
 const updatePlayer = (player: PlayerProfile) => {
-  const all = getAllPlayers();
-  const updated = all.map(p => (p.id === player.id ? player : p));
-  savePlayers(updated);
+  try {
+    const all = getAllPlayers();
+    const updated = all.map(p => (p.id === player.id ? player : p));
+    savePlayers(updated);
+  } catch (_) {}
 };
 
 const clearAll = () => {

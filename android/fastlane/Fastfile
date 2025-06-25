@@ -13,6 +13,11 @@
 # Uncomment the line if you want fastlane to automatically update itself
 # update_fastlane
 
+def copy_env(env_name)
+  puts "🛠 Copying .env.#{env_name} to .env"
+  sh("cp ../../.env.#{env_name} ../../.env")
+end
+
 default_platform(:android)
 
 platform :android do
@@ -60,6 +65,7 @@ platform :android do
   
   desc "Submit a new internal"
   lane :internal do
+    copy_env("production")
     # bump_version_name(type: 'patch')
     android_set_version_code
     gradle(task: "bundleRelease")
@@ -84,6 +90,7 @@ platform :android do
 
   desc "Submit a new alpha"
   lane :alpha do
+    copy_env("production")
     bump_version_name(type: 'patch')
     android_set_version_code
     gradle(task: "bundleRelease")

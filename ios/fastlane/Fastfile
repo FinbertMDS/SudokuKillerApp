@@ -13,6 +13,11 @@
 # Uncomment the line if you want fastlane to automatically update itself
 # update_fastlane
 
+def copy_env(env_name)
+  puts "🛠 Copying .env.#{env_name} to .env"
+  sh("cp ../../.env.#{env_name} ../../.env")
+end
+
 default_platform(:ios)
 
 platform :ios do
@@ -28,6 +33,7 @@ platform :ios do
 
   desc "Push a new beta build to TestFlight"
   lane :beta do
+    copy_env("production")
     app_store_connect_api_key(
       key_id: "SF87XC2GQA",
       issuer_id: "a43e1ea3-3ccd-4012-96d8-a1d3504f23c1",
@@ -38,6 +44,37 @@ platform :ios do
     #   bump_type: "patch" # hoặc "minor", "major"
     # )
     increment_build_number(xcodeproj: "SudokuKillerApp.xcodeproj")
+    build_app(workspace: "SudokuKillerApp.xcworkspace", scheme: "SudokuKillerApp")
+    upload_to_testflight(
+      skip_waiting_for_build_processing: true
+    )
+  end
+
+  desc "Increment build number"
+  lane :increment_build_number do
+    increment_build_number(xcodeproj: "SudokuKillerApp.xcodeproj")
+  end
+
+  desc "Increment version number"
+  lane :increment_version_number do
+    increment_version_number(
+      bump_type: "patch" # hoặc "minor", "major"
+    )
+  end
+
+  desc "Push a new beta build to TestFlight by Github Actions"
+  lane :beta_github do
+    copy_env("production")
+    app_store_connect_api_key(
+      key_id: "SFP99U9WMY",
+      issuer_id: "a43e1ea3-3ccd-4012-96d8-a1d3504f23c1",
+      key_filepath: "./fastlane/AuthKey.p8",
+      in_house: false
+    )
+    # increment_version_number(
+    #   bump_type: "patch" # hoặc "minor", "major"
+    # )
+    # increment_build_number(xcodeproj: "SudokuKillerApp.xcodeproj")
     build_app(workspace: "SudokuKillerApp.xcworkspace", scheme: "SudokuKillerApp")
     upload_to_testflight(
       skip_waiting_for_build_processing: true

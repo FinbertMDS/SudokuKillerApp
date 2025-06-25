@@ -10,6 +10,7 @@ export const CORE_EVENTS = {
   clearStorage: 'clearStorage',
   deletePlayer: 'deletePlayer',
   defaultPlayerUpdated: 'defaultPlayerUpdated',
+  defaultPlayerUpdated_Done: 'defaultPlayerUpdated_Done',
   createPlayer: 'createPlayer',
   updatePlayerName: 'updatePlayerName',
   switchPlayer: 'switchPlayer',

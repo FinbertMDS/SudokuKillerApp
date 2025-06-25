@@ -4,7 +4,13 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Header from '../../components/commons/Header';
@@ -21,9 +27,11 @@ import {
   GameStats,
   Level,
   RootStackParamList,
+  StatsTab,
   TimeFilter,
 } from '../../types';
 import {DEFAULT_PLAYER_ID, SCREENS} from '../../utils/constants';
+import GameHistoryScreen from '../GameHistoryScreen';
 
 const StatisticsScreen = () => {
   const navigation =
@@ -32,10 +40,28 @@ const StatisticsScreen = () => {
   const {t} = useTranslation();
   const [stats, setStats] = useState<Record<Level, GameStats> | null>(null);
   const [logs, setLogs] = useState<GameLogEntryV2[]>([]);
-  const [activeTab, setActiveTab] = useState<'level' | 'chart'>('level');
+  const [activeTab, setActiveTab] = useState<StatsTab['key']>('level');
 
   const [filter, setFilter] = useState<TimeFilter>('all');
   const [showDropdown, setShowDropdown] = useState(false);
+
+  const statsTabs: StatsTab[] = [
+    {
+      key: 'level',
+      label: t('levelStats'),
+      testID: 'LevelStatsTabButton',
+    },
+    {
+      key: 'chart',
+      label: t('chartsStats'),
+      testID: 'ChartsStatsTabButton',
+    },
+    {
+      key: 'history',
+      label: t('gameHistoryTitle'),
+      testID: 'GameHistoryTabButton',
+    },
+  ];
 
   const {updateStatsCache} = useEnsureStatsCache();
 
@@ -77,6 +103,12 @@ const StatisticsScreen = () => {
     setStats(loadedStats);
   }
 
+  const renderTabContent: Record<string, React.ReactNode> = {
+    level: <LevelStats stats={stats} />,
+    chart: <ChartsStats logs={logs} filter={filter} />,
+    history: <GameHistoryScreen />,
+  };
+
   return (
     <SafeAreaView
       edges={['top']}
@@ -102,59 +134,44 @@ const StatisticsScreen = () => {
       />
       {/* Tab Chip Selector */}
       <View style={styles.tabRow}>
-        <TouchableOpacity
-          testID="LevelStatsTabButton"
-          accessibilityLabel="LevelStatsTabButton"
-          onPress={() => setActiveTab('level')}
-          style={[
-            styles.chip,
-            {
-              backgroundColor:
-                activeTab === 'level'
-                  ? theme.primary
-                  : theme.settingItemBackground,
-            },
-          ]}>
-          <Text
-            style={[
-              styles.chipText,
-              {color: activeTab === 'level' ? theme.text : theme.secondary},
-            ]}>
-            {t('levelStats')}
-          </Text>
-        </TouchableOpacity>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.tabRow}>
+          {statsTabs.map(tab => {
+            const isActive = activeTab === tab.key;
 
-        <TouchableOpacity
-          testID="ChartsStatsTabButton"
-          accessibilityLabel="ChartsStatsTabButton"
-          onPress={() => setActiveTab('chart')}
-          style={[
-            styles.chip,
-            {
-              backgroundColor:
-                activeTab === 'chart'
-                  ? theme.primary
-                  : theme.settingItemBackground,
-            },
-          ]}>
-          <Text
-            style={[
-              styles.chipText,
-              {color: activeTab === 'chart' ? theme.text : theme.secondary},
-            ]}>
-            {t('chartsStats')}
-          </Text>
-        </TouchableOpacity>
+            return (
+              <TouchableOpacity
+                key={tab.key}
+                testID={tab.testID}
+                accessibilityLabel={tab.testID}
+                onPress={() => setActiveTab(tab.key)}
+                style={[
+                  styles.chip,
+                  {
+                    backgroundColor: isActive
+                      ? theme.primary
+                      : theme.settingItemBackground,
+                  },
+                ]}>
+                <Text
+                  style={[
+                    styles.chipText,
+                    {
+                      color: isActive ? theme.text : theme.secondary,
+                    },
+                  ]}>
+                  {tab.label}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </ScrollView>
       </View>
 
       {/* Content */}
-      <View style={styles.content}>
-        {activeTab === 'level' ? (
-          <LevelStats stats={stats} />
-        ) : (
-          <ChartsStats logs={logs} filter={filter} />
-        )}
-      </View>
+      <View style={styles.content}>{renderTabContent[activeTab]}</View>
 
       {showDropdown && (
         <TimeFilterDropdown
@@ -181,10 +198,12 @@ const styles = StyleSheet.create({
   tabRow: {
     flexDirection: 'row' as const,
     justifyContent: 'center' as const,
+    paddingHorizontal: 8,
+    gap: 4,
   },
   chip: {
     paddingVertical: 8,
-    paddingHorizontal: 16,
+    paddingHorizontal: 12,
     borderRadius: 20,
     marginHorizontal: 6,
   },
