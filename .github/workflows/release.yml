@@ -19,13 +19,6 @@ jobs:
         with:
           ruby-version: '3.2'
 
-      - name: Set up Ruby & fastlane
-        run: |
-          echo 'gem "fastlane"' >> Gemfile
-          bundle install
-          bundle update fastlane
-          bundle exec fastlane --version
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -34,7 +27,7 @@ jobs:
       - name: Install dependencies
         run: |
           yarn install
-          cd ios && bundle install
+          npx pod-install
 
       - name: Restore AuthKey from base64
         run: |
@@ -46,6 +39,11 @@ jobs:
         run: |
           defaults write com.apple.dt.Xcode IDEFileSystemSynchronizedGroups -bool false
           defaults write com.apple.dt.Xcode IDEEnableFileSystemSynchronizedGroups -bool NO
+
+      - name: Install fastlane (global)
+        run: |
+          sudo gem install fastlane
+          fastlane --version
 
       - name: Run Fastlane beta_github (iOS)
         run: |
