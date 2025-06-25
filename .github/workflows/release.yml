@@ -48,4 +48,4 @@ jobs:
       - name: Run Fastlane beta_github (iOS)
         run: |
           cd ios
-          bundle exec fastlane beta_github
+          fastlane beta_github
