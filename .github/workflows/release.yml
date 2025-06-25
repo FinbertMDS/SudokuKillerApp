@@ -1,0 +1,41 @@
+name: Build and Distribute on Push to Master
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-ios:
+    name: Build and Upload iOS to TestFlight
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: |
+          yarn install
+          cd ios && bundle install
+
+      - name: Restore AuthKey from base64
+        run: |
+          echo "$APP_STORE_CONNECT_API_KEY_BASE64" | base64 -d > ios/fastlane/AuthKey.p8
+        env:
+          APP_STORE_CONNECT_API_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}
+
+      - name: Run Fastlane beta (iOS)
+        run: |
+          cd ios
+          bundle exec fastlane beta
