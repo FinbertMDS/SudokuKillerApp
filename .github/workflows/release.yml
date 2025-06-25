@@ -35,6 +35,10 @@ jobs:
         env:
           APP_STORE_CONNECT_API_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}
 
+      - name: Disable Synchronized Groups (fix Xcode 15.4 crash)
+        run: |
+          defaults write com.apple.dt.Xcode IDEFileSystemSynchronizedGroups -bool false
+
       - name: Run Fastlane beta_github (iOS)
         run: |
           cd ios
