@@ -3,7 +3,10 @@ name: Build and Distribute (Android)
 on:
   push:
     branches:
-      - feature/android_internal
+      - master
+    paths:
+      - 'src/**'
+      - 'android/**'
 
 jobs:
   build-ios:
@@ -25,6 +28,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
+
+      - name: Decode keystore
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > android/app/sudoku-key.keystore
 
       - name: Install dependencies
         run: |
