@@ -39,6 +39,30 @@ Runs all the tests
 
 Submit a new internal
 
+### android increment_vn
+
+```sh
+[bundle exec] fastlane android increment_vn
+```
+
+Increment version name
+
+### android increment_vc
+
+```sh
+[bundle exec] fastlane android increment_vc
+```
+
+Increment version code
+
+### android internal_github
+
+```sh
+[bundle exec] fastlane android internal_github
+```
+
+Submit a new internal by Github Actions
+
 ### android alpha
 
 ```sh
