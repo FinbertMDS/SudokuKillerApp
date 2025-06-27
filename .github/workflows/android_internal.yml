@@ -3,7 +3,7 @@ name: Build and Distribute (Android)
 on:
   push:
     branches:
-      - feature/internal
+      - feature/android_internal
 
 jobs:
   build-ios:
