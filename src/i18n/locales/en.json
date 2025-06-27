@@ -157,5 +157,13 @@
   "completed": "Completed",
   "incomplete": "Incomplete",
   "startTime": "Start",
-  "endTime": "End  "
+  "endTime": "End  ",
+
+  "updateRequired": "Update Required",
+  "updateRequiredDescription": "You must update the app to continue.",
+  "updateNow": "Update Now",
+  "updateAvailable": "Update Available",
+  "updateAvailableDescription": "A newer version is available.\nWould you like to update?",
+  "later": "Later",
+  "update": "Update"
 }

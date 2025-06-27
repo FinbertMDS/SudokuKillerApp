@@ -1,9 +1,10 @@
 // src/screens/MainScreen/index.tsx
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
+  Alert,
   ImageBackground,
   Linking,
   StyleSheet,
@@ -20,6 +21,8 @@ import {useTheme} from '../../context/ThemeContext';
 import {CORE_EVENTS} from '../../events';
 import eventBus from '../../events/eventBus';
 import {InitGameCoreEvent} from '../../events/types';
+import {useAppPause} from '../../hooks/useAppPause';
+import {useAppUpdateChecker} from '../../hooks/useAppUpdateChecker';
 import {useDailyBackground} from '../../hooks/useDailyBackground';
 import {useDailyQuote} from '../../hooks/useDailyQuote';
 import {usePlayerProfile} from '../../hooks/usePlayerProfile';
@@ -43,6 +46,9 @@ const MainScreen = () => {
   const {background, loadBackgrounds} = useDailyBackground(mode);
   const {quote, loadQuote} = useDailyQuote();
   const {player, reloadPlayer} = usePlayerProfile();
+  const [showUpdateAlert, setShowUpdateAlert] = useState(false);
+  const {needUpdate, forceUpdate, storeUrl, checkVersion} =
+    useAppUpdateChecker();
 
   // Sau khi navigation.goBack() sẽ gọi hàm này
   useFocusEffect(
@@ -51,6 +57,7 @@ const MainScreen = () => {
       checkSavedGame();
       loadBackgrounds();
       loadQuote();
+      checkVersion();
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []),
   );
@@ -89,103 +96,148 @@ const MainScreen = () => {
   };
   const insets = useSafeAreaInsets();
 
+  useEffect(() => {
+    if (needUpdate && !showUpdateAlert) {
+      setShowUpdateAlert(true);
+      if (forceUpdate) {
+        Alert.alert(
+          t('updateRequired'),
+          t('updateRequiredDescription'),
+          [
+            {
+              text: t('updateNow'),
+              onPress: () => {
+                Linking.openURL(storeUrl);
+              },
+            },
+          ],
+          {cancelable: false},
+        );
+      } else {
+        Alert.alert(t('updateAvailable'), t('updateAvailableDescription'), [
+          {
+            text: t('later'),
+            style: 'cancel',
+          },
+          {
+            text: t('update'),
+            onPress: () => {
+              Linking.openURL(storeUrl);
+            },
+          },
+        ]);
+      }
+    }
+  }, [forceUpdate, needUpdate, storeUrl, t, showUpdateAlert]);
+
+  useAppPause(
+    () => {
+      setShowUpdateAlert(false);
+    },
+    () => {},
+  );
+
   return (
-    <SafeAreaView
-      edges={['top']}
-      style={[styles.container, {backgroundColor: theme.background}]}>
-      {background && background.url && (
-        <ImageBackground
-          source={{uri: background.url}}
-          style={[StyleSheet.absoluteFillObject, {top: insets.top}]}
-          resizeMode="cover"
-          blurRadius={2}>
-          {SHOW_UNSPLASH_IMAGE_INFO && (
-            <View style={styles.attributionContainer}>
-              <Text style={[styles.attributionText, {color: theme.text}]}>
-                Photo by{' '}
-                <Text
-                  style={[styles.linkText, {color: theme.secondary}]}
-                  onPress={() =>
-                    Linking.openURL(
-                      (background.photographerLink ?? UNSPLASH_URL) +
-                        UNSPLASH_UTM,
-                    )
-                  }>
-                  {background.photographerName}
-                </Text>{' '}
-                on{' '}
-                <Text
-                  style={[styles.linkText, {color: theme.secondary}]}
-                  onPress={() => Linking.openURL(UNSPLASH_URL + UNSPLASH_UTM)}>
-                  Unsplash
+    <>
+      <SafeAreaView
+        edges={['top']}
+        style={[styles.container, {backgroundColor: theme.background}]}>
+        {background && background.url && (
+          <ImageBackground
+            source={{uri: background.url}}
+            style={[StyleSheet.absoluteFillObject, {top: insets.top}]}
+            resizeMode="cover"
+            blurRadius={2}>
+            {SHOW_UNSPLASH_IMAGE_INFO && (
+              <View style={styles.attributionContainer}>
+                <Text style={[styles.attributionText, {color: theme.text}]}>
+                  Photo by{' '}
+                  <Text
+                    style={[styles.linkText, {color: theme.secondary}]}
+                    onPress={() =>
+                      Linking.openURL(
+                        (background.photographerLink ?? UNSPLASH_URL) +
+                          UNSPLASH_UTM,
+                      )
+                    }>
+                    {background.photographerName}
+                  </Text>{' '}
+                  on{' '}
+                  <Text
+                    style={[styles.linkText, {color: theme.secondary}]}
+                    onPress={() =>
+                      Linking.openURL(UNSPLASH_URL + UNSPLASH_UTM)
+                    }>
+                    Unsplash
+                  </Text>
                 </Text>
-              </Text>
-            </View>
-          )}
-        </ImageBackground>
-      )}
-      <Header
-        title={t('appName')}
-        showBack={false}
-        showSettings={true}
-        showTheme={true}
-        showSwitchPlayer={true}
-        onSwitchPlayer={() => {
-          navigation.navigate(SCREENS.PLAYERS);
-        }}
-      />
-      {quote && <QuoteBox q={quote.q} a={quote.a} />}
-      <View style={styles.middle}>
-        <Text style={[styles.title, {color: theme.text}]}>
-          {t('welcomeTitle', {appName: t('appName')})}
-        </Text>
-        {player && (
-          <Text
-            numberOfLines={3}
-            ellipsizeMode="tail"
-            style={[styles.title, {color: theme.text}]}>
-            {t('welcomeUser', {
-              playerName: player.name,
-            })}
+              </View>
+            )}
+          </ImageBackground>
+        )}
+        <Header
+          title={t('appName')}
+          showBack={false}
+          showSettings={true}
+          showTheme={true}
+          showSwitchPlayer={true}
+          onSwitchPlayer={() => {
+            navigation.navigate(SCREENS.PLAYERS);
+          }}
+        />
+        {quote && <QuoteBox q={quote.q} a={quote.a} />}
+        <View style={styles.middle}>
+          <Text style={[styles.title, {color: theme.text}]}>
+            {t('welcomeTitle', {appName: t('appName')})}
           </Text>
-        )}
-      </View>
-      <View style={[styles.footer]}>
-        {hasSavedGame && (
-          <TouchableOpacity
-            style={[
-              styles.button,
-              {
-                backgroundColor: theme.primary,
-                borderColor: theme.buttonBorder,
-              },
-            ]}
-            onPress={handleContinueGame}>
-            <Text style={[styles.buttonText, {color: theme.buttonText}]}>
-              {t('continueGame')}
+          {player && (
+            <Text
+              numberOfLines={3}
+              ellipsizeMode="tail"
+              style={[styles.title, {color: theme.text}]}>
+              {t('welcomeUser', {
+                playerName: player.name,
+              })}
             </Text>
-          </TouchableOpacity>
-        )}
+          )}
+        </View>
+        <View style={[styles.footer]}>
+          {hasSavedGame && (
+            <TouchableOpacity
+              style={[
+                styles.button,
+                {
+                  backgroundColor: theme.primary,
+                  borderColor: theme.buttonBorder,
+                },
+              ]}
+              onPress={handleContinueGame}>
+              <Text style={[styles.buttonText, {color: theme.buttonText}]}>
+                {t('continueGame')}
+              </Text>
+            </TouchableOpacity>
+          )}
 
-        <NewGameMenu handleNewGame={handleNewGame} />
+          <NewGameMenu handleNewGame={handleNewGame} />
 
-        {__DEV__ && !IS_UI_TESTING && (
-          <TouchableOpacity
-            style={[
-              styles.button,
-              {
-                backgroundColor: theme.danger,
-                borderColor: theme.buttonBorder,
-              },
-            ]}
-            onPress={handleClearStorage}>
-            <Text style={[styles.buttonText, {color: theme.buttonText}]}>
-              {t('clearStorage')}
-            </Text>
-          </TouchableOpacity>
-        )}
-      </View>
-    </SafeAreaView>
+          {__DEV__ && !IS_UI_TESTING && (
+            <TouchableOpacity
+              style={[
+                styles.button,
+                {
+                  backgroundColor: theme.danger,
+                  borderColor: theme.buttonBorder,
+                },
+              ]}
+              onPress={handleClearStorage}>
+              <Text style={[styles.buttonText, {color: theme.buttonText}]}>
+                {t('clearStorage')}
+              </Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      </SafeAreaView>
+    </>
   );
 };
 

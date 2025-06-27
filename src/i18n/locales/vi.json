@@ -157,5 +157,13 @@
   "completed": "Hoàn thành",
   "incomplete": "Chưa hoàn thành",
   "startTime": "Bắt đầu ",
-  "endTime": "Kết thúc"
+  "endTime": "Kết thúc",
+
+  "updateRequired": "Cần cập nhật",
+  "updateRequiredDescription": "Bạn phải cập nhật ứng dụng để tiếp tục.",
+  "updateNow": "Cập nhật ngay",
+  "updateAvailable": "Cập nhật có sẵn",
+  "updateAvailableDescription": "Có phiên bản mới hơn.\nBạn có muốn cập nhật không?",
+  "later": "Sau",
+  "update": "Cập nhật"
 }

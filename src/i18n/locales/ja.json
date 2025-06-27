@@ -157,5 +157,13 @@
   "completed": "完了",
   "incomplete": "未完了",
   "startTime": "開始",
-  "endTime": "終了"
+  "endTime": "終了",
+
+  "updateRequired": "更新が必要です",
+  "updateRequiredDescription": "アプリを更新して続けてください。",
+  "updateNow": "今すぐ更新",
+  "updateAvailable": "更新が利用可能です",
+  "updateAvailableDescription": "新しいバージョンが利用可能です。\n更新しますか？",
+  "later": "後で",
+  "update": "更新"
 }
