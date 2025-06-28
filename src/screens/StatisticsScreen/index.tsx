@@ -15,6 +15,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Header from '../../components/commons/Header';
 import ChartsStats from '../../components/Statistics/ChartsStats';
+import GameHistory from '../../components/Statistics/GameHistory';
 import LevelStats from '../../components/Statistics/LevelStats';
 import TimeFilterDropdown from '../../components/Statistics/TimeFilterDropdown';
 import {useTheme} from '../../context/ThemeContext';
@@ -31,7 +32,6 @@ import {
   TimeFilter,
 } from '../../types';
 import {DEFAULT_PLAYER_ID, SCREENS} from '../../utils/constants';
-import GameHistoryScreen from '../GameHistoryScreen';
 
 const StatisticsScreen = () => {
   const navigation =
@@ -106,7 +106,7 @@ const StatisticsScreen = () => {
   const renderTabContent: Record<string, React.ReactNode> = {
     level: <LevelStats stats={stats} />,
     chart: <ChartsStats logs={logs} filter={filter} />,
-    history: <GameHistoryScreen />,
+    history: <GameHistory logs={logs} />,
   };
 
   return (

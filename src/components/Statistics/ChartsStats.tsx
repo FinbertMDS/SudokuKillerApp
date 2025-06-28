@@ -62,13 +62,6 @@ const ChartsStats = ({logs, filter}: ChartsStatsProps) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  scrollContent: {
-    paddingHorizontal: 16,
-    paddingBottom: 40,
-  },
   emptyContainer: {
     flex: 1,
     justifyContent: 'center',
