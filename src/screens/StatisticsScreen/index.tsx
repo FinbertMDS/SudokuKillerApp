@@ -192,8 +192,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   iconButton: {
-    width: 30,
-    paddingHorizontal: 3,
+    width: 40,
+    paddingHorizontal: 8,
   },
   tabRow: {
     flexDirection: 'row' as const,
