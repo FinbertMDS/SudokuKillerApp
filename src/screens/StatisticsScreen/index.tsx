@@ -106,7 +106,7 @@ const StatisticsScreen = () => {
   const renderTabContent: Record<string, React.ReactNode> = {
     level: <LevelStats stats={stats} />,
     chart: <ChartsStats logs={logs} filter={filter} />,
-    history: <GameHistory logs={logs} />,
+    history: <GameHistory logs={logs} filter={filter} />,
   };
 
   return (

@@ -1,25 +1,25 @@
 // src/components/Statistics/GameHistory.tsx
-import React from 'react';
+import React, {useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {useTheme} from '../../context/ThemeContext';
-import {GameLogEntryV2} from '../../types';
+import {GameLogEntryV2, TimeFilter} from '../../types';
+import {getGameHistory} from '../../utils/statsUtil';
 import GameLogCard from '../GameHistory/GameLogCard';
 
 type GameHistoryProps = {
   logs: GameLogEntryV2[];
+  filter: TimeFilter;
 };
 
-const GameHistory = ({logs}: GameHistoryProps) => {
+const GameHistory = ({logs, filter}: GameHistoryProps) => {
   const {theme} = useTheme();
   const {t} = useTranslation();
 
-  const sortedLogs = logs
-    .filter(log => log.durationSeconds > 0)
-    .sort(
-      (a, b) =>
-        new Date(b.startTime).getTime() - new Date(a.startTime).getTime(),
-    );
+  const sortedLogs = useMemo(
+    () => getGameHistory(logs, filter),
+    [logs, filter],
+  );
 
   return (
     <SafeAreaView
