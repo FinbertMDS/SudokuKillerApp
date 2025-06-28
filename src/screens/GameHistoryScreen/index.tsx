@@ -40,10 +40,12 @@ const GameHistoryScreen = () => {
         player?.id,
       );
 
-      const sortedLogs = _logs.sort(
-        (a, b) =>
-          new Date(b.startTime).getTime() - new Date(a.startTime).getTime(),
-      );
+      const sortedLogs = _logs
+        .filter(log => log.durationSeconds > 0)
+        .sort(
+          (a, b) =>
+            new Date(b.startTime).getTime() - new Date(a.startTime).getTime(),
+        );
       setLogs(sortedLogs);
     }
   };
