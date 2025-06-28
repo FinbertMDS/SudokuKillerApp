@@ -31,6 +31,7 @@
 
   "main": "Chính",
   "statistics": "Thống kê",
+  "leaderboard": "Bảng xếp hạng",
 
   "mistakeWarning": "Cảnh báo lỗi",
   "tooManyMistakes": "Bạn đã mắc quá {{max}} lỗi!",
@@ -165,5 +166,26 @@
   "updateAvailable": "Cập nhật có sẵn",
   "updateAvailableDescription": "Có phiên bản mới hơn.\nBạn có muốn cập nhật không?",
   "later": "Sau",
-  "update": "Cập nhật"
+  "update": "Cập nhật",
+
+  "playerLeaderboard": "Người chơi",
+  "levelLeaderboard": "Mức độ",
+  "performanceLeaderboard": "Hiệu suất",
+  "completionLeaderboard": "Hoàn thành",
+  "timeLeaderboard": "Thời gian",
+  "streakLeaderboard": "Chuỗi",
+
+  "playerNotes_noGames": "Chưa chơi ván nào",
+  "playerNotes_bestPerformance": "Hiệu suất tốt nhất - giải nhanh và chính xác",
+  "playerNotes_stable": "Ổn định - luôn hoàn thành các ván chơi",
+  "playerNotes_manyGames": "Nhiều game, thắng phần lớn",
+  "playerNotes_even": "Chơi đều - thắng thua cân bằng",
+  "playerNotes_avgTimeLong": "Thời gian hơi dài, cần cải thiện",
+  "playerNotes_allNotCompleted": "Toàn bộ chưa hoàn thành - cần kiên trì hơn",
+  "playerNotes_needToImprove": "Cần hoàn thành thêm để cải thiện",
+
+  "playerNotes_highlights_bestPerformance": "Hiệu suất tốt nhất",
+  "playerNotes_highlights_fastest": "Thời gian trung bình thấp nhất",
+  "playerNotes_highlights_mostGames": "Chơi nhiều nhất",
+  "playerNotes_highlights_allNotCompleted": "Chưa hoàn thành ván nào"
 }

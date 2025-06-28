@@ -31,6 +31,7 @@
 
   "main": "Main",
   "statistics": "Statistics",
+  "leaderboard": "Leaderboard",
 
   "mistakeWarning": "Mistake Warning",
   "tooManyMistakes": "You've made more than {{max}} mistakes!",
@@ -165,5 +166,26 @@
   "updateAvailable": "Update Available",
   "updateAvailableDescription": "A newer version is available.\nWould you like to update?",
   "later": "Later",
-  "update": "Update"
+  "update": "Update",
+
+  "playerLeaderboard": "Player",
+  "levelLeaderboard": "Level",
+  "performanceLeaderboard": "Performance",
+  "completionLeaderboard": "Completion",
+  "timeLeaderboard": "Time",
+  "streakLeaderboard": "Streak",
+
+  "playerNotes_noGames": "No games played",
+  "playerNotes_bestPerformance": "Best performance - solve quickly and accurately",
+  "playerNotes_stable": "Stable - always complete games",
+  "playerNotes_manyGames": "Many games, win most of the time",
+  "playerNotes_even": "Even - win and lose balance",
+  "playerNotes_avgTimeLong": "Average time is a bit long, need to improve",
+  "playerNotes_allNotCompleted": "All incomplete - need more perseverance",
+  "playerNotes_needToImprove": "Need to complete more to improve",
+
+  "playerNotes_highlights_bestPerformance": "Best performance",
+  "playerNotes_highlights_fastest": "Fastest time",
+  "playerNotes_highlights_mostGames": "Most games",
+  "playerNotes_highlights_allNotCompleted": "All incomplete"
 }

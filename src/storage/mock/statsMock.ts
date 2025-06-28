@@ -117,15 +117,15 @@ const gameLog = [
 ] as GameLogEntryV2[];
 
 const saveMockGameLogs = async () => {
-  const oldLogs = statsStorage.getGameLogs();
+  const oldLogs = statsStorage.getGameLogsV2();
   if (oldLogs.length > 0) {
     return;
   }
   console.log('mock game logs', gameLog);
-  await GameStatsManager.saveLogs(gameLog);
+  statsStorage.saveGameLogsV2(gameLog);
   const affectedRanges: TimeRange[] = ['today', 'week', 'month', 'year', 'all'];
 
-  const allLogs = await GameStatsManager.getLogs();
+  const allLogs = statsStorage.getGameLogsV2();
   await GameStatsManager.updateStatsWithAllCache(
     allLogs,
     affectedRanges,

@@ -1,6 +1,11 @@
-import {playerProfileStorage, statsStorage} from '../storage';
+import {TFunction} from 'i18next';
+import {
+  leaderboardStorage,
+  playerProfileStorage,
+  statsStorage,
+} from '../storage';
 import {GameLogEntryV2} from '../types';
-import {PlayerProfile} from '../types/player';
+import {PlayerProfile, PlayerStats} from '../types/player';
 import {DEFAULT_PLAYER_ID} from '../utils/constants';
 import {createDefaultPlayer} from '../utils/playerUtil';
 import {GameStatsManager} from './GameStatsManager';
@@ -93,5 +98,11 @@ export const PlayerService = {
 
   async getCurrentPlayerId(): Promise<string> {
     return playerProfileStorage.getCurrentPlayerId();
+  },
+
+  async getAllPlayerStats(t: TFunction): Promise<PlayerStats[]> {
+    const stats = leaderboardStorage.getAllPlayerStats(t);
+    const highlights = leaderboardStorage.getAllPlayerHighlights(stats, t);
+    return highlights;
   },
 };

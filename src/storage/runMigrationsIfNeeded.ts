@@ -1,12 +1,13 @@
 import {appStorage} from './appStorage';
 import {migrateGameLogsEntryV2} from './migrations/gameLogsEntryV2';
+import {rankingMock} from './mock/rankingMock';
 
 export const CURRENT_MIGRATION_VERSION = 1;
 
 export async function runMigrationsIfNeeded() {
   // if (IS_UI_TESTING) {
   //   console.log('[MIGRATION] Mock game logs for UI testing');
-  //   statsMock.saveMockGameLogs();
+  rankingMock.saveMockRanking();
   // }
 
   const storedVersion = appStorage.getMigrationVersion() ?? 0;

@@ -31,6 +31,7 @@
 
   "main": "メイン",
   "statistics": "統計",
+  "leaderboard": "リーダーボード",
 
   "mistakeWarning": "ミス警告",
   "tooManyMistakes": "{{max}}回以上のミスがあります！",
@@ -165,5 +166,26 @@
   "updateAvailable": "更新が利用可能です",
   "updateAvailableDescription": "新しいバージョンが利用可能です。\n更新しますか？",
   "later": "後で",
-  "update": "更新"
+  "update": "更新",
+
+  "playerLeaderboard": "プレイヤー",
+  "levelLeaderboard": "レベル",
+  "performanceLeaderboard": "パフォーマンス",
+  "completionLeaderboard": "完了",
+  "timeLeaderboard": "時間",
+  "streakLeaderboard": "ストリーク",
+
+  "playerNotes_noGames": "ゲームをプレイしていません",
+  "playerNotes_bestPerformance": "最高のパフォーマンス – 迅速かつ正確に解決",
+  "playerNotes_stable": "安定したプレイ – 常にゲームを完了",
+  "playerNotes_manyGames": "多くのゲーム、ほとんどのゲームで勝利",
+  "playerNotes_even": "均衡 – 勝ち負けが均等",
+  "playerNotes_avgTimeLong": "平均時間が少し長い、改善が必要",
+  "playerNotes_allNotCompleted": "すべて未完了 – もっと持続力が必要",
+  "playerNotes_needToImprove": "もっとプレイして改善する必要があります",
+
+  "playerNotes_highlights_bestPerformance": "最高のパフォーマンス",
+  "playerNotes_highlights_fastest": "最速の時間",
+  "playerNotes_highlights_mostGames": "最も多くのゲーム",
+  "playerNotes_highlights_allNotCompleted": "すべて未完了"
 }
