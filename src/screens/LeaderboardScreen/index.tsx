@@ -11,29 +11,19 @@ import {
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Header from '../../components/commons/Header';
-import CompletionRanking from '../../components/Leaderboard/CompletionRanking';
-import LevelRanking from '../../components/Leaderboard/LevelRanking';
-import PerformanceRanking from '../../components/Leaderboard/PerformanceRanking';
 import PlayerRanking from '../../components/Leaderboard/PlayerRanking';
-import StreakRanking from '../../components/Leaderboard/StreakRanking';
-import TimeRanking from '../../components/Leaderboard/TimeRanking';
 import {useTheme} from '../../context/ThemeContext';
 import {useAppPause} from '../../hooks/useAppPause';
-import {LeaderboardService, PlayerService, StatsService} from '../../services';
-import {
-  GameLogEntryV2,
-  LeaderboardTab,
-  PlayerProfile,
-  PlayerStats,
-} from '../../types';
+import {LeaderboardService} from '../../services';
+import {LeaderboardTab, PlayerStats} from '../../types';
 
 const LeaderboardScreen = () => {
   const {t} = useTranslation();
   const {theme} = useTheme();
   const [playerStats, setPlayerStats] = useState<PlayerStats[]>([]);
   const [activeTab, setActiveTab] = useState<LeaderboardTab['key']>('player');
-  const [logs, setLogs] = useState<GameLogEntryV2[]>([]);
-  const [players, setPlayers] = useState<PlayerProfile[]>([]);
+  // const [logs, setLogs] = useState<GameLogEntryV2[]>([]);
+  // const [players, setPlayers] = useState<PlayerProfile[]>([]);
 
   const leaderboardTabs: LeaderboardTab[] = [
     // PlayerRanking
@@ -42,47 +32,47 @@ const LeaderboardScreen = () => {
       label: t('playerLeaderboard'),
       testID: 'PlayerLeaderboardTabButton',
     },
-    // LevelRanking
-    {
-      key: 'level',
-      label: t('levelLeaderboard'),
-      testID: 'LevelLeaderboardTabButton',
-    },
-    // PerformanceRanking
-    {
-      key: 'performance',
-      label: t('performanceLeaderboard'),
-      testID: 'PerformanceLeaderboardTabButton',
-    },
-    // CompletionRanking
-    {
-      key: 'completion',
-      label: t('completionLeaderboard'),
-      testID: 'CompletionLeaderboardTabButton',
-    },
-    // TimeRanking
-    {
-      key: 'time',
-      label: t('timeLeaderboard'),
-      testID: 'TimeLeaderboardTabButton',
-    },
-    // StreakRanking
-    {
-      key: 'streak',
-      label: t('streakLeaderboard'),
-      testID: 'StreakLeaderboardTabButton',
-    },
+    // // LevelRanking
+    // {
+    //   key: 'level',
+    //   label: t('levelLeaderboard'),
+    //   testID: 'LevelLeaderboardTabButton',
+    // },
+    // // PerformanceRanking
+    // {
+    //   key: 'performance',
+    //   label: t('performanceLeaderboard'),
+    //   testID: 'PerformanceLeaderboardTabButton',
+    // },
+    // // CompletionRanking
+    // {
+    //   key: 'completion',
+    //   label: t('completionLeaderboard'),
+    //   testID: 'CompletionLeaderboardTabButton',
+    // },
+    // // TimeRanking
+    // {
+    //   key: 'time',
+    //   label: t('timeLeaderboard'),
+    //   testID: 'TimeLeaderboardTabButton',
+    // },
+    // // StreakRanking
+    // {
+    //   key: 'streak',
+    //   label: t('streakLeaderboard'),
+    //   testID: 'StreakLeaderboardTabButton',
+    // },
   ];
 
   const loadLeaderboardStats = async () => {
     const _playerStats = await LeaderboardService.getAllPlayerStats(t);
     setPlayerStats(_playerStats);
 
-    const _logs = await StatsService.getLogs();
-    setLogs(_logs);
+    // const _logs = await StatsService.getLogs();
+    // setLogs(_logs);
 
-    const _players = await PlayerService.getAllPlayers();
-    setPlayers(_players);
+    // const _players = await PlayerService.getAllPlayers();
+    // setPlayers(_players);
   };
 
   // Sau khi navigation.goBack() sẽ gọi hàm này
@@ -107,11 +97,11 @@ const LeaderboardScreen = () => {
 
   const renderTabContent: Record<string, React.ReactNode> = {
     player: <PlayerRanking playerStats={playerStats} />,
-    level: <LevelRanking logs={logs} players={players} />,
-    performance: <PerformanceRanking />,
-    completion: <CompletionRanking />,
-    time: <TimeRanking />,
-    streak: <StreakRanking />,
+    // level: <LevelRanking logs={logs} players={players} />,
+    // performance: <PerformanceRanking />,
+    // completion: <CompletionRanking />,
+    // time: <TimeRanking />,
+    // streak: <StreakRanking />,
   };
 
   return (

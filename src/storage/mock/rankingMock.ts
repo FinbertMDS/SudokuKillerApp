@@ -2,7 +2,6 @@ import {playerProfileStorage, statsStorage} from '..';
 import {StatsService} from '../../services';
 import {GameLogEntryV2, TimeRange} from '../../types';
 import {PlayerProfile} from '../../types/player';
-import {DEFAULT_PLAYER_ID} from '../../utils/constants';
 
 const mockPlayers: PlayerProfile[] = [
   {
@@ -36,7 +35,6 @@ const mockPlayers: PlayerProfile[] = [
 ];
 
 const mockGameLogs: GameLogEntryV2[] = [
-  // Alice - nhiều game, nhiều thắng
   {
     id: 'g1',
     level: 'easy',
@@ -71,7 +69,6 @@ const mockGameLogs: GameLogEntryV2[] = [
     playerId: 'p1',
   },
 
-  // Bob - thắng vừa phải, thời gian hơi lâu
   {
     id: 'g4',
     level: 'easy',
@@ -95,7 +92,6 @@ const mockGameLogs: GameLogEntryV2[] = [
     playerId: 'p2',
   },
 
-  // Charlie - ít game, nhanh và sạch
   {
     id: 'g6',
     level: 'easy',
@@ -119,7 +115,6 @@ const mockGameLogs: GameLogEntryV2[] = [
     playerId: 'p3',
   },
 
-  // Daisy - thua nhiều, chưa hoàn thành
   {
     id: 'g8',
     level: 'easy',
@@ -152,6 +147,7 @@ const saveMockRanking = async () => {
 
   // save mock players
   playerProfileStorage.savePlayers(mockPlayers);
+  playerProfileStorage.setCurrentPlayerId(mockPlayers[0].id);
 
   // save mock game logs
   console.log('mock game logs', mockGameLogs);
@@ -159,13 +155,16 @@ const saveMockRanking = async () => {
   const affectedRanges: TimeRange[] = ['today', 'week', 'month', 'year', 'all'];
 
   const allLogs = statsStorage.getGameLogsV2();
-  await StatsService.updateStatsWithAllCache(
-    allLogs,
-    affectedRanges,
-    DEFAULT_PLAYER_ID,
-  );
 
-  statsStorage.setLastStatsCacheUpdate();
+  mockPlayers.forEach(async player => {
+    await StatsService.updateStatsWithAllCache(
+      allLogs,
+      affectedRanges,
+      player.id,
+    );
+  });
+
+  await StatsService.updateStatsDone();
 };
 
 export const rankingMock = {
