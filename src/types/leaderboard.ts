@@ -3,7 +3,6 @@ import {PlayerProfile} from './player';
 export interface PlayerStats {
   player: PlayerProfile;
   totalGames: number;
-  avgTime?: number;
   completedGames: number;
   totalTime: number;
   winRate: number;
@@ -23,6 +22,7 @@ export interface PlayerStats {
 export interface RankedPlayer extends PlayerStats {
   score: number;
   totalWeightedWins: number;
+  avgTime: number | undefined;
 }
 
 export type PlayerHighlight = {

@@ -1,8 +1,7 @@
 // src/utils/leaderboardUtil.ts
 
 import {TFunction} from 'i18next';
-import {PlayerService} from '../services';
-import {statsStorage} from '../storage';
+import {PlayerService, StatsService} from '../services';
 import {
   GameLogEntryV2,
   Level,
@@ -11,7 +10,7 @@ import {
   PlayerStats,
   RankedPlayer,
 } from '../types';
-import {LEVEL_PRIORITY, LEVEL_WEIGHT, PLAYER_TIME_MAX} from './constants';
+import {LEVEL_PRIORITY, LEVEL_WEIGHT, MAX_TIMEPLAYED} from './constants';
 import {generateOverallRankingNotes, getPlayerNotes} from './playerNotesUtil';
 
 export const calculatePlayerScore = (stat: PlayerStats): RankedPlayer => {
@@ -27,21 +26,44 @@ export const calculatePlayerScore = (stat: PlayerStats): RankedPlayer => {
 
     const weight = LEVEL_WEIGHT[level];
     const wins = lvlStat.wins;
-    const avgTime = lvlStat.avgTime || PLAYER_TIME_MAX;
+    const avgTime = lvlStat.avgTime;
 
     totalWeightedWins += wins * weight;
     winScore += (wins / (wins || 1)) * weight; // 1.0 * weight
-    avgTimePenalty += ((PLAYER_TIME_MAX + 1) / avgTime) * weight; // thấp avgTime thì điểm cao
+    avgTimePenalty += (10000 / avgTime) * weight; // thấp avgTime thì điểm cao
   }
 
+  const avgTime = getWeightedAvgTime(stat);
+
   // Kết hợp 2 yếu tố thành score cuối cùng
-  const score = totalWeightedWins + winScore + avgTimePenalty * 0.1;
+  const score = totalWeightedWins + winScore + avgTimePenalty * 0.01;
 
   return {
     ...stat,
     score,
     totalWeightedWins,
+    avgTime,
   };
+};
+
+export const getWeightedAvgTime = (stat: PlayerStats): number | undefined => {
+  let totalTime = 0;
+  let totalWeight = 0;
+
+  for (const level of LEVEL_PRIORITY) {
+    const lvlStat = stat.byLevel?.[level];
+    if (lvlStat && lvlStat.wins > 0) {
+      const weight = LEVEL_WEIGHT[level];
+      totalTime += lvlStat.avgTime * lvlStat.wins * weight;
+      totalWeight += lvlStat.wins * weight;
+    }
+  }
+
+  if (totalWeight === 0) {
+    return undefined;
+  }
+
+  return totalTime / totalWeight;
 };
 
 export const getRankedPlayers = (allStats: PlayerStats[]): RankedPlayer[] => {
@@ -50,44 +72,25 @@ export const getRankedPlayers = (allStats: PlayerStats[]): RankedPlayer[] => {
     .sort((a, b) => b.score - a.score);
 };
 
-export const getRankedPlayersByLevel = (
-  allStats: PlayerStats[],
-  level: string,
-): RankedPlayer[] => {
-  return allStats
-    .filter(stat => stat.byLevel?.[level])
-    .map(stat => {
-      const lvl = stat.byLevel?.[level]!;
-      const winRate = lvl.wins / (lvl.totalGames || 1);
-      const avgTime = lvl.avgTime;
-      const score = lvl.wins * 2 + winRate * 100 - avgTime * 0.05;
-
-      return {
-        ...stat,
-        score,
-        totalWeightedWins: lvl.wins,
-      };
-    })
-    .sort((a, b) => b.score - a.score);
-};
-
 export const getAllStats = async (): Promise<PlayerStats[]> => {
   try {
     const players: PlayerProfile[] = await PlayerService.getAllPlayers();
-    const logs: GameLogEntryV2[] = statsStorage.getGameLogsV2();
+    const logs: GameLogEntryV2[] = await StatsService.getLogsDone();
 
     return players.map(player => {
-      const playerLogs = logs.filter(log => log.playerId === player.id);
+      const playerLogs = logs.filter(
+        log => log.playerId === player.id && log.durationSeconds > 0,
+      );
       const completed = playerLogs.filter(log => log.completed);
 
       if (completed.length === 0) {
         return {
           player,
           totalGames: playerLogs.length,
+          avgTime: 0,
           completedGames: completed.length,
           totalTime: 0,
           winRate: 0,
-          avgTime: 0,
         } as PlayerStats;
       }
 
@@ -115,17 +118,14 @@ export const getAllStats = async (): Promise<PlayerStats[]> => {
             fastestTime:
               levelCompleted.length > 0
                 ? Math.min(...levelCompleted.map(log => log.durationSeconds))
-                : PLAYER_TIME_MAX,
+                : MAX_TIMEPLAYED,
             avgTime:
               levelCompleted.length > 0
                 ? totalLevelTime / levelCompleted.length
-                : PLAYER_TIME_MAX,
+                : MAX_TIMEPLAYED,
           };
         }
       }
-
-      const avgTime =
-        completed.length > 0 ? totalTime / completed.length : undefined;
 
       const stat: PlayerStats = {
         player,
@@ -133,7 +133,6 @@ export const getAllStats = async (): Promise<PlayerStats[]> => {
         completedGames: completed.length,
         totalTime,
         winRate,
-        avgTime,
         byLevel,
       };
 
