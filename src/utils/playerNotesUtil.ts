@@ -83,6 +83,10 @@ export const generateOverallRankingNotes = (
   )[0];
 
   for (const stat of statsList) {
+    if (stat.totalGames === 0 || stat.completedGames === 0) {
+      continue;
+    }
+
     const highlights: string[] = [];
 
     if (stat.player.id === topScore.player.id) {

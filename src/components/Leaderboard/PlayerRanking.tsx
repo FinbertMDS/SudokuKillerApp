@@ -2,8 +2,7 @@
 
 import React from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
-import {PlayerStats} from '../../types/player';
-import {MAX_PLAYER_RANKING_COUNT} from '../../utils/constants';
+import {PlayerStats} from '../../types';
 import PlayerStatsCard from './sub/PlayerStatsCard';
 
 type PlayerRankingProps = {
@@ -11,15 +10,10 @@ type PlayerRankingProps = {
 };
 
 const PlayerRanking = ({playerStats}: PlayerRankingProps) => {
-  const totalGamesSortedStats = [...playerStats]
-    .sort((a, b) => b.completedGames - a.completedGames)
-    .sort((a, b) => b.winRate - a.winRate)
-    .slice(0, MAX_PLAYER_RANKING_COUNT);
-
   return (
     <ScrollView>
       <View style={styles.cardContainer}>
-        {totalGamesSortedStats.map((playerStat, index) => (
+        {playerStats.map((playerStat, index) => (
           <PlayerStatsCard
             key={playerStat.player.id}
             stat={playerStat}

@@ -80,6 +80,17 @@ export const getAllStats = async (): Promise<PlayerStats[]> => {
       const playerLogs = logs.filter(log => log.playerId === player.id);
       const completed = playerLogs.filter(log => log.completed);
 
+      if (completed.length === 0) {
+        return {
+          player,
+          totalGames: playerLogs.length,
+          completedGames: completed.length,
+          totalTime: 0,
+          winRate: 0,
+          avgTime: 0,
+        } as PlayerStats;
+      }
+
       const totalTime = completed.reduce(
         (sum, log) => sum + log.durationSeconds,
         0,
