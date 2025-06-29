@@ -1,3 +1,4 @@
+import {autoDetectLanguage} from '../../i18n/i18n';
 import {
   BackgroundService,
   BoardService,
@@ -15,4 +16,6 @@ export const handleClearStorage = async () => {
     await BackgroundService.clear();
   }
   await PlayerService.createDefaultPlayerIfNeeded();
+
+  autoDetectLanguage();
 };

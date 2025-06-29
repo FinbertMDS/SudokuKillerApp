@@ -187,12 +187,11 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   noteText: {
-    marginLeft: 8,
+    marginLeft: 16,
     fontSize: 14,
     lineHeight: 20,
   },
   highlightList: {
-    marginLeft: 8,
     flex: 1,
   },
 });

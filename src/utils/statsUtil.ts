@@ -184,7 +184,7 @@ export function getGameHistory(
 
   const filtered = logs
     .filter(log => log.durationSeconds > 0)
-    .filter(log => log.completed && isInTimeRange(log.endTime, filter))
+    .filter(log => isInTimeRange(log.endTime, filter))
     .sort(
       (a, b) =>
         new Date(b.startTime).getTime() - new Date(a.startTime).getTime(),

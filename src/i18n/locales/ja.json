@@ -176,18 +176,16 @@
   "streakLeaderboard": "ストリーク",
 
   "playerNotes_noGames": "まだゲームをプレイしていません。",
-  "playerNotes_bestPerformance": "100%の勝率と迅速な解決時間。",
-  "playerNotes_stable": "安定したパフォーマンスで100%の勝率。",
+  "playerNotes_bestPerformance": "完全な勝率です。",
+  "playerNotes_stable": "100％の勝率で安定したパフォーマンス。",
   "playerNotes_manyGames": "多くのゲームで高い勝率。",
   "playerNotes_even": "バランスの取れたパフォーマンス。",
-  "playerNotes_avgTimeLong": "勝率は良いが、かなり遅い。",
   "playerNotes_allNotCompleted": "まだゲームを完了していません。",
-  "playerNotes_needToImprove": "パフォーマンスを改善する必要があります。",
-  "playerNotes_strongAtHardLevels": "難しいレベルでよく勝ちます。",
-  "playerNotes_generic": "まあまあの全体的なパフォーマンス。",
-  "playerNotes_highlights_topRanked": "スコアによる総合ランキングのトップ。",
+  "playerNotes_strongAtHardLevels": "難易度の高いレベルでよく勝ちます。",
+  "playerNotes_generic": "全体的にまずまずのパフォーマンス。",
+  "playerNotes_highlights_topRanked": "スコアによる総合ランキングトップ。",
   "playerNotes_highlights_bestPerformance": "最高の勝率。",
   "playerNotes_highlights_fastest": "最速の平均時間。",
-  "playerNotes_highlights_mostGames": "最も多くのゲームをプレイしました。",
-  "playerNotes_highlights_allNotCompleted": "まだゲームを完了していません。"
+  "playerNotes_highlights_mostGames": "最も多くのゲームをプレイ。",
+  "playerNotes_highlights_allNotCompleted": "どのゲームも完了していません。"
 }
