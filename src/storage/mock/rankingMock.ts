@@ -1,5 +1,5 @@
 import {playerProfileStorage, statsStorage} from '..';
-import {GameStatsManager} from '../../services/GameStatsManager';
+import {StatsService} from '../../services';
 import {GameLogEntryV2, TimeRange} from '../../types';
 import {PlayerProfile} from '../../types/player';
 import {DEFAULT_PLAYER_ID} from '../../utils/constants';
@@ -159,7 +159,7 @@ const saveMockRanking = async () => {
   const affectedRanges: TimeRange[] = ['today', 'week', 'month', 'year', 'all'];
 
   const allLogs = statsStorage.getGameLogsV2();
-  await GameStatsManager.updateStatsWithAllCache(
+  await StatsService.updateStatsWithAllCache(
     allLogs,
     affectedRanges,
     DEFAULT_PLAYER_ID,

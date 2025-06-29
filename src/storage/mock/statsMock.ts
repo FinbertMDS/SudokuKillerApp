@@ -1,4 +1,4 @@
-import {GameStatsManager} from '../../services/GameStatsManager';
+import {StatsService} from '../../services';
 import {GameLogEntryV2, TimeRange} from '../../types';
 import {DEFAULT_PLAYER_ID} from '../../utils/constants';
 import {statsStorage} from '../statsStorage';
@@ -122,11 +122,11 @@ const saveMockGameLogs = async () => {
     return;
   }
   console.log('mock game logs', gameLog);
-  statsStorage.saveGameLogsV2(gameLog);
+  await StatsService.saveLogs(gameLog);
   const affectedRanges: TimeRange[] = ['today', 'week', 'month', 'year', 'all'];
 
-  const allLogs = statsStorage.getGameLogsV2();
-  await GameStatsManager.updateStatsWithAllCache(
+  const allLogs = await StatsService.getLogs();
+  await StatsService.updateStatsWithAllCache(
     allLogs,
     affectedRanges,
     DEFAULT_PLAYER_ID,

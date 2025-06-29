@@ -3,10 +3,9 @@ import {StyleSheet, Text, View} from 'react-native';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useTheme} from '../../../context/ThemeContext';
-import {PlayerStats} from '../../../types/player';
-import {medalColors} from '../../../utils/colorUtil';
-import {MAX_PLAYER_RANKING_COUNT} from '../../../utils/constants';
+import {PlayerStats} from '../../../types';
 import {formatDuration} from '../../../utils/dateUtil';
+import {renderMedal} from './RankingComponents';
 
 type PlayerStatsCardProps = {
   stat: PlayerStats;
@@ -25,39 +24,11 @@ const PlayerStatsCard = ({stat, rank}: PlayerStatsCardProps) => {
     highlights,
   } = stat;
 
-  const renderMedal = () => {
-    const colors = medalColors[mode];
-    const color = colors[rank - 1];
-    if (rank > MAX_PLAYER_RANKING_COUNT) {
-      return null;
-    }
-
-    const glowStyle =
-      rank === 1
-        ? {
-            shadowColor: color,
-            shadowOpacity: 0.9,
-            shadowRadius: 8,
-            shadowOffset: {width: 0, height: 0},
-            elevation: 6,
-          }
-        : {};
-
-    return (
-      <MaterialIcon
-        name="medal"
-        size={20}
-        color={color}
-        style={[styles.rank, glowStyle]}
-      />
-    );
-  };
-
   return (
     <View style={[styles.card, {backgroundColor: theme.card}]}>
       {/* Header */}
       <View style={styles.header}>
-        {renderMedal()}
+        {renderMedal(mode, rank)}
         <View style={[styles.avatar, {backgroundColor: player.avatarColor}]} />
         <Text style={[styles.name, {color: theme.text}]}>{player.name}</Text>
       </View>
@@ -174,9 +145,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 12,
-  },
-  rank: {
-    marginRight: 8,
   },
   avatar: {
     width: 18,

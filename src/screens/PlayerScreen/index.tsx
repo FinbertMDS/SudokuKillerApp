@@ -112,7 +112,6 @@ const PlayerScreen = () => {
         style: 'destructive',
         onPress: () => {
           deletePlayer(id);
-          eventBus.emit(CORE_EVENTS.deletePlayer, id);
         },
       },
     ]);

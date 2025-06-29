@@ -128,3 +128,5 @@ export const DEFAULT_PLAYER_ID = '00000000-0000-4000-8000-000000000000'; // ho�
 export const DEFAULT_PLAYER_NAME = 'Player';
 
 export const MAX_PLAYER_RANKING_COUNT = 3;
+// Sử dụng để tính score của player, cho độ chính xác của player
+export const PLAYER_TIME_MAX = 999999999;

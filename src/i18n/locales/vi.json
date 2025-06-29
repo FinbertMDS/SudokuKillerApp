@@ -183,8 +183,10 @@
   "playerNotes_avgTimeLong": "Thời gian hơi dài, cần cải thiện",
   "playerNotes_allNotCompleted": "Toàn bộ chưa hoàn thành - cần kiên trì hơn",
   "playerNotes_needToImprove": "Cần hoàn thành thêm để cải thiện",
-
-  "playerNotes_highlights_bestPerformance": "Hiệu suất tốt nhất",
+  "playerNotes_strongAtHardLevels": "Thắng nhiều ở các mức độ khó",
+  "playerNotes_generic": "Hiệu suất tốt",
+  "playerNotes_highlights_topRanked": "Xếp hạng cao nhất theo điểm",
+  "playerNotes_highlights_bestPerformance": "Tỷ lệ thắng cao nhất",
   "playerNotes_highlights_fastest": "Thời gian trung bình thấp nhất",
   "playerNotes_highlights_mostGames": "Chơi nhiều nhất",
   "playerNotes_highlights_allNotCompleted": "Chưa hoàn thành ván nào"

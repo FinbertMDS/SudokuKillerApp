@@ -14,7 +14,7 @@ import {
 import {getTodayDateString, isInTimeRange} from '../utils/dateUtil';
 import {getStatsFromLogs} from '../utils/statsUtil';
 
-export const GameStatsManager = {
+export const StatsService = {
   async shouldUpdateStatsCache(): Promise<boolean> {
     const lastUpdateStr = statsStorage.getLastStatsCacheUpdate();
     const lastUpdateUserId = statsStorage.getLastStatsCacheUpdateUserId();
@@ -135,7 +135,7 @@ export const GameStatsManager = {
 
   async getLogs(): Promise<GameLogEntryV2[]> {
     try {
-      return statsStorage.getGameLogs();
+      return statsStorage.getGameLogsV2();
     } catch (error) {
       console.error('Error loading logs:', error);
     }
@@ -171,7 +171,7 @@ export const GameStatsManager = {
         existing.unshift(log);
       }
 
-      statsStorage.saveGameLogs(existing);
+      statsStorage.saveGameLogsV2(existing);
     } catch (error) {
       console.error('Error saving logs:', error);
     }
@@ -194,7 +194,7 @@ export const GameStatsManager = {
         updated = [...sortedLogs, ...existing];
       }
 
-      statsStorage.saveGameLogs(updated);
+      statsStorage.saveGameLogsV2(updated);
     } catch (error) {
       console.error('Error saving logs:', error);
     }

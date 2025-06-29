@@ -175,17 +175,19 @@
   "timeLeaderboard": "Time",
   "streakLeaderboard": "Streak",
 
-  "playerNotes_noGames": "No games played",
-  "playerNotes_bestPerformance": "Best performance - solve quickly and accurately",
-  "playerNotes_stable": "Stable - always complete games",
-  "playerNotes_manyGames": "Many games, win most of the time",
-  "playerNotes_even": "Even - win and lose balance",
-  "playerNotes_avgTimeLong": "Average time is a bit long, need to improve",
-  "playerNotes_allNotCompleted": "All incomplete - need more perseverance",
-  "playerNotes_needToImprove": "Need to complete more to improve",
-
-  "playerNotes_highlights_bestPerformance": "Best performance",
-  "playerNotes_highlights_fastest": "Fastest time",
-  "playerNotes_highlights_mostGames": "Most games",
-  "playerNotes_highlights_allNotCompleted": "All incomplete"
+  "playerNotes_noGames": "Has not played any games yet.",
+  "playerNotes_bestPerformance": "Perfect win rate and fast completion time.",
+  "playerNotes_stable": "Stable performance with 100% win rate.",
+  "playerNotes_manyGames": "High win rate across many games.",
+  "playerNotes_even": "Balanced performance.",
+  "playerNotes_avgTimeLong": "Win rate is okay, but quite slow.",
+  "playerNotes_allNotCompleted": "Has not completed any games.",
+  "playerNotes_needToImprove": "Needs improvement in performance.",
+  "playerNotes_strongAtHardLevels": "Wins often at harder levels.",
+  "playerNotes_generic": "Decent overall performance.",
+  "playerNotes_highlights_topRanked": "Top overall ranking by score.",
+  "playerNotes_highlights_bestPerformance": "Highest win rate.",
+  "playerNotes_highlights_fastest": "Fastest average time.",
+  "playerNotes_highlights_mostGames": "Most games played.",
+  "playerNotes_highlights_allNotCompleted": "Hasn't finished any game."
 }

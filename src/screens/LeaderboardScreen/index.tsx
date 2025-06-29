@@ -19,15 +19,21 @@ import StreakRanking from '../../components/Leaderboard/StreakRanking';
 import TimeRanking from '../../components/Leaderboard/TimeRanking';
 import {useTheme} from '../../context/ThemeContext';
 import {useAppPause} from '../../hooks/useAppPause';
-import {PlayerService} from '../../services/PlayerService';
-import {LeaderboardTab} from '../../types/components';
-import {PlayerStats} from '../../types/player';
+import {LeaderboardService, PlayerService, StatsService} from '../../services';
+import {
+  GameLogEntryV2,
+  LeaderboardTab,
+  PlayerProfile,
+  PlayerStats,
+} from '../../types';
 
 const LeaderboardScreen = () => {
   const {t} = useTranslation();
   const {theme} = useTheme();
   const [playerStats, setPlayerStats] = useState<PlayerStats[]>([]);
   const [activeTab, setActiveTab] = useState<LeaderboardTab['key']>('player');
+  const [logs, setLogs] = useState<GameLogEntryV2[]>([]);
+  const [players, setPlayers] = useState<PlayerProfile[]>([]);
 
   const leaderboardTabs: LeaderboardTab[] = [
     // PlayerRanking
@@ -69,8 +75,14 @@ const LeaderboardScreen = () => {
   ];
 
   const loadLeaderboardStats = async () => {
-    const _playerStats = await PlayerService.getAllPlayerStats(t);
+    const _playerStats = await LeaderboardService.getAllPlayerStats(t);
     setPlayerStats(_playerStats);
+
+    const _logs = await StatsService.getLogs();
+    setLogs(_logs);
+
+    const _players = await PlayerService.getAllPlayers();
+    setPlayers(_players);
   };
 
   // Sau khi navigation.goBack() sẽ gọi hàm này
@@ -95,7 +107,7 @@ const LeaderboardScreen = () => {
 
   const renderTabContent: Record<string, React.ReactNode> = {
     player: <PlayerRanking playerStats={playerStats} />,
-    level: <LevelRanking />,
+    level: <LevelRanking logs={logs} players={players} />,
     performance: <PerformanceRanking />,
     completion: <CompletionRanking />,
     time: <TimeRanking />,

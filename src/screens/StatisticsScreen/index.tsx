@@ -21,8 +21,7 @@ import TimeFilterDropdown from '../../components/Statistics/TimeFilterDropdown';
 import {useTheme} from '../../context/ThemeContext';
 import {useAppPause} from '../../hooks/useAppPause';
 import {useEnsureStatsCache} from '../../hooks/useEnsureStatsCache';
-import {GameStatsManager} from '../../services/GameStatsManager';
-import {PlayerService} from '../../services/PlayerService';
+import {PlayerService, StatsService} from '../../services';
 import {
   GameLogEntryV2,
   GameStats,
@@ -91,11 +90,11 @@ const StatisticsScreen = () => {
 
   async function loadData() {
     const player = await PlayerService.getCurrentPlayer();
-    const loadedLogs = await GameStatsManager.getLogsByPlayerId(
+    const loadedLogs = await StatsService.getLogsByPlayerId(
       player?.id ?? DEFAULT_PLAYER_ID,
     );
     setLogs(loadedLogs);
-    const loadedStats = await GameStatsManager.getStatsWithCache(
+    const loadedStats = await StatsService.getStatsWithCache(
       loadedLogs,
       filter,
       player?.id ?? DEFAULT_PLAYER_ID,

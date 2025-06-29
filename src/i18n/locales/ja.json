@@ -175,17 +175,19 @@
   "timeLeaderboard": "時間",
   "streakLeaderboard": "ストリーク",
 
-  "playerNotes_noGames": "ゲームをプレイしていません",
-  "playerNotes_bestPerformance": "最高のパフォーマンス – 迅速かつ正確に解決",
-  "playerNotes_stable": "安定したプレイ – 常にゲームを完了",
-  "playerNotes_manyGames": "多くのゲーム、ほとんどのゲームで勝利",
-  "playerNotes_even": "均衡 – 勝ち負けが均等",
-  "playerNotes_avgTimeLong": "平均時間が少し長い、改善が必要",
-  "playerNotes_allNotCompleted": "すべて未完了 – もっと持続力が必要",
-  "playerNotes_needToImprove": "もっとプレイして改善する必要があります",
-
-  "playerNotes_highlights_bestPerformance": "最高のパフォーマンス",
-  "playerNotes_highlights_fastest": "最速の時間",
-  "playerNotes_highlights_mostGames": "最も多くのゲーム",
-  "playerNotes_highlights_allNotCompleted": "すべて未完了"
+  "playerNotes_noGames": "まだゲームをプレイしていません。",
+  "playerNotes_bestPerformance": "100%の勝率と迅速な解決時間。",
+  "playerNotes_stable": "安定したパフォーマンスで100%の勝率。",
+  "playerNotes_manyGames": "多くのゲームで高い勝率。",
+  "playerNotes_even": "バランスの取れたパフォーマンス。",
+  "playerNotes_avgTimeLong": "勝率は良いが、かなり遅い。",
+  "playerNotes_allNotCompleted": "まだゲームを完了していません。",
+  "playerNotes_needToImprove": "パフォーマンスを改善する必要があります。",
+  "playerNotes_strongAtHardLevels": "難しいレベルでよく勝ちます。",
+  "playerNotes_generic": "まあまあの全体的なパフォーマンス。",
+  "playerNotes_highlights_topRanked": "スコアによる総合ランキングのトップ。",
+  "playerNotes_highlights_bestPerformance": "最高の勝率。",
+  "playerNotes_highlights_fastest": "最速の平均時間。",
+  "playerNotes_highlights_mostGames": "最も多くのゲームをプレイしました。",
+  "playerNotes_highlights_allNotCompleted": "まだゲームを完了していません。"
 }
