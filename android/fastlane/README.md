@@ -47,6 +47,14 @@ Submit a new internal
 
 Increment version name
 
+### android increment_vn_force
+
+```sh
+[bundle exec] fastlane android increment_vn_force
+```
+
+Increment version name force
+
 ### android increment_vc
 
 ```sh

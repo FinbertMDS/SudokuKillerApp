@@ -3,6 +3,12 @@
   "version": "1.0.1",
   "private": true,
   "scripts": {
+    "prebuild:android:force": "cd android && fastlane increment_vc && fastlane increment_vn_force",
+    "prebuild:android": "cd android && fastlane increment_vc",
+    "prebuild:ios:force": "cd ios && fastlane increment_bn && fastlane increment_vn_force",
+    "prebuild:ios": "cd ios && fastlane increment_bn",
+    "prebuild:force": "yarn prebuild:android:force && yarn prebuild:ios:force",
+    "prebuild": "yarn prebuild:android && yarn prebuild:ios",
     "android": "cp .env.development .env && react-native run-android",
     "ios": "cp .env.development .env && react-native run-ios",
     "lint": "eslint .",
