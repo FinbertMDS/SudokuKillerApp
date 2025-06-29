@@ -5,6 +5,7 @@ export interface PlayerStats {
   totalGames: number;
   completedGames: number;
   totalTime: number;
+  speedScore?: number;
   winRate: number;
   notes?: string;
   highlights?: string[];
@@ -22,7 +23,6 @@ export interface PlayerStats {
 export interface RankedPlayer extends PlayerStats {
   score: number;
   totalWeightedWins: number;
-  avgTime: number | undefined;
 }
 
 export type PlayerHighlight = {

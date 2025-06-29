@@ -33,8 +33,6 @@ export const calculatePlayerScore = (stat: PlayerStats): RankedPlayer => {
     avgTimePenalty += (10000 / avgTime) * weight; // thấp avgTime thì điểm cao
   }
 
-  const avgTime = getWeightedAvgTime(stat);
-
   // Kết hợp 2 yếu tố thành score cuối cùng
   const score = totalWeightedWins + winScore + avgTimePenalty * 0.01;
 
@@ -42,28 +40,21 @@ export const calculatePlayerScore = (stat: PlayerStats): RankedPlayer => {
     ...stat,
     score,
     totalWeightedWins,
-    avgTime,
   };
 };
 
-export const getWeightedAvgTime = (stat: PlayerStats): number | undefined => {
-  let totalTime = 0;
-  let totalWeight = 0;
-
-  for (const level of LEVEL_PRIORITY) {
-    const lvlStat = stat.byLevel?.[level];
-    if (lvlStat && lvlStat.wins > 0) {
-      const weight = LEVEL_WEIGHT[level];
-      totalTime += lvlStat.avgTime * lvlStat.wins * weight;
-      totalWeight += lvlStat.wins * weight;
-    }
-  }
-
-  if (totalWeight === 0) {
+const getSpeedScore = (logs: GameLogEntryV2[]): number | undefined => {
+  const completed = logs.filter(l => l.completed);
+  if (completed.length === 0) {
     return undefined;
   }
 
-  return totalTime / totalWeight;
+  const totalNormalizedTime = completed.reduce((sum, log) => {
+    const weight = LEVEL_WEIGHT[log.level] || 1;
+    return sum + log.durationSeconds / weight;
+  }, 0);
+
+  return totalNormalizedTime / completed.length;
 };
 
 export const getRankedPlayers = (allStats: PlayerStats[]): RankedPlayer[] => {
@@ -87,7 +78,7 @@ export const getAllStats = async (): Promise<PlayerStats[]> => {
         return {
           player,
           totalGames: playerLogs.length,
-          avgTime: 0,
+          speedScore: undefined,
           completedGames: completed.length,
           totalTime: 0,
           winRate: 0,
@@ -134,6 +125,7 @@ export const getAllStats = async (): Promise<PlayerStats[]> => {
         totalTime,
         winRate,
         byLevel,
+        speedScore: getSpeedScore(playerLogs),
       };
 
       return stat;
