@@ -1,6 +1,6 @@
 // src/screens/LeaderboardScreen.tsx
 import {useFocusEffect} from '@react-navigation/native';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   ScrollView,
@@ -99,11 +99,6 @@ const LeaderboardScreen = () => {
       loadLeaderboardStats();
     },
   );
-
-  useEffect(() => {
-    loadLeaderboardStats();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const renderTabContent: Record<string, React.ReactNode> = {
     player: <PlayerRanking playerStats={playerStats} />,

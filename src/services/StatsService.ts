@@ -142,6 +142,16 @@ export const StatsService = {
     return [];
   },
 
+  async getLogsDone(): Promise<GameLogEntryV2[]> {
+    try {
+      const logs = await this.getLogs();
+      return logs.filter(log => log.durationSeconds > 0);
+    } catch (error) {
+      console.error('Error loading logs:', error);
+    }
+    return [];
+  },
+
   async getLogsByPlayerId(playerId: string): Promise<GameLogEntryV2[]> {
     try {
       return statsStorage.getGameLogsV2ByPlayerId(playerId);
