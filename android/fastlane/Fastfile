@@ -90,7 +90,12 @@ platform :android do
 
   desc "Increment version name"
   lane :increment_vn do
-    bump_version_name(type: 'patch')
+    bump_version_name(type: 'patch') # hoặc "minor", "major"
+  end
+
+  desc "Increment version name force"
+  lane :increment_vn_force do
+    bump_version_name(type: 'minor')
   end
 
   desc "Increment version code"

@@ -15,13 +15,13 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Header from '../../components/commons/Header';
 import ChartsStats from '../../components/Statistics/ChartsStats';
+import GameHistory from '../../components/Statistics/GameHistory';
 import LevelStats from '../../components/Statistics/LevelStats';
 import TimeFilterDropdown from '../../components/Statistics/TimeFilterDropdown';
 import {useTheme} from '../../context/ThemeContext';
 import {useAppPause} from '../../hooks/useAppPause';
 import {useEnsureStatsCache} from '../../hooks/useEnsureStatsCache';
-import {GameStatsManager} from '../../services/GameStatsManager';
-import {PlayerService} from '../../services/PlayerService';
+import {PlayerService, StatsService} from '../../services';
 import {
   GameLogEntryV2,
   GameStats,
@@ -31,7 +31,6 @@ import {
   TimeFilter,
 } from '../../types';
 import {DEFAULT_PLAYER_ID, SCREENS} from '../../utils/constants';
-import GameHistoryScreen from '../GameHistoryScreen';
 
 const StatisticsScreen = () => {
   const navigation =
@@ -91,11 +90,11 @@ const StatisticsScreen = () => {
 
   async function loadData() {
     const player = await PlayerService.getCurrentPlayer();
-    const loadedLogs = await GameStatsManager.getLogsByPlayerId(
+    const loadedLogs = await StatsService.getLogsByPlayerId(
       player?.id ?? DEFAULT_PLAYER_ID,
     );
     setLogs(loadedLogs);
-    const loadedStats = await GameStatsManager.getStatsWithCache(
+    const loadedStats = await StatsService.getStatsWithCache(
       loadedLogs,
       filter,
       player?.id ?? DEFAULT_PLAYER_ID,
@@ -106,7 +105,7 @@ const StatisticsScreen = () => {
   const renderTabContent: Record<string, React.ReactNode> = {
     level: <LevelStats stats={stats} />,
     chart: <ChartsStats logs={logs} filter={filter} />,
-    history: <GameHistoryScreen />,
+    history: <GameHistory logs={logs} filter={filter} />,
   };
 
   return (
@@ -192,8 +191,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   iconButton: {
-    width: 30,
-    paddingHorizontal: 3,
+    width: 40,
+    paddingHorizontal: 8,
   },
   tabRow: {
     flexDirection: 'row' as const,

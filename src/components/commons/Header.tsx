@@ -166,8 +166,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold' as const,
   },
   iconButton: {
-    width: 30,
-    paddingHorizontal: 3,
+    width: 40,
+    paddingHorizontal: 8,
   },
 });
 

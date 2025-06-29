@@ -1,6 +1,14 @@
 import {Level} from '../types';
 
 export const LEVELS = ['easy', 'medium', 'hard', 'expert'] as const;
+export const LEVEL_PRIORITY: Level[] = LEVELS.slice().reverse();
+export const LEVEL_WEIGHT: Record<string, number> = {
+  expert: 4,
+  hard: 3,
+  medium: 2,
+  easy: 1,
+};
+
 export const SHOW_UNSPLASH_IMAGE_INFO = false;
 export const IS_UI_TESTING = false;
 

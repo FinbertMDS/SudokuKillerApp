@@ -173,3 +173,22 @@ export function convertToStackedData(
     barColors: LEVELS.map(level => levelColors[level][scheme!]),
   };
 }
+
+export function getGameHistory(
+  logs: GameLogEntryV2[],
+  filter: TimeRange,
+): GameLogEntryV2[] {
+  if (logs.length === 0) {
+    return [];
+  }
+
+  const filtered = logs
+    .filter(log => log.durationSeconds > 0)
+    .filter(log => log.completed && isInTimeRange(log.endTime, filter))
+    .sort(
+      (a, b) =>
+        new Date(b.startTime).getTime() - new Date(a.startTime).getTime(),
+    );
+
+  return filtered;
+}

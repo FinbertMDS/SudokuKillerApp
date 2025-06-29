@@ -2,6 +2,7 @@
   "name": "SudokuKillerApp",
   "displayName": "Killer Sudoku",
   "react-native-google-mobile-ads": {
-    "ios_app_id": "ca-app-pub-4776985253905766~3093131803"
+    "ios_app_id": "ca-app-pub-4776985253905766~3093131803",
+    "android_app_id": "ca-app-pub-4776985253905766~6216922933"
   }
 }

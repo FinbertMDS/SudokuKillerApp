@@ -112,7 +112,6 @@ const PlayerScreen = () => {
         style: 'destructive',
         onPress: () => {
           deletePlayer(id);
-          eventBus.emit(CORE_EVENTS.deletePlayer, id);
         },
       },
     ]);
@@ -201,7 +200,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   selectedPlayerContainer: {
-    paddingTop: 16,
     paddingHorizontal: 16,
   },
   contentContainer: {
@@ -211,7 +209,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 22,
     fontWeight: 'bold',
-    paddingTop: 16,
+    paddingVertical: 8,
     paddingLeft: 16,
   },
   button: {

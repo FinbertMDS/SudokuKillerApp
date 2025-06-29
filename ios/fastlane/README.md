@@ -39,14 +39,6 @@ Take screenshots
 
 Push a new beta build to TestFlight
 
-### ios increment_bn
-
-```sh
-[bundle exec] fastlane ios increment_bn
-```
-
-Increment build number
-
 ### ios increment_vn
 
 ```sh
@@ -54,6 +46,22 @@ Increment build number
 ```
 
 Increment version number
+
+### ios increment_vn_force
+
+```sh
+[bundle exec] fastlane ios increment_vn_force
+```
+
+Increment version number force
+
+### ios increment_bn
+
+```sh
+[bundle exec] fastlane ios increment_bn
+```
+
+Increment build number
 
 ### ios beta_github
 

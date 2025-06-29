@@ -1,5 +1,5 @@
-import {GameStatsManager} from '../../services/GameStatsManager';
 import {PlayerService} from '../../services/PlayerService';
+import {StatsService} from '../../services/StatsService';
 import {GameLogEntryV2, TimeRange} from '../../types/stats';
 import {DEFAULT_PLAYER_ID} from '../../utils/constants';
 import {statsStorage} from '../statsStorage';
@@ -7,7 +7,7 @@ import {statsStorage} from '../statsStorage';
 export async function migrateGameLogsEntryV2() {
   console.log('[MIGRATION] Migrating game logs entry v2...');
   await PlayerService.createDefaultPlayerIfNeeded();
-  const rawLogs = statsStorage.getGameLogs();
+  const rawLogs = statsStorage.getGameLogsV2();
   const migrated = rawLogs.map(entry => {
     if (
       entry.playerId === undefined ||
@@ -26,8 +26,8 @@ export async function migrateGameLogsEntryV2() {
   // update last stats cache update user id
   const affectedRanges: TimeRange[] = ['today', 'week', 'month', 'year', 'all'];
 
-  const allLogs = await GameStatsManager.getLogs();
-  await GameStatsManager.updateStatsWithAllCache(
+  const allLogs = await StatsService.getLogs();
+  await StatsService.updateStatsWithAllCache(
     allLogs,
     affectedRanges,
     DEFAULT_PLAYER_ID,

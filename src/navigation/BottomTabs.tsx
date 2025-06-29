@@ -4,13 +4,18 @@ import React from 'react';
 import {useTranslation} from 'react-i18next';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useTheme} from '../context/ThemeContext';
+import LeaderboardScreen from '../screens/LeaderboardScreen';
 import MainScreen from '../screens/MainScreen';
 import StatisticsScreen from '../screens/StatisticsScreen';
 import {SCREENS} from '../utils/constants';
 
 const Tab = createBottomTabNavigator();
 
-const icons: any = {Main: 'home', Statistics: 'bar-chart'};
+const icons: any = {
+  Main: 'home',
+  Statistics: 'bar-chart',
+  Leaderboard: 'trophy',
+};
 
 const BottomTabs = () => {
   const {theme} = useTheme();
@@ -47,6 +52,11 @@ const BottomTabs = () => {
         name={SCREENS.STATISTICS}
         component={StatisticsScreen}
         options={{tabBarLabel: t('statistics')}}
+      />
+      <Tab.Screen
+        name={SCREENS.LEADERBOARD}
+        component={LeaderboardScreen}
+        options={{tabBarLabel: t('leaderboard')}}
       />
     </Tab.Navigator>
   );
