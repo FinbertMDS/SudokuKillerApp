@@ -3,6 +3,7 @@
 import React from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {PlayerStats} from '../../types';
+import EmptyContainer from '../commons/EmptyContainer';
 import PlayerStatsCard from './sub/PlayerStatsCard';
 
 type PlayerRankingProps = {
@@ -11,17 +12,23 @@ type PlayerRankingProps = {
 
 const PlayerRanking = ({playerStats}: PlayerRankingProps) => {
   return (
-    <ScrollView>
-      <View style={styles.cardContainer}>
-        {playerStats.map((playerStat, index) => (
-          <PlayerStatsCard
-            key={playerStat.player.id}
-            stat={playerStat}
-            rank={index + 1}
-          />
-        ))}
-      </View>
-    </ScrollView>
+    <>
+      {playerStats.length === 0 ? (
+        <EmptyContainer />
+      ) : (
+        <ScrollView>
+          <View style={styles.cardContainer}>
+            {playerStats.map((playerStat, index) => (
+              <PlayerStatsCard
+                key={playerStat.player.id}
+                stat={playerStat}
+                rank={index + 1}
+              />
+            ))}
+          </View>
+        </ScrollView>
+      )}
+    </>
   );
 };
 

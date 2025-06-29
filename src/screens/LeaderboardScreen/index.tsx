@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Header from '../../components/commons/Header';
+import LoadingContainer from '../../components/commons/LoadingContainer';
 import PlayerRanking from '../../components/Leaderboard/PlayerRanking';
 import {useTheme} from '../../context/ThemeContext';
 import {useAppPause} from '../../hooks/useAppPause';
@@ -20,6 +21,7 @@ import {LeaderboardTab, PlayerStats} from '../../types';
 const LeaderboardScreen = () => {
   const {t} = useTranslation();
   const {theme} = useTheme();
+  const [isLoading, setIsLoading] = useState(false);
   const [playerStats, setPlayerStats] = useState<PlayerStats[]>([]);
   const [activeTab, setActiveTab] = useState<LeaderboardTab['key']>('player');
   // const [logs, setLogs] = useState<GameLogEntryV2[]>([]);
@@ -65,14 +67,22 @@ const LeaderboardScreen = () => {
   ];
 
   const loadLeaderboardStats = async () => {
-    const _playerStats = await LeaderboardService.getAllPlayerStats(t);
-    setPlayerStats(_playerStats);
+    try {
+      setIsLoading(true);
 
-    // const _logs = await StatsService.getLogs();
-    // setLogs(_logs);
+      const _playerStats = await LeaderboardService.getAllPlayerStats(t);
+      setPlayerStats(_playerStats);
 
-    // const _players = await PlayerService.getAllPlayers();
-    // setPlayers(_players);
+      // const _logs = await StatsService.getLogs();
+      // setLogs(_logs);
+
+      // const _players = await PlayerService.getAllPlayers();
+      // setPlayers(_players);
+    } catch (error) {
+      console.error('Failed to load leaderboard stats:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // Sau khi navigation.goBack() sẽ gọi hàm này
@@ -156,7 +166,9 @@ const LeaderboardScreen = () => {
       </View>
 
       {/* Content */}
-      <View style={styles.content}>{renderTabContent[activeTab]}</View>
+      <View style={styles.content}>
+        {isLoading ? <LoadingContainer /> : renderTabContent[activeTab]}
+      </View>
     </SafeAreaView>
   );
 };

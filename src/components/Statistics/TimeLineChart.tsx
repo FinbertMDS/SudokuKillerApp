@@ -6,6 +6,7 @@ import {useTheme} from '../../context/ThemeContext';
 import {DailyStats} from '../../types';
 import {CHART_WIDTH} from '../../utils/constants';
 import {formatShortChartDate} from '../../utils/dateUtil';
+import EmptyContainer from '../commons/EmptyContainer';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -19,14 +20,7 @@ const TimeLineChart = ({dailyStats, chartConfig}: TimeLineChartProps) => {
   const {t} = useTranslation();
 
   if (dailyStats.length === 0) {
-    return (
-      <View style={[styles.container, {backgroundColor: theme.background}]}>
-        <Text style={[styles.title, {color: theme.text}]}>
-          {t('timesPerDay')}
-        </Text>
-        <Text style={[{color: theme.text}]}>{t('noDataAvailable')}</Text>
-      </View>
-    );
+    return <EmptyContainer text={t('timesPerDay')} />;
   }
 
   const labels = dailyStats.map(s => formatShortChartDate(s.date));
