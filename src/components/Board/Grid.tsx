@@ -1,11 +1,5 @@
 import React, {useCallback, useEffect, useRef} from 'react';
-import {
-  Dimensions,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import Animated, {
   useAnimatedStyle,
@@ -24,6 +18,7 @@ import {
   ANIMATION_DURATION,
   ANIMATION_TYPE,
   BOARD_SIZE,
+  CELL_SIZE,
 } from '../../utils/constants';
 import CageBorders from './CageBorders';
 
@@ -53,11 +48,9 @@ const Grid = ({
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const colScales = Array.from({length: BOARD_SIZE}, () => useSharedValue(1));
 
-  const {height} = Dimensions.get('window');
-  const cellSize = DeviceInfo.isTablet() && height > 950 ? 60 : 40;
+  const cellSize = CELL_SIZE;
 
-  const {cellText, noteText, cageText, noteWidth} =
-    getFontSizesFromCellSize(cellSize);
+  const {cellText, noteText, cageText, noteWidth} = getFontSizesFromCellSize();
 
   const animatedStyles = useRef(
     Array.from({length: BOARD_SIZE}, (_, row) =>
@@ -313,6 +306,7 @@ const styles = StyleSheet.create({
   boardContainer: {
     width: '100%' as const,
     alignItems: 'center' as const,
+    marginTop: DeviceInfo.isTablet() ? 20 : 0,
     marginBottom: 20,
   },
   grid: {

@@ -4,7 +4,6 @@ import {
   generateKillerSudoku,
   overrideNumberOfCellsToRemove,
 } from 'killer-sudoku-generator';
-import DeviceInfo from 'react-native-device-info';
 import {Cage, CellValue, InitGame, Level} from '../types';
 import {BOARD_SIZE, CELLS_TO_REMOVE_RANGE} from './constants';
 
@@ -264,11 +263,11 @@ export const isColFilled = (
   return true; // Nếu tất cả ô trong cột đều khác 0, coi như đã filled
 };
 
-export function getFontSizesFromCellSize(cellSize: number) {
+export function getFontSizesFromCellSize() {
   return {
-    cellText: DeviceInfo.isTablet() ? Math.floor(cellSize / 1.5) : 22, // ví dụ: 40 → 22
-    noteText: DeviceInfo.isTablet() ? Math.floor(cellSize / 4.25) : 8, // ví dụ: 40 → 8
-    cageText: DeviceInfo.isTablet() ? Math.floor(cellSize / 3.5) : 9, // ví dụ: 40 → 9
-    noteWidth: DeviceInfo.isTablet() ? Math.floor(cellSize / 4) : 9, // ví dụ: 40 → 9
+    cellText: 22,
+    noteText: 8,
+    cageText: 9,
+    noteWidth: 9,
   };
 }

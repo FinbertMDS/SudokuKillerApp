@@ -111,18 +111,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row' as const,
     justifyContent: 'space-around' as const,
     alignItems: 'center' as const,
-    marginTop: 20,
-    marginBottom: 20,
+    marginTop: DeviceInfo.isTablet() ? 0 : 20,
+    marginBottom: DeviceInfo.isTablet() ? 0 : 20,
   },
   infoBlock: {
     alignItems: 'center' as const,
     minWidth: 70,
   },
   title: {
-    fontSize: DeviceInfo.isTablet() ? 20 : 14,
+    fontSize: 14,
   },
   value: {
-    fontSize: DeviceInfo.isTablet() ? 22 : 16,
+    fontSize: 16,
     fontWeight: 'bold' as const,
   },
 });

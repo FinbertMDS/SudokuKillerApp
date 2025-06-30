@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useMemo, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   FlatList,
@@ -9,7 +9,7 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useTheme} from '../../context/ThemeContext';
 import {getTutorialImage} from '../../utils/tutorialImages';
 
@@ -23,6 +23,13 @@ const HowToPlay = ({onClose}: HowToPlayProps) => {
   const [index, setIndex] = useState(0);
   const {mode, theme} = useTheme();
   const {t} = useTranslation();
+
+  const viewabilityConfig = useMemo(
+    () => ({
+      itemVisiblePercentThreshold: 50,
+    }),
+    [],
+  );
 
   const slides = [
     {
@@ -58,7 +65,7 @@ const HowToPlay = ({onClose}: HowToPlayProps) => {
 
   const onViewableItemsChanged = useRef(({viewableItems}: any) => {
     if (viewableItems.length > 0) {
-      setIndex(viewableItems[0].index);
+      setIndex(viewableItems[viewableItems.length - 1].index);
     }
   });
 
@@ -73,8 +80,10 @@ const HowToPlay = ({onClose}: HowToPlayProps) => {
         pagingEnabled
         showsHorizontalScrollIndicator={false}
         onViewableItemsChanged={onViewableItemsChanged.current}
+        viewabilityConfig={viewabilityConfig}
+        extraData={width}
         renderItem={({item}) => (
-          <View style={[styles.slide, {width}]}>
+          <View style={[styles.slide, {width: width - 48}]}>
             <Image
               source={item.image}
               style={styles.image}
@@ -107,7 +116,7 @@ const HowToPlay = ({onClose}: HowToPlayProps) => {
           <TouchableOpacity
             onPress={onBack}
             style={[styles.navBtn, {backgroundColor: theme.buttonBlue}]}>
-            <Icon name="arrow-back" size={24} color={theme.iconColor} />
+            <Ionicons name="arrow-back" size={24} color={theme.iconColor} />
           </TouchableOpacity>
         ) : (
           <View />
@@ -118,7 +127,7 @@ const HowToPlay = ({onClose}: HowToPlayProps) => {
           testID="HowToPlayNextButton"
           onPress={onNext}
           style={[styles.navBtn, {backgroundColor: theme.buttonBlue}]}>
-          <Icon
+          <Ionicons
             name={index === slides.length - 1 ? 'checkmark' : 'arrow-forward'}
             size={24}
             color={theme.iconColor}

@@ -1,23 +1,21 @@
 import React from 'react';
-import {Dimensions, StyleSheet} from 'react-native';
-import DeviceInfo from 'react-native-device-info';
+import {StyleSheet} from 'react-native';
 import Svg, {Line} from 'react-native-svg';
 import {useTheme} from '../../context/ThemeContext';
 import {Cage} from '../../types';
 import {getAdjacentCellsInSameCage} from '../../utils/boardUtil';
-import {BOARD_SIZE} from '../../utils/constants';
+import {BOARD_SIZE, CELL_SIZE} from '../../utils/constants';
 
 type CageBordersProps = {
   cages: Cage[];
 };
 
-const CAGE_PADDING = DeviceInfo.isTablet() ? 5 : 4;
+const CAGE_PADDING = 4;
 
 const CageBorders = ({cages}: CageBordersProps) => {
   const {theme} = useTheme();
 
-  const {height} = Dimensions.get('window');
-  const cellSize = DeviceInfo.isTablet() && height > 950 ? 60 : 40;
+  const cellSize = CELL_SIZE;
 
   const renderCageBorders = () => {
     // Map từ (row,col) => cage index

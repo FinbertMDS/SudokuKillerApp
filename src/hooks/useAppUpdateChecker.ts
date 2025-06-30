@@ -23,6 +23,9 @@ export const useAppUpdateChecker = () => {
 
   const checkVersion = async () => {
     try {
+      if (__DEV__ || Platform.OS === 'web') {
+        return;
+      }
       const _storeUrl =
         Platform.OS === 'ios'
           ? await VersionCheck.getAppStoreUrl({appID: appConfig.iosAppId})

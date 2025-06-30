@@ -1,11 +1,5 @@
 import React, {useMemo} from 'react';
-import {
-  Dimensions,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import {useTheme} from '../../context/ThemeContext';
 import {useNumberCounts} from '../../hooks/useNumberCounts';
@@ -22,19 +16,6 @@ const NumberPad = ({board, settings, onSelectNumber}: NumberPadProps) => {
   const {theme} = useTheme();
   const counts = useNumberCounts(board, settings);
 
-  // Tính toán kích thước button dựa trên width màn hình
-  const {buttonWidth, buttonHeight} = useMemo(() => {
-    const screenWidth = Dimensions.get('window').width;
-    const containerPadding = DeviceInfo.isTablet() ? 150 : 8; // padding left/right của container
-    const availableWidth = screenWidth - containerPadding * 2; // width khả dụng
-    const width = availableWidth / 9; // chia đều cho 9 button
-    const height = width + (DeviceInfo.isTablet() ? 0 : 20); // height = width + padding top/bottom 10px
-    return {
-      buttonWidth: Math.max(width, 40),
-      buttonHeight: Math.max(height, 40),
-    };
-  }, []);
-
   // Tạo mảng số từ 1-9 một lần duy nhất
   const numbers = useMemo(
     () => Array.from({length: BOARD_SIZE}, (_, i) => i + 1),
@@ -46,19 +27,13 @@ const NumberPad = ({board, settings, onSelectNumber}: NumberPadProps) => {
       {numbers.map(num => (
         <TouchableOpacity
           key={num}
-          style={[
-            styles.button,
-            {
-              width: buttonWidth,
-              height: buttonHeight,
-            },
-          ]}
+          style={[styles.button]}
           onPress={() => onSelectNumber(num)}
           disabled={counts[num] === BOARD_SIZE}>
           <Text
             style={[
               // eslint-disable-next-line react-native/no-inline-styles
-              {color: theme.text, fontSize: buttonWidth > 50 ? 48 : 32},
+              {color: theme.text, fontSize: 32},
             ]}>
             {counts[num] === BOARD_SIZE ? ' ' : num}
           </Text>
@@ -74,10 +49,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center' as const,
     width: '100%' as const,
     alignItems: 'center' as const,
-    marginBottom: DeviceInfo.isTablet() ? 10 : 20,
+    marginTop: DeviceInfo.isTablet() ? 10 : 0,
+    marginBottom: 20,
     paddingHorizontal: 32,
   },
   button: {
+    width: DeviceInfo.isTablet() ? 60 : 40,
+    height: DeviceInfo.isTablet() ? 60 : 40,
     borderRadius: 8,
     justifyContent: 'center' as const,
     alignItems: 'center' as const,

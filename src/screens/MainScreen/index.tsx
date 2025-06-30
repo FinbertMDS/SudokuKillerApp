@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import DeviceInfo from 'react-native-device-info';
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import uuid from 'react-native-uuid';
 import Header from '../../components/commons/Header';
@@ -271,7 +272,7 @@ const styles = StyleSheet.create({
     textShadowRadius: 4,
   },
   footer: {
-    marginBottom: 96,
+    marginBottom: DeviceInfo.isTablet() ? 32 : 96,
     paddingHorizontal: 20,
     alignItems: 'center',
   },

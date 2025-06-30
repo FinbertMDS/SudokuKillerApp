@@ -115,7 +115,7 @@ const ActionButtons = ({
                   ? btn.icon[1]
                   : btn.icon[0]
               }
-              size={DeviceInfo.isTablet() ? 36 : 24}
+              size={24}
               color={
                 btn.icon.length > 0 && btn.iconChangeFlag
                   ? theme.buttonBlue
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row' as const,
     justifyContent: 'space-around' as const,
     width: '100%' as const,
-    marginBottom: DeviceInfo.isTablet() ? 10 : 20,
+    marginBottom: DeviceInfo.isTablet() ? 0 : 20,
   },
   actionButton: {
     alignItems: 'center' as const,
@@ -180,8 +180,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   label: {
-    fontSize: DeviceInfo.isTablet() ? 18 : 12,
-    marginTop: DeviceInfo.isTablet() ? 10 : 4,
+    fontSize: 12,
+    marginTop: 4,
   },
 });
 
