@@ -1,12 +1,17 @@
+import {useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Dimensions, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import {PieChart} from 'react-native-chart-kit';
 import {AbstractChartConfig} from 'react-native-chart-kit/dist/AbstractChart';
 import {useTheme} from '../../context/ThemeContext';
 import {DailyStatsPieData} from '../../types';
 import EmptyContainer from '../commons/EmptyContainer';
-
-const screenWidth = Dimensions.get('window').width;
 
 type GamePieChartProps = {
   levelCounts: DailyStatsPieData[];
@@ -16,22 +21,24 @@ type GamePieChartProps = {
 const GamePieChart = ({levelCounts, chartConfig}: GamePieChartProps) => {
   const {theme} = useTheme();
   const {t} = useTranslation();
+  const {width: screenWidth} = useWindowDimensions();
+  const [containerWidth, setContainerWidth] = useState(screenWidth);
 
   if (levelCounts.length === 0) {
     return <EmptyContainer text={t('gamesDistributionByLevel')} />;
   }
 
-  const chartWidth = screenWidth - 16;
-
   return (
-    <View style={[styles.container, {backgroundColor: theme.background}]}>
+    <View
+      style={[styles.container, {backgroundColor: theme.background}]}
+      onLayout={e => setContainerWidth(e.nativeEvent.layout.width)}>
       <Text style={[styles.title, {color: theme.text}]}>
         {t('gamesDistributionByLevel')}
       </Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         <PieChart
           data={levelCounts}
-          width={chartWidth}
+          width={containerWidth}
           height={220}
           accessor="count"
           backgroundColor="transparent"
