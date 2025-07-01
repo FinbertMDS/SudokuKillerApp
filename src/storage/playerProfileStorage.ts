@@ -1,6 +1,6 @@
 // storage/playerProfileStorage.ts
 import {storage} from '.';
-import {PlayerProfile} from '../types/player';
+import {PlayerProfile} from '../types';
 import {
   DEFAULT_PLAYER_ID,
   STORAGE_KEY_CURRENT_PLAYER_ID,
