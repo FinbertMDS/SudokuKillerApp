@@ -1,5 +1,3 @@
----
-
 Dựa trên phân tích cấu trúc project, đây là cấu trúc thư mục quan trọng của **SudokuKillerApp**:
 
 ## 📁 Cấu trúc thư mục quan trọng - SudokuKillerApp
