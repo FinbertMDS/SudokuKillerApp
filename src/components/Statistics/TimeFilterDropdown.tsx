@@ -13,8 +13,8 @@ import {TimeFilter} from '../../types';
 
 interface Props {
   visible: boolean;
-  onClose: () => void;
   selected: TimeFilter;
+  onClose: () => void;
   onSelect: (filter: TimeFilter) => void;
 }
 
@@ -28,9 +28,9 @@ const options: {label: string; value: TimeFilter}[] = [
 
 const TimeFilterDropdown: React.FC<Props> = ({
   visible,
-  onClose,
   selected,
   onSelect,
+  onClose,
 }) => {
   const {theme} = useTheme();
 
